@@ -83,21 +83,6 @@ namespace StarBreaker.NPCs
             {
                 SkyManager.Instance.Activate("StarBreaker:Portal");
             }
-            #region 鬼神存活
-            foreach (Projectile p in Main.projectile)
-            {
-                if (p.type == ModContent.ProjectileType<Projs.TheGhost.Kazan>())
-                {
-                    NPC.damage += 1000;
-                    if (NPC.damage > 1000) NPC.damage = 1000;
-                }
-                if (p.type == ModContent.ProjectileType<Projs.TheGhost.Puchumeng>())
-                {
-                    NPC.defense += 10;
-                    if (NPC.defense > 20) NPC.defense = 20;
-                }
-            }
-            #endregion
             #region 去世机制
             if (!Target.active || Target.dead)
             {
