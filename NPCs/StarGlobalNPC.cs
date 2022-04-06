@@ -10,7 +10,7 @@ namespace StarBreaker.NPCs
         public override bool InstancePerEntity => true;//必须加上,且返回值为true,否则GlobalNPC不能创建实例字段
         public bool EnergySmash = false;//声明并赋值一个实例字段
         public bool StarDoomMark = false;
-        public int BloodyBleed = 0;//血鞭
+        public int BloodyBleed = 0;//流血效果
         public int CursedWhipHit = 0;//诅咒鞭
         public int StarSpiralBladeProj = -1;//星辰旋刃弹幕
         public int DrumHitDamage = 0;//鼓的标记伤害
@@ -57,15 +57,7 @@ namespace StarBreaker.NPCs
             //在这个重写函数进行判断
             if (EnergySmash)//如果buff存在了
             {
-                npc.defense -= 20;//减少对方防御
-                if (npc.defense <= 0)
-                {
-                    damage += 20;
-                }
-            }
-            else
-            {
-                npc.defense = npc.defDefense;
+                damage = Main.CalculateDamageNPCsTake((int)damage, defense - 20);//调用原版伤害计算,然后转回伤害,继续给原版进行计算
             }
             if (BloodyBleed > 0 && !npc.immortal)//血鞭
             {
