@@ -10,10 +10,10 @@ namespace StarBreaker
 {
     public partial class StarBreakerSystem : ModSystem
     {
-        public static bool downedStarBreakerNom;
-        public static bool downedStarBreakerEX;
-        public static bool downedStarSpiralBlade;
-        public static bool downedStarFist;
+        public static bool downedStarBreakerNom = false;
+        public static bool downedStarBreakerEX = false;
+        public static bool downedStarSpiralBlade = false;
+        public static bool downedStarFist = false;
         public override void SaveWorldData(TagCompound tag)
         {
             tag["downedStarBrekerNom"] = downedStarBreakerNom;
