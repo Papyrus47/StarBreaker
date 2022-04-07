@@ -74,7 +74,6 @@ namespace StarBreaker.NPCs
         public override void OnKill()
         {
             StarBreakerSystem.downedStarBreakerNom = true;
-            StarBreakerSystem.sommonBossTime = -1;
         }
         public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;
 

@@ -272,9 +272,7 @@ namespace StarBreaker.NPCs
         }
         public override void OnKill()
         {
-            StarBreakerSystem.downedStarBreakerEX = true;
-            StarBreakerSystem.sommonBossTime = -1;
-        }
+            StarBreakerSystem.downedStarBreakerEX = true;        }
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             #region 旧位置储存
