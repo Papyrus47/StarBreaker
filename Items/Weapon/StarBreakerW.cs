@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.EnergyDamageClass;
+using StarBreaker.Items.DamageClasses;
 using StarBreaker.Projs;
 using System.Collections.Generic;
 using Terraria;
@@ -75,7 +75,7 @@ namespace StarBreaker.Items.Weapon
                         #region 获取对应武器贴图
                         foreach (Item item in player.inventory)
                         {
-                            if (item.DamageType == ModContent.GetInstance<EnergyDamageClass.EnergyDamage>())
+                            if (item.DamageType == ModContent.GetInstance<StarBreaker.Items.DamageClasses.EnergyDamage>())
                             {
                                 (Main.projectile[proj].ModProjectile as OmnipotentGun).ItemGun = item;
                                 Main.projectile[proj].damage = item.damage;

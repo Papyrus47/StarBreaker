@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items.EnergyDamageClass;
+using StarBreaker.Items.DamageClasses;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;

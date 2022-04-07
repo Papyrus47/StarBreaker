@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using StarBreaker.Items.Bullet;
-using StarBreaker.Items.EnergyDamageClass;
+using StarBreaker.Items.DamageClasses;
 using StarBreaker.Projs.Bullets;
 using Terraria;
 using Terraria.DataStructures;

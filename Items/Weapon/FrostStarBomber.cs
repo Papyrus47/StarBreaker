@@ -3,11 +3,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
-using StarBreaker.Items.EnergyDamageClass;
 using System.Collections.Generic;
 using StarBreaker.Items.Bullet;
 using StarBreaker.Projs.Bullets;
 using Terraria.DataStructures;
+using StarBreaker.Items.DamageClasses;
 
 namespace StarBreaker.Items.Weapon
 {
