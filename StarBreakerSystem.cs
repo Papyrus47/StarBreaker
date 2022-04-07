@@ -14,7 +14,6 @@ namespace StarBreaker
         public static bool downedStarBreakerEX;
         public static bool downedStarSpiralBlade;
         public static bool downedStarFist;
-        public static int sommonBossTime;
         public override void SaveWorldData(TagCompound tag)
         {
             tag["downedStarBrekerNom"] = downedStarBreakerNom;
@@ -35,7 +34,6 @@ namespace StarBreaker
             downedStarBreakerEX = false;
             downedStarSpiralBlade = false;
             downedStarFist = false;
-            sommonBossTime = 0;
         }
         public override void OnWorldUnload()
         {
@@ -43,7 +41,6 @@ namespace StarBreaker
             downedStarBreakerEX = false;
             downedStarSpiralBlade = false;
             downedStarFist = false;
-            sommonBossTime = 0;
         }
         public override void NetSend(BinaryWriter writer)
         {
@@ -54,7 +51,6 @@ namespace StarBreaker
             flags[2] = downedStarSpiralBlade;
             flags[3] = downedStarFist;
             writer.Write(flags);
-            writer.Write(sommonBossTime);
         }
         public override void NetReceive(BinaryReader reader)
         {
@@ -64,42 +60,10 @@ namespace StarBreaker
             downedStarBreakerEX = flags[1];
             downedStarSpiralBlade = flags[2];
             downedStarFist = flags[3];
-            sommonBossTime = reader.ReadInt32();
         }
         public override void PreUpdateWorld()
         {
             base.PreUpdateWorld();
-            if (Main.LocalPlayer.ZoneSkyHeight)
-            {
-                if (sommonBossTime >= 3600)
-                {
-                    if (NPC.downedAncientCultist && !downedStarBreakerNom)
-                    {
-                        NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<NPCs.StarBreakerN>());
-                    }
-                    else if (!downedStarBreakerEX && NPC.downedMoonlord)
-                    {
-                        NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<NPCs.StarBreakerEX>());
-                    }
-                    else if(downedStarBreakerEX && downedStarFist)
-                    {
-                        NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<NPCs.FrostFist>());
-                    }
-                    else if (!downedStarSpiralBlade && downedStarFist)
-                    {
-                        NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<NPCs.StarSpiralBladeN>());
-                    }
-                    sommonBossTime = -1;
-                }
-                else if (sommonBossTime < 3600 && sommonBossTime >= 0)
-                {
-                    sommonBossTime++;
-                }
-            }
-            else
-            {
-                sommonBossTime = 0;
-            }
         }
         public override void UpdateUI(GameTime gameTime)
         {
