@@ -22,6 +22,7 @@ namespace StarBreaker.Projs
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 2;
         }
         public override void AI()
         {
@@ -42,6 +43,7 @@ namespace StarBreaker.Projs
                     Projectile.localAI[1]--;
                 }
             }
+            Projectile.damage = (int)Math.Abs(Projectile.localAI[0] * 5);
             Player player = Main.player[Projectile.owner];
             switch (Projectile.ai[0])
             {
@@ -72,7 +74,6 @@ namespace StarBreaker.Projs
                         player.itemAnimation = 2;
                         player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
                             Projectile.velocity.X * Projectile.direction);
-                        if (Projectile.damage < 900) Projectile.damage++;
                         if (Projectile.owner == Main.myPlayer)
                         {
                             Projectile.velocity = (Main.MouseWorld - Projectile.Center) * 0.2f;
@@ -101,37 +102,14 @@ namespace StarBreaker.Projs
                             float vel = toTarget.Length() > 50 ? toTarget.Length() * 0.1f : 20;
                             Projectile.velocity = toTarget.SafeNormalize(default) * vel;
                             Projectile.timeLeft++;
-                            if (player.channel)
+                            if (player.altFunctionUse == 2)
                             {
-                                if (player.statLife < player.statLifeMax2 / 2 || !Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy())
-                                {
-                                    Projectile.ai[0] = 3;
-                                }
-                                else Projectile.ai[0] = 2;
+                                Projectile.ai[0] = 2;
                             }
                         }
                         break;
                     }
-                case 2://星辰旋刃-加速!
-                    {
-                        Projectile.ai[0] = 1;
-                        if (Projectile.extraUpdates < 5) Projectile.extraUpdates++;
-                        else
-                        {
-                            _ = PopupText.NewText(new()
-                            {
-                                Velocity = new Vector2(0,5),
-                                Color = Color.MediumPurple,
-                                Text = "别加速了,再加速我会爆炸的",
-                                DurationInFrames = 120
-                            },player.Center);
-                            break;
-                        }
-                        player.statLife -= (int)(player.statLifeMax2 * 0.05f);
-                        Projectile.damage += Projectile.damage * 2 / 50;
-                        break;
-                    }
-                case 3://星辰旋刃-回来
+                case 2://星辰旋刃-回来
                     {
                         Projectile.velocity = (player.Center - Projectile.Center).RealSafeNormalize() * 30;
                         if(Vector2.Distance(player.Center,Projectile.Center) < 50)
@@ -171,7 +149,6 @@ namespace StarBreaker.Projs
                 target.HitEffect(0, 10);
                 target.checkDead();
             }
-            target.immune[Projectile.owner] = 2;
         }
         //public override bool PreDraw(ref Color lightColor)
         //{
