@@ -23,7 +23,6 @@ namespace StarBreaker.Items
             Item.autoReuse = true;
             Item.useTurn = true;
             Item.useAnimation = Item.useTime = 40;
-            Item.noUseGraphic = true;
         }
         public override bool? UseItem(Player player)
         {
