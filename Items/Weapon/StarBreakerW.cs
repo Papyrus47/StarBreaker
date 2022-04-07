@@ -75,7 +75,7 @@ namespace StarBreaker.Items.Weapon
                         #region 获取对应武器贴图
                         foreach (Item item in player.inventory)
                         {
-                            if (item.DamageType == ModContent.GetInstance<StarBreaker.Items.DamageClasses.EnergyDamage>())
+                            if (item.DamageType == ModContent.GetInstance<Items.DamageClasses.EnergyDamage>())
                             {
                                 (Main.projectile[proj].ModProjectile as OmnipotentGun).ItemGun = item;
                                 Main.projectile[proj].damage = item.damage;
