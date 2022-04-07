@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using StarBreaker.NPCs;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,16 +10,16 @@ namespace StarBreaker.Items
         public override string Texture => "StarBreaker/Projs/Star";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("tml更新后紧急本mod测试boss召唤器");
-            Tooltip.SetDefault("开发者所用，用于Hero无法使用时，手动写入召唤的boss\n" +
-                "可空手合成");
+            DisplayName.SetDefault("星辰武器诱捕器");
+            Tooltip.SetDefault("吸引星辰武器\n" +
+                "根据时期与地形决定召唤的boss");
         }
         public override void SetDefaults()
         {
             Item.rare = ItemRarityID.Blue;
             Item.width = 66;
             Item.height = 25;
-            Item.useStyle = 3;
+            Item.useStyle = ItemUseStyleID.HoldUp;
             Item.autoReuse = true;
             Item.useTurn = true;
             Item.useAnimation = Item.useTime = 40;
@@ -26,26 +27,19 @@ namespace StarBreaker.Items
         }
         public override bool? UseItem(Player player)
         {
-            foreach (NPC n in Main.npc)
+            if(!StarBreakerSystem.downedStarBreakerNom)
             {
-                n.active = false;
+                NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<StarBreakerN>());
             }
-            int npc = NPC.NewNPC(player.GetNPCSource_TileInteraction((int)player.position.X, (int)player.position.Y + 100), (int)player.position.X, (int)player.position.Y + 100, ModContent.NPCType<NPCs.StarBreakerN>());
-            //StarBreakerSystem.downedStarBreakerEX = false;
-            //NPC.NewNPC((int)player.position.X, (int)player.position.Y - 100,NPCID.MoonLordCore);
-
-            player.immune = true;
-            player.immuneTime = 300;
-            foreach (Item item in Main.item)
+            else if (!StarBreakerSystem.downedStarBreakerEX)
             {
-                item.active = false;
+                NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<StarBreakerEX>());
             }
-            //Item.NewItem(player.Hitbox, ModContent.ItemType<FrostFistW>());
             return base.UseItem(player);
         }
-        //public override void AddRecipes()
-        //{
-        //    CreateRecipe().Register();
-        //}
+        public override void AddRecipes()
+        {
+            CreateRecipe().AddTile(TileID.MythrilAnvil).Register();
+        }
     }
 }
