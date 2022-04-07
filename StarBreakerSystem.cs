@@ -10,16 +10,16 @@ namespace StarBreaker
 {
     public partial class StarBreakerSystem : ModSystem
     {
-        public static bool downedStarBreakerNom = false;
-        public static bool downedStarBreakerEX = false;
-        public static bool downedStarSpiralBlade = false;
-        public static bool downedStarFist = false;
+        public static bool downedStarBreakerNom;
+        public static bool downedStarBreakerEX;
+        public static bool downedStarSpiralBlade;
+        public static bool downedStarFist;
         public override void SaveWorldData(TagCompound tag)
         {
-            tag["downedStarBrekerNom"] = downedStarBreakerNom;
-            tag["downedStarBreakerEX"] = downedStarBreakerEX;
-            tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
-            tag["downedStarFist"] = downedStarFist;
+            if(downedStarBreakerNom) tag["downedStarBrekerNom"] = downedStarBreakerNom;
+            if(downedStarBreakerEX) tag["downedStarBreakerEX"] = downedStarBreakerEX;
+            if(downedStarSpiralBlade) tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
+            if(downedStarFist) tag["downedStarFist"] = downedStarFist;
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -60,10 +60,6 @@ namespace StarBreaker
             downedStarBreakerEX = flags[1];
             downedStarSpiralBlade = flags[2];
             downedStarFist = flags[3];
-        }
-        public override void PreUpdateWorld()
-        {
-            base.PreUpdateWorld();
         }
         public override void UpdateUI(GameTime gameTime)
         {
