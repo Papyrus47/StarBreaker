@@ -1,7 +1,7 @@
 ﻿using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace StarBreaker.Items.EnergyDamageClass
+namespace StarBreaker.Items.DamageClasses
 {
     public class EnergyDamage : DamageClass
     {
