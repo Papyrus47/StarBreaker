@@ -43,7 +43,7 @@ namespace StarBreaker.Projs
                     Projectile.localAI[1]--;
                 }
             }
-            Projectile.damage = (int)Math.Abs(Projectile.localAI[0] * 5);
+            Projectile.damage = Projectile.originalDamage + (int)Math.Abs(Projectile.localAI[0] * 5);
             Player player = Main.player[Projectile.owner];
             switch (Projectile.ai[0])
             {
