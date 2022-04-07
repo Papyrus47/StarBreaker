@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using StarBreaker.NPCs;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -10,16 +11,16 @@ namespace StarBreaker
 {
     public partial class StarBreakerSystem : ModSystem
     {
-        public static bool downedStarBreakerNom = false;
-        public static bool downedStarBreakerEX = false;
-        public static bool downedStarSpiralBlade = false;
-        public static bool downedStarFist = false;
+        public static bool downedStarBreakerNom;
+        public static bool downedStarBreakerEX;
+        public static bool downedStarSpiralBlade;
+        public static bool downedStarFist;
         public override void SaveWorldData(TagCompound tag)
         {
-            tag["downedStarBrekerNom"] = downedStarBreakerNom;
-            tag["downedStarBreakerEX"] = downedStarBreakerEX;
-            tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
-            tag["downedStarFist"] = downedStarFist;
+            if(downedStarBreakerNom) tag["downedStarBrekerNom"] = downedStarBreakerNom;
+            if(downedStarBreakerEX) tag["downedStarBreakerEX"] = downedStarBreakerEX;
+            if(downedStarSpiralBlade) tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
+            if(downedStarFist) tag["downedStarFist"] = downedStarFist;
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -61,15 +62,25 @@ namespace StarBreaker
             downedStarSpiralBlade = flags[2];
             downedStarFist = flags[3];
         }
-        public override void PreUpdateWorld()
-        {
-            base.PreUpdateWorld();
-        }
         public override void UpdateUI(GameTime gameTime)
         {
             StarBreaker.Instantiate._userInterface?.Update(gameTime);
             StarBreaker.Instantiate.chargeUser?.Update(gameTime);
             base.UpdateUI(gameTime);
+        }
+        public override void PostUpdateWorld()
+        {
+            if(Main.LocalPlayer.ZoneSkyHeight && Main.rand.NextBool(100))
+            {
+                if(NPC.downedAncientCultist && !downedStarBreakerNom)
+                {
+                    NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<StarBreakerN>());
+                }
+                else if(downedStarBreakerNom && !downedStarBreakerEX)
+                {
+                    NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<StarBreakerN>());
+                }
+            }
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
