@@ -10,7 +10,7 @@ namespace StarBreaker.Items.DamageClasses
             ClassName.SetDefault("Four Damgage");
             ClassName.AddTranslation((int)GameCulture.CultureName.Chinese, "混合伤害");
         }
-        protected override float GetBenefitFrom(DamageClass damageClass) => 1f;
+        protected override float GetBenefitFrom(DamageClass damageClass) => 10f;
         public override bool CountsAs(DamageClass damageClass) => true;
     }
 }

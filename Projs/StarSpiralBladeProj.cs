@@ -101,11 +101,11 @@ namespace StarBreaker.Projs
                             Vector2 toTarget = Projectile.OwnerMinionAttackTargetNPC.position - Projectile.position;
                             float vel = toTarget.Length() > 50 ? toTarget.Length() * 0.1f : 20;
                             Projectile.velocity = toTarget.SafeNormalize(default) * vel;
-                            Projectile.timeLeft++;
-                            if (player.altFunctionUse == 2)
-                            {
-                                Projectile.ai[0] = 2;
-                            }
+                            Projectile.timeLeft = 1000;
+                        }
+                        if (Projectile.timeLeft < 800 || (player.whoAmI == Main.myPlayer && Main.mouseLeft))
+                        {
+                            Projectile.ai[0] = 2;
                         }
                         break;
                     }
