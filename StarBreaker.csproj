@@ -8,6 +8,12 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Items\UltimateCopperShortsword\LastCopperChainHammer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Items\UltimateCopperShortsword\LastCopperChainHammer.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>

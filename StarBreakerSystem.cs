@@ -70,7 +70,7 @@ namespace StarBreaker
         }
         public override void PostUpdateWorld()
         {
-            if(Main.LocalPlayer.ZoneSkyHeight && Main.rand.NextBool(100))
+            if(Main.LocalPlayer.ZoneSkyHeight && Main.rand.NextBool(100) && Main.CurrentFrameFlags.AnyActiveBossNPC)
             {
                 if(NPC.downedAncientCultist && !downedStarBreakerNom)
                 {
