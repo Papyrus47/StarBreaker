@@ -33,9 +33,9 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                 Projectile.ai[1] = 1;
             }
             Projectile.rotation += Math.Abs(0.05f + Projectile.velocity.Length()) * 0.1f;
-            Projectile.velocity.Y += 0.1f - Projectile.ai[0];
+            Projectile.velocity.Y += 0.1f;
             Tile tile = Main.tile[(int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16];
-            if (tile != null)
+            if (tile.HasTile)
             {
                 if (Main.tileAxe[tile.TileType])
                 {
@@ -68,8 +68,8 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             }
             if (n != null)
             {
-                Projectile.velocity = (n.position - Projectile.Center) * 0.1f;
-                if (Projectile.ai[0] < 0.1f) Projectile.ai[0] += 0.01f;
+                Projectile.velocity = (n.position - Projectile.Center) / 5;
+                Projectile.damage++;
             }
         }
         public override bool PreDraw(ref Color lightColor)

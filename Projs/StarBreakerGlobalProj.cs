@@ -10,6 +10,7 @@ namespace StarBreaker.Projs
         public override bool InstancePerEntity => true;
         public bool ProjectileForSporadicBow = false;
         public bool ProjectileForLastBow = false;
+        public int Bloody = 0;
         public override void SetDefaults(Projectile projectile)
         {
             base.SetDefaults(projectile);
@@ -220,7 +221,7 @@ namespace StarBreaker.Projs
             }
             if(ProjectileForLastBow)
             {
-                projectile.penetrate = -1;
+                if(projectile.tileCollide) projectile.penetrate = 5;//如果是非穿墙箭使它穿透5次
                 projectile.usesLocalNPCImmunity = true;
                 projectile.localNPCHitCooldown = 0;
                 projectile.tileCollide = false;
@@ -273,6 +274,10 @@ namespace StarBreaker.Projs
                         }
                         break;
                     }
+            }
+            if(Bloody > 0)
+            {
+                target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += Bloody;
             }
         }
     }

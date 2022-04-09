@@ -33,17 +33,8 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                     Projectile.ai[0] = 0;
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        for (int i = 0; i <= 5; i++)
-                        {
-                            Tile tile = Main.tile[(int)Projectile.Center.X / 16, (int)Projectile.Center.Y / 16 + i];
-                            if (tile == null || !tile.HasTile)
-                            {
-                                continue;
-                            }
-                            Projectile.NewProjectile(null, Projectile.position + new Vector2(0, (i - 1) * 16), Vector2.Zero, ModContent.ProjectileType<CopperSawHead>(),
-                                Projectile.damage, Projectile.knockBack, Projectile.owner, 0, (Main.MouseWorld - Projectile.Center).X);
-                            break;
-                        }
+                        Projectile.NewProjectile(null, Projectile.Center,Projectile.velocity.RealSafeNormalize() * 10, ModContent.ProjectileType<CopperSawHead>(),
+                            Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                 }
             }

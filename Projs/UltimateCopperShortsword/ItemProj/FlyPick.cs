@@ -14,10 +14,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
         {
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.timeLeft = 300;
+            Projectile.timeLeft = 2000;
             Projectile.width = Projectile.height = 32;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.penetrate = 5;
+            Projectile.extraUpdates = 5;
             Projectile.tileCollide = true;
             Projectile.aiStyle = -1;
         }

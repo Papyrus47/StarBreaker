@@ -13,7 +13,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("最终铜矛");
-            Tooltip.SetDefault("左键插矛，右键投矛，谁不喜欢?");
+            Tooltip.SetDefault("使用时额外投出铜矛,谁不喜欢?");
         }
         public override void SetDefaults()
         {
@@ -32,40 +32,6 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.UseSound = SoundID.Item1;
             Item.shoot = ModContent.ProjectileType<LastCopperSpearProj>();
             Item.shootSpeed = 2;
-        }
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            if (player.altFunctionUse == 2)
-            {
-                Projectile.NewProjectile(null, position, velocity * 5, ModContent.ProjectileType<FlySpearProj>(),
-                    damage / 4, knockback, Main.myPlayer);
-                return false;
-            }
-            return base.Shoot(player, source, position, velocity, type, damage, knockback);
-        }
-        public override bool CanUseItem(Player player)
-        {
-            if (player.altFunctionUse == 2)
-            {
-                Item.useTime = 5;
-                Item.useAnimation = 16;
-                Item.autoReuse = true;
-                Item.useStyle = ItemUseStyleID.Swing;
-                Item.channel = false;
-            }
-            else
-            {
-                Item.reuseDelay = 0;
-                Item.useTime = Item.useAnimation = 20;
-                Item.useStyle = ItemUseStyleID.Shoot;
-                Item.channel = true;
-            }
-            return player.ownedProjectileCounts[Item.shoot] == 0;
-        }
-
-        public override bool AltFunctionUse(Player player)
-        {
-            return true;
         }
     }
 }

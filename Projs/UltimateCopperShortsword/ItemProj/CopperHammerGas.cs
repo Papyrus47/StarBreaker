@@ -24,6 +24,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             Projectile.aiStyle = -1;
             Projectile.hide = true;
             Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 0;
             Projectile.extraUpdates = 10;
         }
         public override void AI()

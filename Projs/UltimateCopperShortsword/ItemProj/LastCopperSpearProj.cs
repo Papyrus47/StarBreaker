@@ -13,7 +13,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
         public override void SetDefaults()
         {
             Projectile.timeLeft = 200;
-            Projectile.height = Projectile.width = 54;
+            Projectile.height = Projectile.width = 42;
             Projectile.penetrate = -1;
             Projectile.tileCollide = true;
             Projectile.DamageType = DamageClass.Melee;
@@ -34,17 +34,17 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             {
                 case 0://前进状态
                     {
-                        Projectile.ai[1]++;
+                        Projectile.ai[1] += 2;
                         if (Main.myPlayer == Projectile.owner)
                         {
                             for (int i = -1; i <= 1; i++)
                             {
-                                Vector2 vel = Projectile.velocity.RotatedBy(i * MathHelper.Pi / 3);
+                                Vector2 vel = Projectile.velocity.RotatedBy(i * MathHelper.Pi / 28);
                                 Projectile.NewProjectile(null, Projectile.Center, vel, ModContent.ProjectileType<FlySpearProj>(),
                                     (int)System.Math.Sqrt(Projectile.damage), Projectile.knockBack, Main.myPlayer);
                             }
                         }
-                        if (Projectile.ai[1] > 20)
+                        if (Projectile.ai[1] > 10)
                         {
                             Projectile.ai[0]++;
                         }

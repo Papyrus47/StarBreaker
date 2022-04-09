@@ -78,8 +78,10 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.BossB
                             }
                             if (Main.netMode != 1)
                             {
-                                Projectile.NewProjectile(null, NPC.Center, ToTarget.SafeNormalize(default) * 5, ModContent.ProjectileType<LostSword2>(),
-                                     90, 1.3f, Main.myPlayer, 3);
+                                Projectile projectile = Projectile.NewProjectileDirect(null, NPC.Center, ToTarget.SafeNormalize(default) * 15, ModContent.ProjectileType<CopperSawHead>(),
+                                     90, 1.3f, Main.myPlayer);
+                                projectile.hostile = true;
+                                projectile.friendly = false;
                             }
                         }
                         break;

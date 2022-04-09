@@ -19,7 +19,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword
             Projectile.penetrate = -1;
             Projectile.width = Projectile.height = 18;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
         }
         public override void AI()
         {

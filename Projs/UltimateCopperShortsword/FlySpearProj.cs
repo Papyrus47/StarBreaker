@@ -22,7 +22,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword
             Projectile.hostile = false;
             Projectile.aiStyle = -1;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 0;
         }
         public override void AI()
         {
@@ -37,13 +37,6 @@ namespace StarBreaker.Projs.UltimateCopperShortsword
                 {
                     if (target != null)
                     {
-                        Vector2 proj_vel = target.Center - Projectile.Center;
-                        if (proj_vel != Vector2.Zero)
-                        {
-                            proj_vel.Normalize();
-                            proj_vel *= 14f;
-                        }
-                        Projectile.velocity = (Projectile.velocity * 4 + proj_vel) / 5;//速度渐变
                         if (target.active && target.CanBeChasedBy() && !target.friendly)
                         {
                             Projectile.gfxOffY = target.gfxOffY;
