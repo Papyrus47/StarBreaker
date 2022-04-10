@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace StarBreaker.Items
+namespace StarBreaker.Items.ItemTiles
 {
     public class StarHardRock : ModItem
     {

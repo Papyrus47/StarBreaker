@@ -12,7 +12,7 @@ namespace StarBreaker.Items.Weapon.NoHardMode
             DisplayName.SetDefault("Stone sword");
             DisplayName.AddTranslation((int)GameCulture.CultureName.Chinese, "石剑");
             Tooltip.SetDefault("emm...This sword is \" HARD \"");
-            Tooltip.AddTranslation((int)GameCulture.CultureName.Chinese, "唔...这剑是很\" HARD \"");
+            Tooltip.AddTranslation((int)GameCulture.CultureName.Chinese, "唔...这剑是很\" 硬 \"");
         }
         public override void SetDefaults()
         {

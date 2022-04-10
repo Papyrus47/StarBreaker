@@ -25,7 +25,7 @@ namespace StarBreaker.Tiles
             AddMapEntry(Color.Purple, name);
 
             MinPick = 200;//最低稿力
-            ItemDrop = ModContent.ItemType<Items.StarHardRock>();
+            ItemDrop = ModContent.ItemType<Items.ItemTiles.StarHardRock>();
             SoundType = SoundID.Tink;
             SoundStyle = 1;
         }
