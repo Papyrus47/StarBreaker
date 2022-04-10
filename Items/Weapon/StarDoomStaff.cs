@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using StarBreaker.Projs.StarDoomStaff;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -17,6 +18,7 @@ namespace StarBreaker.Items.Weapon
             Tooltip.SetDefault("2%标记伤害\n" +
                 "(标记伤害取玩家召唤伤害加成与玩家防御的与玩家的血量的和后,乘以2%)\n" +
                 "使用时 如果没有敌人,则标记距离玩家最近的敌人\n" +
+                "悬浮在玩家背后\n" +
                 "随机使用以下水晶:\n" +
                 "爆炸水晶:触碰方块发射爆炸\n" +
                 "控制水晶:控制敌人\n" +
@@ -32,48 +34,25 @@ namespace StarBreaker.Items.Weapon
             Item.damage = 210;
             Item.DamageType = DamageClass.Summon;
             Item.knockBack = 3.2f;
-            Item.useTime = Item.useAnimation = 1;
+            Item.useTime = Item.useAnimation = 5;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.crit = 61;
             Item.mana = 2;
             Item.autoReuse = true;
-            Item.useTurn = false;
+            Item.useTurn = true;
             Item.value = 5130142;
             Item.UseSound = SoundID.Item101;
             Item.rare = ItemRarityID.Red;
-            Item.shoot = ModContent.ProjectileType<Projs.StarDoomStaff.StarBoomCrystal>();
-            Item.shootSpeed = 30;
+            Item.channel = true;
+            Item.noUseGraphic = true;
         }
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override void HoldItem(Player player)
         {
-            position += Main.rand.NextVector2Unit() * Main.rand.NextFloat(60, 80);
-            type = Main.rand.Next(new int[]{
-            ModContent.ProjectileType<Projs.StarDoomStaff.StarBoomCrystal>(),
-            ModContent.ProjectileType<Projs.StarDoomStaff.StarControlCrystal>()}
-            );
-            if (type == ModContent.ProjectileType<Projs.StarDoomStaff.StarControlCrystal>() && player.ownedProjectileCounts[ModContent.ProjectileType<Projs.StarDoomStaff.StarControlCrystal>()] > 5)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<StarDoomStaffProj>()] == 0)
             {
-                type = ModContent.ProjectileType<Projs.StarDoomStaff.StarCrystal>();
+                Main.projectile[Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.Center, Vector2.Zero,
+                    ModContent.ProjectileType<StarDoomStaffProj>(),Item.damage,Item.knockBack, player.whoAmI)].originalDamage = Item.damage;
             }
-        }
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            if (!player.HasMinionAttackTargetNPC)
-            {
-                float max = 1200;
-                foreach (NPC npc in Main.npc)
-                {
-                    float dis = Vector2.Distance(npc.position, player.position);
-                    if (npc.active && dis < max && npc.CanBeChasedBy() && !npc.friendly)
-                    {
-                        max = dis;
-                        player.MinionAttackTargetNPC = npc.whoAmI;
-                    }
-                }
-            }
-            else Main.npc[player.MinionAttackTargetNPC].GetGlobalNPC<NPCs.StarGlobalNPC>().StarDoomMark = true;
-            Main.projectile[Projectile.NewProjectile(player.GetProjectileSource_Item(Item), position, (Main.MouseWorld - position).SafeNormalize(default) * Item.shootSpeed, type, damage, knockback, player.whoAmI)].originalDamage = damage;
-            return false;
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -81,11 +60,11 @@ namespace StarBreaker.Items.Weapon
             {
                 if (line.mod == "Terraria")
                 {
-                    if (line.Name == "Tooltip0" || line.Name == "Tooltip3" || line.Name == "Tooltip8")
+                    if (line.Name == "Tooltip0" || line.Name == "Tooltip3" || line.Name == "Tooltip9")
                     {
                         line.overrideColor = Color.Purple * 0.8f;
                     }
-                    else if (line.Name == "Tooltip9")
+                    else if (line.Name == "Tooltip10")
                     {
                         line.overrideColor = Color.Red * 0.8f;
                     }

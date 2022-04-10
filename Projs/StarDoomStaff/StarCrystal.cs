@@ -28,15 +28,7 @@ namespace StarBreaker.Projs.StarDoomStaff
             {
                 Projectile.timeLeft = 2;
             }
-            if (!Main.player[Projectile.owner].HasMinionAttackTargetNPC)
-            {
-                Player player = Main.player[Projectile.owner];
-                Projectile.position = player.position + new Vector2(0, -100);
-                Projectile.velocity = Vector2.Zero;
-                Projectile.rotation = -MathHelper.PiOver4;
-                Projectile.extraUpdates = 0;
-            }
-            else
+            if(Main.player[Projectile.owner].HasMinionAttackTargetNPC)
             {
                 Projectile.extraUpdates = 2;
                 Projectile.velocity = (Projectile.velocity * 10 + (Projectile.OwnerMinionAttackTargetNPC.position - Projectile.position) * 0.1f) / 11;

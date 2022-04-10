@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using StarBreaker.Items.Weapon;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -45,79 +46,132 @@ namespace StarBreaker.Projs
             }
             Projectile.damage = Projectile.originalDamage + (int)Math.Abs(Projectile.localAI[0] * 5);
             Player player = Main.player[Projectile.owner];
-            switch (Projectile.ai[0])
+            if (Projectile.timeLeft <= 950)
             {
-                case 0://左键使用
-                    {
-                        if (!player.active)
+                Projectile.hostile = Projectile.ai[0] == 3;
+                switch (Projectile.ai[0])
+                {
+                    case 0://左键使用
                         {
-                            Projectile.active = false;
-                            return;
-                        }
-                        if (!player.channel)
-                        {
-                            Projectile.Kill();
-                        }
-                        else
-                        {
-                            Projectile.timeLeft = 2;
-                        }
-                        Projectile.direction = Projectile.spriteDirection = (Projectile.velocity.X > 0f) ? 1 : -1;
-                        if (Projectile.spriteDirection == -1)
-                        {
-                            Projectile.rotation += MathHelper.Pi;
-                        }
-                        Projectile.timeLeft = 2;
-                        player.ChangeDir(Projectile.direction);
-                        player.heldProj = Projectile.whoAmI;
-                        player.itemTime = 2;
-                        player.itemAnimation = 2;
-                        player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
-                            Projectile.velocity.X * Projectile.direction);
-                        if (Projectile.owner == Main.myPlayer)
-                        {
-                            Projectile.velocity = (Main.MouseWorld - Projectile.Center) * 0.2f;
-                        }
-                        break;
-                    }
-                case 1://右键使用
-                    {
-                        if (Projectile.OwnerMinionAttackTargetNPC == null || !Projectile.OwnerMinionAttackTargetNPC.active || !Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy())
-                        {
-                            float max = 3000;
-                            foreach (NPC npc in Main.npc)
+                            if (!player.active)
                             {
-                                float dis = npc.position.Distance(Projectile.position);
-                                if (npc.active && npc.CanBeChasedBy() && !npc.friendly && dis < max)
+                                Projectile.active = false;
+                                return;
+                            }
+                            if (!player.channel)
+                            {
+                                Projectile.ai[0] = 2;
+                            }
+                            Projectile.direction = Projectile.spriteDirection = (Projectile.velocity.X > 0f) ? 1 : -1;
+                            if (Projectile.spriteDirection == -1)
+                            {
+                                Projectile.rotation += MathHelper.Pi;
+                            }
+                            Projectile.timeLeft = 950;
+                            player.ChangeDir(Projectile.direction);
+                            player.heldProj = Projectile.whoAmI;
+                            player.itemTime = 2;
+                            player.itemAnimation = 2;
+                            player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
+                                Projectile.velocity.X * Projectile.direction);
+                            if (Projectile.owner == Main.myPlayer)
+                            {
+                                Projectile.velocity = (Main.MouseWorld - Projectile.Center) * 0.2f;
+                            }
+                            break;
+                        }
+                    case 1://右键使用
+                        {
+                            if (Projectile.OwnerMinionAttackTargetNPC == null || !Projectile.OwnerMinionAttackTargetNPC.active || !Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy() || player.altFunctionUse == 2)
+                            {
+                                float max = 3000;
+                                foreach (NPC npc in Main.npc)
                                 {
-                                    player.MinionAttackTargetNPC = npc.whoAmI;
-                                    max = dis;
+                                    float dis = npc.Center.Distance(player.Center);
+                                    if (npc.active && npc.CanBeChasedBy() && !npc.friendly && dis < max)
+                                    {
+                                        player.MinionAttackTargetNPC = npc.whoAmI;
+                                        max = dis;
 
+                                    }
+                                }
+                                if (player.whoAmI == Main.myPlayer && Projectile.timeLeft % 30 == 0)
+                                {
+                                    Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 30;
                                 }
                             }
+                            else
+                            {
+                                Vector2 toTarget = Projectile.OwnerMinionAttackTargetNPC.position - Projectile.position;
+                                float vel = toTarget.Length() > 200 ? toTarget.Length() * 0.1f : 30;
+                                Projectile.velocity = toTarget.SafeNormalize(default) * vel;
+                                Projectile.timeLeft = 950;
+                            }
+                            if (player.altFunctionUse == 2) Projectile.ai[0] = 3;
+                            if (Projectile.timeLeft < 800 || player.channel)
+                            {
+                                Projectile.ai[0] = 0;
+                            }
+                            break;
                         }
-                        else
+                    case 2://星辰旋刃-回来
                         {
-                            Vector2 toTarget = Projectile.OwnerMinionAttackTargetNPC.position - Projectile.position;
-                            float vel = toTarget.Length() > 50 ? toTarget.Length() * 0.1f : 20;
-                            Projectile.velocity = toTarget.SafeNormalize(default) * vel;
-                            Projectile.timeLeft = 1000;
+                            Projectile.velocity = (player.Center - Projectile.Center).RealSafeNormalize() * 30;
+                            if (Vector2.Distance(player.Center, Projectile.Center) < 50)
+                            {
+                                Projectile.Kill();
+                            }
+                            if (player.altFunctionUse == 2)
+                            {
+                                Projectile.ai[0] = 3;
+                            }
+                            if (player.channel)
+                            {
+                                Projectile.ai[0] = 0;
+                            }
+                            break;
                         }
-                        if (Projectile.timeLeft < 800 || (player.whoAmI == Main.myPlayer && Main.mouseLeft))
+                    case 3://切割其他弹幕
                         {
-                            Projectile.ai[0] = 2;
+                            Projectile projectile = null;
+                            Projectile.timeLeft = 950;
+                            float max = 1200;
+                            foreach(Projectile proj in Main.projectile)
+                            {
+                                float dis = Vector2.Distance(player.Center, proj.Center);
+                                if(proj.active && (!proj.friendly || proj.hostile) && max > dis && proj != Projectile)
+                                {
+                                    max = dis;
+                                    projectile = proj;
+                                }
+                            }
+                            if (projectile != null)
+                            { 
+                                Projectile.velocity = (projectile.Center - Projectile.Center).RealSafeNormalize() * 30;
+                                if (Vector2.Distance(projectile.Center, Projectile.Center) < Projectile.width)
+                                {
+                                    projectile.Kill();
+                                }
+                            }
+                            else
+                            {
+                                Projectile.ai[0] = 1;
+                                if (player.channel)
+                                {
+                                    Projectile.ai[0] = 0;
+                                }
+                            }
+                            break;
                         }
-                        break;
-                    }
-                case 2://星辰旋刃-回来
-                    {
-                        Projectile.velocity = (player.Center - Projectile.Center).RealSafeNormalize() * 30;
-                        if(Vector2.Distance(player.Center,Projectile.Center) < 50)
-                        {
-                            Projectile.Kill();
-                        }
-                        break;
-                    }
+                }
+                if (player.HeldItem.type != ModContent.ItemType<StarSpiralBlade>())
+                {
+                    Projectile.timeLeft = 950;
+                    Projectile.hostile = true;
+                    Vector2 toTarget = player.Center - Projectile.Center;
+                    float vel = toTarget.Length() > 200 ? toTarget.Length() * 0.1f : 30;
+                    Projectile.velocity = toTarget.SafeNormalize(default) * vel;
+                }
             }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -126,24 +180,19 @@ namespace StarBreaker.Projs
             target.GetGlobalNPC<NPCs.StarGlobalNPC>().StarSpiralBladeProj = Projectile.whoAmI;
             if (Projectile.localAI[1] == 0)
             {
-                int dama = (int)((damage * 1.5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
+                int dama = (int)((damage * 5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
                 if (dama <= 0) dama = 1;
-                target.life -= dama;
+                target.StrikeNPC(dama, knockback, 10);
                 Main.player[Projectile.owner].dpsDamage += dama;
-                target.HitEffect(0, 10);
-                target.checkDead();
-                CombatText.NewText(target.Hitbox, Color.Purple, dama);
                 if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
             }
             else
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    int dama = (int)((damage * 0.2f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
+                    int dama = (int)((damage * 2.5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
                     if (dama <= 0) dama = 1;
-                    target.life -= dama;
-                    Main.player[Projectile.owner].dpsDamage += dama;
-                    CombatText.NewText(target.Hitbox, Color.Purple, dama);
+                    target.StrikeNPC(dama, knockback, 10);
                     if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
                 }
                 target.HitEffect(0, 10);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StarBreaker.Items.Weapon;
 using System;
 using Terraria;
 using Terraria.GameContent;
@@ -66,6 +67,10 @@ namespace StarBreaker.Projs
                                 player.statLife += da;
                                 if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
                                 target.Kill();
+                                if(player.HeldItem.type != ModContent.ItemType<StarBreakerW>())
+                                {
+                                    Projectile.Kill();
+                                }
                             }
                         }
                     }
