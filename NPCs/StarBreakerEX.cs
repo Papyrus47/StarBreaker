@@ -115,10 +115,10 @@ namespace StarBreaker.NPCs
                             }
                             else if (Timer1 / 50 >= 10 && Timer1 / 50 < 11)
                             {
-                                int npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.EXSDMG>());
-                                Main.npc[npc1].realLife = NPC.whoAmI;
-                                int npc2 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.EXVortexBeater>());
-                                Main.npc[npc2].realLife = NPC.whoAmI;
+                                //int npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.EXSDMG>());
+                                //Main.npc[npc1].realLife = NPC.whoAmI;
+                                //int npc2 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.EXVortexBeater>());
+                                //Main.npc[npc2].realLife = NPC.whoAmI;
                             }
                             Main.NewText(_sayText[(int)(Timer1 / 50)], color);
                         }

@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace StarBreaker.Projs
@@ -30,6 +32,15 @@ namespace StarBreaker.Projs
             {
                 Projectile.Kill();
             }
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.End();//通过end结束上面的绘制
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.Additive,SamplerState.PointWrap,
+                DepthStencilState.None,RasterizerState.CullNone,null);//开始自己的绘制,让它一次性绘制激光
+            Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Projs/IceThorn").Value;
+            Main.spriteBatch.Draw(texture,Projectile.Center - Main.screenPosition, new Rectangle(0,0,texture.Width * 2,120), Color.White);
+            return false;
         }
         public override bool? CanDamage()
         {
