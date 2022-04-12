@@ -38,13 +38,12 @@ namespace StarBreaker.Projs
             Main.spriteBatch.End();//通过end结束上面的绘制
             Main.spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.Additive,SamplerState.PointWrap,
                 DepthStencilState.None,RasterizerState.CullNone,null);//开始自己的绘制,让它一次性绘制激光
-            Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Projs/IceThorn").Value;
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Type].Value;
             Main.spriteBatch.Draw(texture,Projectile.Center - Main.screenPosition, new Rectangle(0,0,texture.Width * 2,120), Color.White);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin();
             return false;
         }
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
     }
 }
