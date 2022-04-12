@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using StarBreaker.Projs.StarGhostKnife;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -24,15 +25,31 @@ namespace StarBreaker.Items.Weapon
             Item.width = 20;
             Item.height = 20;
             Item.useStyle = 1;
+            Item.shoot = ModContent.ProjectileType<GhostFireHit>();
+            Item.shootSpeed = 9f;
             Item.damage = 210;
             Item.DamageType = DamageClass.Melee;
             Item.useTime = Item.useAnimation = 38;
             Item.rare = ItemRarityID.Red;
             Item.value = 13100232;
+            Item.noUseGraphic = true;
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            return false;
+            ref int ghostAttack = ref player.GetModPlayer<StarPlayer>().GhostSwordAttack;//通过ref 与 鬼刀攻击ai挂钩
+            switch ((StarGhostKnifeAtk)ghostAttack)
+            {
+                case StarGhostKnifeAtk.GhostFireHit://鬼影斩
+                    {
+                        ghostAttack++;
+                        break;
+                    }
+                case StarGhostKnifeAtk.LunarSlash://满月斩
+                    {
+                        break;
+                    }
+            }
+            return true;
         }
         public override bool AltFunctionUse(Player player)
         {

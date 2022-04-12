@@ -7,6 +7,9 @@ using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.GameContent;
+using StarBreaker.Items.Weapon;
+using Terraria.Utilities;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace StarBreaker
 {
@@ -102,6 +105,10 @@ namespace StarBreaker
                     null,
                     Color.White);
             }
+            if(Player.HeldItem.type == ModContent.ItemType<StarGhostKnife>())//如果玩家手持星辰鬼刀
+            {
+                Utils.DrawBorderString(Main.spriteBatch, "", Player.Center - new Vector2(0, 30) - Main.screenPosition, Color.Purple);
+            }
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
@@ -182,7 +189,7 @@ namespace StarBreaker
             if (StarBreaker.ToggleGhostSwordAttack.JustPressed)
             {
                 GhostSwordAttack++;
-                if (GhostSwordAttack > 2) GhostSwordAttack = 0;
+                if (GhostSwordAttack > (int)StarGhostKnifeAtk.Buraxiu) GhostSwordAttack = 0;//如果不处于任何一种攻击状态
                 else if (GhostSwordAttack < 0) GhostSwordAttack = 0;
             }
         }
@@ -216,5 +223,19 @@ namespace StarBreaker
                 Main.screenPosition = Main.npc[FrostFistModScr].position - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
             }
         }
+    }
+    public enum StarGhostKnifeAtk
+    {
+        Kalla,//冥炎之卡洛
+        GhostFireHit,//鬼炎斩
+        StoneShower,//死亡墓碑
+        KeiGa,//残影之凯贾
+        LunarSlash,//满月斩
+        Puchumeng,//侵蚀之普戾蒙
+        SaYa,//冰霜之萨亚
+        GhostSlash,//鬼影闪
+        Rhasa,//瘟疫之罗刹
+        Kazan,//刀魂卡赞
+        Buraxiu,//第七鬼神 怖拉修
     }
 }

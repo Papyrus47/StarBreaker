@@ -3,7 +3,7 @@ using StarBreaker.Projs.Type;
 
 namespace StarBreaker.Projs.TheGhost
 {
-    class Raksha : Ghost
+    class Rhasa : Ghost
     {
         public override void SetStaticDefaults()
         {
