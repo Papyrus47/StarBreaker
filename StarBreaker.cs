@@ -95,6 +95,7 @@ namespace StarBreaker
                 chargeUser.SetState(chargeUIState);
             }
             #endregion
+            StarBreakerLoadString.LoadString();
         }
         public override void PostSetupContent()
         {

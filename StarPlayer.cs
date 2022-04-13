@@ -10,6 +10,8 @@ using Terraria.GameContent;
 using StarBreaker.Items.Weapon;
 using Terraria.Utilities;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Localization;
+using StarBreaker.Projs.StarGhostKnife;
 
 namespace StarBreaker
 {
@@ -20,6 +22,10 @@ namespace StarBreaker
         public int FrostFistModScr = -1;
         public int SummonStarShieldTime;
         public int GhostSwordAttack;
+        public readonly Dictionary<StarGhostKnifeAtk, string> GhostSwordName = new()
+        {
+            {StarGhostKnifeAtk.Kalla,"冥炎之卡洛" } 
+        };
         public Item Bullet1;
         public Item Bullet2;
         public int StarCharge;
@@ -107,7 +113,7 @@ namespace StarBreaker
             }
             if(Player.HeldItem.type == ModContent.ItemType<StarGhostKnife>())//如果玩家手持星辰鬼刀
             {
-                Utils.DrawBorderString(Main.spriteBatch, "", Player.Center - new Vector2(0, 30) - Main.screenPosition, Color.Purple);
+                Utils.DrawBorderString(Main.spriteBatch, "$Mods.StarBreaker.StarGhostKnife" + (GhostSwordAttack + 1).ToString(), Player.Center - new Vector2(90, 80) - Main.screenPosition, Color.Purple);
             }
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
@@ -221,6 +227,10 @@ namespace StarBreaker
             if (FrostFistModScr != -1)
             {
                 Main.screenPosition = Main.npc[FrostFistModScr].position - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
+            }
+            if(Player.heldProj >= 0 && Main.projectile[Player.heldProj].type == ModContent.ProjectileType<GhostFireHit>() && Main.projectile[Player.heldProj].frame % 6 == 0)
+            {
+                Main.screenPosition += Main.rand.NextVector2Unit() * 8;
             }
         }
     }
