@@ -84,11 +84,11 @@ namespace StarBreaker.Items.Weapon
         {
             foreach (TooltipLine line in tooltips)
             {
-                if (line.mod == "Terraria" && line.Name == "ItemName")
+                if (line.mod == "Terraria" && (line.Name == "ItemName" || line.Name == "Damage"))
                 {
                     line.overrideColor = new Color?(new Color((int)Math.Sqrt(Main.time), 1, (int)Math.Sqrt(Main.time)));
                 }
-                if(line.mod == "Terraria" && line.text =="Tooltip5")
+                if(line.mod == "Terraria" && line.Name == "Tooltip3")
                 {
                     line.overrideColor = Color.Red;
                 }

@@ -24,7 +24,7 @@ namespace StarBreaker.Projs.StarGhostKnife
             Projectile.width = Projectile.height = 358;
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 8;
+            Projectile.localNPCHitCooldown = 4;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 100;
