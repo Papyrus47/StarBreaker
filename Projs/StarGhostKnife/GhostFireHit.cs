@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.GameContent;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace StarBreaker.Projs.StarGhostKnife
 {
@@ -48,6 +49,7 @@ namespace StarBreaker.Projs.StarGhostKnife
                         player.KillMe(PlayerDeathReason.ByCustomReason(player.name + "鬼神之力的过度使用"), 10, player.direction);
                     }
                     player.velocity.X = Projectile.velocity.X > 0 ? 6 : -6;
+                    if(Projectile.frame < 16) SoundEngine.PlaySound(SoundID.Item1.SoundId,(int)player.Center.X,(int)player.Center.Y,1,4.5f,-0.5f);
                 }
                 if (player.dead) Projectile.Kill();
                 player.heldProj = Projectile.whoAmI;
@@ -56,7 +58,7 @@ namespace StarBreaker.Projs.StarGhostKnife
                 player.ChangeDir(Projectile.direction);
                 Projectile.position = player.MountedCenter - Projectile.Size / 2f + new Vector2(0,50);
                 Projectile.timeLeft = 2;
-                Projectile.damage = player.GetWeaponDamage(player.HeldItem) * 100;
+                Projectile.damage = player.GetWeaponDamage(player.HeldItem) * 1500;
                 PlayerHeadFrame(player);
             }
             else
@@ -106,7 +108,8 @@ namespace StarBreaker.Projs.StarGhostKnife
         public override void PostDraw(Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Main.spriteBatch.Draw(texture,Projectile.Center,null,lightColor * 0.2f,0f,texture.Size() * 0.5f,
+            Main.spriteBatch.Draw(texture,Projectile.Center - new Vector2(0, 70) - Main.screenPosition,new Rectangle(0,texture.Height / 18 * (Projectile.frame - 1),texture.Width,texture.Height / 18)
+                ,Color.Purple * 0.45f,0f,new Vector2(texture.Width,texture.Height / 18)* 0.5f,
                 1.2f,Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,0f);
         }
     }
