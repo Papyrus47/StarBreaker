@@ -6,11 +6,13 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace StarBreaker.Items.Weapon
 {
     public class StarGhostKnife : ModItem
     {
+        private int _MyOwner = -1;
         private int GetGhostAttack(Player player) => player.GetModPlayer<StarPlayer>().GhostSwordAttack;
         private void SetGhostAttack(Player player, int attack) => player.GetModPlayer<StarPlayer>().GhostSwordAttack = attack;
         public override void SetStaticDefaults()
@@ -43,6 +45,51 @@ namespace StarBreaker.Items.Weapon
         public override bool CanUseItem(Player player)
         {
             return base.CanUseItem(player);
+        }
+        public override bool OnPickup(Player player)
+        {
+            _MyOwner = player.whoAmI;
+            return base.OnPickup(player);
+        }
+        public override void SaveData(TagCompound tag)
+        {
+            tag["myOnwer"] = _MyOwner;
+        }
+        public override void LoadData(TagCompound tag)
+        {
+            _MyOwner = tag.GetInt("myOnwer");
+        }
+        public override void PostUpdate()
+        {
+            try
+            {
+                if (_MyOwner >= 0)
+                {
+                    Player player = Main.player[_MyOwner];
+                    for(int i =0;i<58;i++)
+                    {
+                        if(player.inventory[i].stack == 0 || !player.inventory[i].active)
+                        {
+                            player.inventory[i] = Item.Clone();
+                            break;
+                        }
+                        else if(i == 57 && player.inventory[i].active)
+                        {
+                            player.inventory[i] = Item.Clone();
+                        }
+                    }
+                    Item.TurnToAir();
+                    PopupText.NewText(new AdvancedPopupRequest()
+                    {
+                        Text = "你无法丢弃它,除开销毁",
+                        DurationInFrames = 120,
+                        Velocity = new Vector2(0, -4),
+                        Color = Color.White
+                    }, player.Center);
+                }
+            }
+            catch { }
+            base.PostUpdate();
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

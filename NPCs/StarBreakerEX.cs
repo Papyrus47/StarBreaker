@@ -8,24 +8,25 @@ using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using StarBreaker.Projs;
 
 namespace StarBreaker.NPCs
 {
     public class StarBreakerEX : FSMNPC
     {
-        private readonly string[] _sayText = {
+        private string[] _sayText = {
         "很好",
-        "我们最终还是击败了某个boss",
-        "现在，我需要新的 主人",
+        "我们最终还是击败了月球领主",
+        "现在,我需要知道我们的关系",
         "我以前的那个主人兼制造者...疯了",
         "他一疯，拳套一走，我们就失去了控制",
         "现在,我要重新击败他",
-        "什么?我要主人做什么?",
-        "xswl，我也不知道",
-        "终于有个像样的对手了,我可不会放水了",
-        "顺带一提,我忘记给你看看我的特殊能力了",
-        "我的魔法可以操控两把枪",
-        "温馨提示:不要撞墙"
+        "所以我现在要对你进行试炼",
+        "不然你怎么能打败他?",
+        "我不会放水了",
+        "顺带一提,我还藏着4把武器没给你展示过",
+        "那么来吧,进行这一场决斗",
+        "我会很高兴你能够击败我的"
         };
         private Vector2 _enCenter;
         public override string Texture => "StarBreaker/NPCs/StarBreakerN";
@@ -58,6 +59,7 @@ namespace StarBreaker.NPCs
             NPC.boss = true;
             NPC.lifeMax = (Main.masterMode) ? 120000 : (Main.expertMode) ? 60000 : 30000;
             NPC.knockBackResist = 0f;
+            NPC.damage = 50;
             NPC.defense = 18;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
@@ -92,9 +94,10 @@ namespace StarBreaker.NPCs
                 if (NPC.velocity.Y > 20) NPC.active = false;//到达一定的下坠速度就自杀
                 return;
             }
-            Vector2 toTarget = (Target.Center - NPC.Center).SafeNormalize(Vector2.Zero);//到玩家的单位向量
+            Vector2 toTarget = Target.Center - NPC.Center;//到玩家的单位向量
             NPC.spriteDirection = NPC.direction = NPC.velocity.X < 0 ? 1 : -1;//npc朝向
-            Enchantment();
+            int damage = NPC.damage;
+            if (Main.expertMode || Main.masterMode) damage /= 2;
             switch (State)
             {
                 case 0://开幕
@@ -110,155 +113,176 @@ namespace StarBreaker.NPCs
                                 Timer1 = 0;
                                 State++;
                                 NPC.dontTakeDamage = false;
+                                _sayText = null;//释放内存,避免再吃更多内存
                                 _enCenter = Target.Center;
                                 break;
                             }
                             else if (Timer1 / 50 >= 10 && Timer1 / 50 < 11)
                             {
-                                //int npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.EXSDMG>());
-                                //Main.npc[npc1].realLife = NPC.whoAmI;
-                                //int npc2 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.EXVortexBeater>());
-                                //Main.npc[npc2].realLife = NPC.whoAmI;
+                                int npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.AntiTankGun>());
+                                Main.npc[npc1].realLife = NPC.whoAmI;
+                                npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.FocusFlamethrower>());
+                                Main.npc[npc1].realLife = NPC.whoAmI;
+                                npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y + 500, ModContent.NPCType<StarBreakerEXGunNPC.GatlingGun>());
+                                Main.npc[npc1].realLife = NPC.whoAmI;
+                                npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y + 500, ModContent.NPCType<StarBreakerEXGunNPC.SpikedCannon>());
+                                Main.npc[npc1].realLife = NPC.whoAmI;
                             }
                             Main.NewText(_sayText[(int)(Timer1 / 50)], color);
                         }
                         break;
                     }
-                case 1://发射平行散弹
+                case 1://星击随机使用一把武器,对玩家攻击
+                    {
+                        if(Timer3 == 0)
+                        {
+                            Timer3 = Main.rand.Next(1, 5);
+                            switch(Timer3)
+                            {
+                                case 1:FightSayText("M-137格林机枪,用你的速度撕裂他!"); break;
+                                case 2:FightSayText("反坦克炮,炸烂他的身体!");break;
+                                case 3:FightSayText("你能躲过我的聚焦喷火器?");break;
+                                case 4:FightSayText("FM-92刺弹炮,刺入爆炸!");break;
+                            }
+                            if(Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                _ = Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<StarShield>(),
+                                    0, 0, Main.myPlayer, NPC.whoAmI);
+                            }
+                        }
+                        else
+                        {
+                            NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize() * 10;
+                            NPC.Center -= NPC.velocity;
+                            Timer1++;
+                            if(Timer1 > 300)
+                            {
+                                Timer1 = 0;
+                                Timer3 = 0;
+                                State++;
+                            }
+                        }
+                        break;
+                    }
+                case 2://星击自己发射子弹
+                    {
+                        NPC.velocity = toTarget * 0.015f;
+                        Timer1++;
+                        if (Timer1 > 20 - (toTarget.Length() * 0.001f))//根据距离微调发射时间
+                        {
+                            if (Timer2 < 10)
+                            {
+                                Timer1 = 0;
+                                if (Timer2 == 0)//这是说话
+                                {
+                                    FightSayText("停火!我自己开火");
+                                }
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
+                                {
+                                    int type = RandBullets();
+                                    for (float i = -5; i <= 5; i++)
+                                    {
+                                        Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + NPC.velocity.RealSafeNormalize();
+                                        Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
+                                    }
+                                    SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
+                                }
+                            }
+                            else
+                            {
+                                Timer1 = Timer2 = 0;
+                                State++;
+                                break;
+                            }
+                            Timer2++;
+                        }
+                        break;
+                    }
+                case 3://同步行动,开始大火力输出
                     {
                         Timer1++;
-                        float speed = (float)Math.Sqrt((NPC.Center - Target.Center).Length());
-                        NPC.velocity = speed * toTarget * 0.2f;
-                        if (Timer1 - speed > 40)
+                        NPC.velocity = toTarget * 0.015f;
+                        if (Timer1 == 10)
                         {
-                            int bullet = RandBullets();
-                            if (Main.netMode != 1)
+                            FightSayText("同步行动,瞄准他!");
+                        }
+                        else if(Timer1 == 20)
+                        {
+                            FightSayText("开火!");
+                        }
+                        else if(Timer1 > 20 && Timer1 % 30 == 0)
+                        {
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                for (int i = -5; i <= 5; i++)
+                                int type = RandBullets();
+                                for (float i = -5; i <= 5; i++)
                                 {
-                                    Vector2 ves = NPC.velocity.SafeNormalize(default) * 5;
-                                    Vector2 center = NPC.Center + ((ves.ToRotation() - MathHelper.PiOver2).ToRotationVector2() * i * 10);
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), center, ves, bullet,
-                                        50, 2.3f, Main.myPlayer);
+                                    Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + NPC.velocity.RealSafeNormalize();
+                                    Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
                                 }
                                 SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                             }
                             Timer2++;
-                            Timer1 = 0;
-                            if (Timer2 > 10)
+                            if(Timer2 > 10)
                             {
-                                Timer2 = 0;
+                                Timer1 = Timer2 = Timer3 = 0;
                                 State++;
                             }
                         }
                         break;
                     }
-                case 2://发射星星
+                case 4://包围射击,在玩家运动路程过长后
                     {
-                        Timer1++;
-                        float speed = (float)Math.Sqrt((NPC.Center - Target.Center).Length());
-                        NPC.velocity = speed * toTarget * 0.2f;
-                        if (Timer1 > 30 && Main.netMode != 1)
+                        Timer2 += Target.velocity.Length();
+                        NPC.velocity *= 0.9f;
+                        Timer1 += 0.5f;
+                        if (Timer2 < 800)
                         {
-                            int damage = Main.rand.Next(100, 120) / (Main.expertMode ? 2 : 1);
-                            Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, toTarget * 5,
-                                 RandBullets(), damage, 1.5f, Main.myPlayer);
-                            Timer1 = 0;
-                            Timer2++;
-                            SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
-                        }
-                        else if (Timer2 > 5)
-                        {
-                            Timer1 = 0;
-                            Timer2 = 0;
-                            State++;
-                        }
-                        break;
-                    }
-                case 3://拼刺刀!
-                    {
-                        if (Timer1 <= 0)
-                        {
-                            Timer1 = 50;
-                            NPC.velocity = toTarget * 20;
-                            Timer2++;
-                            if (Timer2 > 5)
+                            if(Timer3 == 0)
                             {
-                                Timer1 = 0;
-                                Timer2 = 0;
-                                State++;
+                                FightSayText("我们休息一下,只要你不动,我就无敌在这里,等到时间够长为止,或者你走的够多为止");
+                                NPC.dontTakeDamage = true;
+                                Timer3++;
                             }
-                        }
-                        else Timer1--;
-                        if (Vector2.Distance(Target.position, NPC.position) < 36)
-                        {
-                            Target.statLife -= 20;
-                            CombatText.NewText(Target.Hitbox, Color.Red, 20);
-                        }
-                        break;
-                    }
-                case 4://发射激光
-                    {
-                        switch (Timer3)
-                        {
-                            case 0://使速度变低
-                                {
-                                    NPC.velocity *= 0.9f;
-                                    if (NPC.velocity.Length() < 0.5f) Timer3++;
-                                    break;
-                                }
-                            case 1://发射一圈激光
-                                {
-                                    NPC.position = NPC.oldPosition;
-                                    if (NPC.velocity.Length() < 0.5f)
-                                    {
-                                        NPC.velocity = toTarget * 5;
-                                    }
-                                    else
-                                    {
-                                        NPC.velocity = NPC.velocity.RotatedBy(0.02f);
-                                        Timer1++;
-                                        if (Main.netMode != 1)
-                                        {
-                                            int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, NPC.velocity.RotatedBy(-0.02f),
-                                                ModContent.ProjectileType<Projs.StarLine>(), 100, 1.2f, Main.myPlayer);
-                                            Main.projectile[proj].friendly = false;
-                                            Main.projectile[proj].hostile = true;
-                                        }
-                                        if (Timer1 > 360)
-                                        {
-                                            Timer1 = 0;
-                                            Timer3 = 0;
-                                            State++;
-                                        }
-                                    }
-
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-                case 5://星辰 弹幕
-                    {
-                        if (!NPC.dontTakeDamage)
-                        {
-                            NPC.dontTakeDamage = true;
-                            if (Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                Timer2 = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), _enCenter, Vector2.Zero, ModContent.ProjectileType<Projs.ProjDrawStar>(), 1, 1, Main.myPlayer, _enCenter.X, _enCenter.Y);
-                            }
-
                         }
                         else
                         {
-                            NPC.velocity *= 0.85f;
-                            if (!Main.projectile[(int)Timer2].active || Main.projectile[(int)Timer2].type != ModContent.ProjectileType<Projs.ProjDrawStar>())
+                            Timer1 += 0.5f;
+                            if(Timer3 == 1)
                             {
-                                NPC.dontTakeDamage = false;
-                                Timer2 = 0;
-                                State++;
-                                NPC.velocity = Vector2.One;
+                                FightSayText("休息够了?来让我看看!");
+                                Timer3++;
                             }
+                        }
+                        if (Timer1 > 300)
+                        {
+                            Timer1 = Timer2 = Timer3 = 0;
+                            State++;
+                            NPC.dontTakeDamage = false;
+                        }
+                        break;
+                    }
+                case 5://难得的冲刺
+                    {
+                        Timer1--;
+                        if(Timer1<=0)
+                        {
+                            if(Timer2 == 0)
+                            {
+                                FightSayText("我来和你贴贴了~");
+                            }
+                            else NPC.velocity = toTarget.RealSafeNormalize() * 30;
+                            Timer2++;
+                            Timer1 = 40;
+                            if(Timer2 > 5)
+                            {
+                                Timer1 = Timer2 = 0;
+                                State++;
+                            }
+                        }
+                        else if(Timer1 < 20)
+                        {
+                            NPC.velocity *= 0.85f;
                         }
                         break;
                     }
@@ -283,19 +307,6 @@ namespace StarBreaker.NPCs
             }
             NPC.oldRot[0] = NPC.rotation;
             #endregion
-            #region 结界绘制
-            if (State != 0)
-            {
-                Texture2D textureEn = ModContent.Request<Texture2D>("StarBreaker/Projs/Type/EnergyProj").Value;
-                for (int i = 0; i < 4; i++)
-                {
-                    float rot = 0 + i * MathHelper.PiOver2 + MathHelper.PiOver2;
-                    Vector2 center = _enCenter + ((i * MathHelper.PiOver2).ToRotationVector2() * 1000) - screenPos;
-                    Main.spriteBatch.Draw(textureEn, center, null, Color.Purple,
-                        rot, textureEn.Size() * 0.5f, new Vector2(800, 1), SpriteEffects.None, 0f);
-                }
-            }
-            #endregion
             #region 残影
             for (int i = 0; i < NPC.oldPos.Length; i += 2)
             {
@@ -318,31 +329,15 @@ namespace StarBreaker.NPCs
             #endregion
             return true;
         }
-        private void Enchantment()//结界
+        private void FightSayText(string text)
         {
-            if (State == 0)
+            PopupText.NewText(new()
             {
-                return;
-            }
-            if (Target.Center.Y > (_enCenter + new Vector2(0, 1000)).Y)
-            {
-                Target.velocity.Y = 0;
-                Target.gravDir = 0;
-                Target.gravity = 0;
-            }
-            else if (Target.Center.Y < (_enCenter + new Vector2(0, -1000)).Y)
-            {
-                Target.velocity.Y = 0;
-            }
-            if (Target.Center.X < (_enCenter + new Vector2(-1000, 0)).X || Target.Center.X > (_enCenter + new Vector2(1000, 0)).X)
-            {
-                Target.velocity.X = 0;
-            }
-            if (Target.Center.X - (_enCenter + new Vector2(-1000, 0)).X < 5 || Target.Center.X - (_enCenter + new Vector2(1000, 0)).X > 5
-                || Target.Center.Y - (_enCenter + new Vector2(0, -1000)).Y < 5 || Target.Center.Y - (_enCenter + new Vector2(0, 1000)).Y > 5)
-            {
-                Target.position = _enCenter;
-            }
+                Color = Color.Purple,
+                DurationInFrames = 120,
+                Text = text,
+                Velocity = Vector2.UnitY * -5
+            }, NPC.Center);
         }
         private static int RandBullets()//随机子弹
         {

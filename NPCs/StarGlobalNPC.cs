@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using StarBreaker.Items.Weapon;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -49,6 +50,10 @@ namespace StarBreaker.NPCs
             {
                 damage += DrumHitDamage;
                 DrumHitDamage = 0;
+            }
+            if(StarBreakerSystem.downedStarBreakerNom && !Main.player[projectile.owner].HasItem(ModContent.ItemType<StarBreakerW>()))
+            {
+                Item.NewItem(npc.GetItemSource_Loot(), npc.Hitbox, ModContent.ItemType<StarBreakerW>());
             }
             base.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
         }

@@ -12,6 +12,7 @@ namespace StarBreaker.Items.Weapon
 {
     public class StarBreakerW : ModItem
     {
+        private bool _hasMe;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("星辰击碎者");
@@ -31,6 +32,7 @@ namespace StarBreaker.Items.Weapon
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.crit = 30;
             Item.autoReuse = true;
+            Item.value = 2949204;
             Item.useTurn = true;
             Item.useAnimation = Item.useTime = 40;
             Item.shoot = ModContent.ProjectileType<StarBreakerHeadProj>();
@@ -40,18 +42,32 @@ namespace StarBreaker.Items.Weapon
         }
         public override bool OnPickup(Player player)
         {
-            PopupText.NewText(new AdvancedPopupRequest()
+            if(player.HasItem(Type))
             {
-                Text = Main.rand.Next<string>(new string[]
+                PopupText.NewText(new AdvancedPopupRequest()
                 {
+                    Text = "另一个我?看来是时间线错乱了啊",
+                    DurationInFrames = 120,
+                    Velocity = new Vector2(0, -4),
+                    Color = Color.Purple
+                }, player.Center);
+                Item.TurnToAir();
+            }
+            else
+            {
+                PopupText.NewText(new AdvancedPopupRequest()
+                {
+                    Text = Main.rand.Next(new string[]
+                    {
                     "额...你好?",
                     "YaHo~",
                     "我来了~"
-                }),
-                DurationInFrames = 120,
-                Velocity = new Vector2(0, -4),
-                Color = Color.Purple
-            }, player.Center);
+                    }),
+                    DurationInFrames = 120,
+                    Velocity = new Vector2(0, -4),
+                    Color = Color.Purple
+                }, player.Center);
+            }
             return base.OnPickup(player);
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -91,18 +107,33 @@ namespace StarBreaker.Items.Weapon
                 ModContent.ProjectileType<StarBreakerHeadProj>(), damage, knockback, player.whoAmI);
             return false;
         }
-        public override bool AltFunctionUse(Player player)
+        public override bool AltFunctionUse(Player player) => true;
+        public override bool CanUseItem(Player player) => true;
+
+        public override void PostUpdate()
         {
-            return true;
-        }
-        public override bool CanUseItem(Player player)
-        {
-            return true;
+            if (_hasMe)//丢弃时的语句
+            {
+                PopupText.NewText(new AdvancedPopupRequest()
+                {
+                    Text = Main.rand.Next(new string[]
+                    {
+                    "你不是开玩笑的吧?",
+                    "呜呜呜别这样吓我",
+                    "QAQ别这样"
+                    }),
+                    DurationInFrames = 120,
+                    Velocity = new Vector2(0, -4),
+                    Color = Color.Purple
+                }, Item.Center);
+                _hasMe = false;
+            }
         }
         public override void UpdateInventory(Player player)
         {
             StarPlayer starPlayer = player.GetModPlayer<StarPlayer>();
             if (StarBreakerSystem.downedStarBreakerEX && Item.damage < 30) Item.damage = 30;
+            _hasMe = true;
             if (starPlayer.SummonStarShieldTime == 1)
             {
                 PopupText.NewText(new AdvancedPopupRequest()

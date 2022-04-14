@@ -24,7 +24,17 @@ namespace StarBreaker
         public int GhostSwordAttack;
         public readonly Dictionary<StarGhostKnifeAtk, string> GhostSwordName = new()
         {
-            {StarGhostKnifeAtk.Kalla,"冥炎之卡洛" } 
+            { StarGhostKnifeAtk.Kalla,"冥炎之卡洛" } ,
+            { StarGhostKnifeAtk.GhostFireHit,"鬼炎斩(阎冥斩)"},
+            { StarGhostKnifeAtk.StoneShower, "死亡墓碑" },
+            { StarGhostKnifeAtk.KeiGa, "残影之凯嘉" },
+            { StarGhostKnifeAtk.LunarSlash,"满月斩" },
+            { StarGhostKnifeAtk.Puchumeng, "侵蚀之普戾蒙" },
+            { StarGhostKnifeAtk.SaYa,"冰霜之萨亚"},
+            { StarGhostKnifeAtk.GhostSlash,"鬼影闪"},
+            { StarGhostKnifeAtk.Rhasa, "瘟疫之罗刹" },
+            { StarGhostKnifeAtk.Kazan,"刀魂卡赞"},
+            { StarGhostKnifeAtk.Buraxiu,"第七鬼神 怖拉修"}
         };
         public Item Bullet1;
         public Item Bullet2;
@@ -43,6 +53,55 @@ namespace StarBreaker
             tag["Bullet2"] = Bullet2;
             tag["StarBreker:StarCharge"] = StarCharge;
             base.SaveData(tag);
+        }
+        public override bool CanBuyItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            if (item.type == ModContent.ItemType<StarGhostKnife>())
+            {
+                PopupText.NewText(new AdvancedPopupRequest()
+                {
+                    Text = "你的气息太过于邪恶了,你听不到你周围的鬼在呼救?",
+                    DurationInFrames = 120,
+                    Velocity = new Vector2(0, -4),
+                    Color = Color.White
+                }, vendor.Center);
+                return false;
+            }
+            return base.CanBuyItem(vendor, shopInventory, item);
+        }
+        public override bool CanSellItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            if(item.type == ModContent.ItemType<StarGhostKnife>())
+            {
+                PopupText.NewText(new AdvancedPopupRequest()
+                {
+                    Text = "抱歉...我不收这个",
+                    DurationInFrames = 120,
+                    Velocity = new Vector2(0, -4),
+                    Color = Color.White
+                }, vendor.Center);
+                return false;
+            }
+            return base.CanSellItem(vendor, shopInventory, item);
+        }
+        public override void PostSellItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            if(item.type == ModContent.ItemType<StarBreakerW>())//玩家售卖物品
+            {
+                PopupText.NewText(new AdvancedPopupRequest()
+                {
+                    Text = Main.rand.Next(new string[]
+                    {
+                    "我错了,别卖了我好吗",
+                    "你卖了我,我以后怎么办啊",
+                    "我这么好卖的吗?"
+                    }),
+                    DurationInFrames = 120,
+                    Velocity = new Vector2(0, -4),
+                    Color = Color.Purple
+                }, vendor.Center);
+            }
+            base.PostSellItem(vendor, shopInventory, item);
         }
         public override void LoadData(TagCompound tag)
         {
@@ -113,7 +172,7 @@ namespace StarBreaker
             }
             if(Player.HeldItem.type == ModContent.ItemType<StarGhostKnife>())//如果玩家手持星辰鬼刀
             {
-                Utils.DrawBorderString(Main.spriteBatch, "$Mods.StarBreaker.StarGhostKnife" + (GhostSwordAttack + 1).ToString(), Player.Center - new Vector2(90, 80) - Main.screenPosition, Color.Purple);
+                Utils.DrawBorderString(Main.spriteBatch, GhostSwordName[(StarGhostKnifeAtk)GhostSwordAttack], Player.Center - new Vector2(90, 80) - Main.screenPosition, Color.Purple);
             }
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)

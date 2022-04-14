@@ -25,6 +25,7 @@ namespace StarBreaker.Projs.StarGhostKnife
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 4;
+            Projectile.ownerHitCheck = true;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 100;
@@ -104,6 +105,10 @@ namespace StarBreaker.Projs.StarGhostKnife
                     }
             }
             player.bodyFrame.Y = player.bodyFrame.Height * frame;
+        }
+        public override bool? CanHitNPC(NPC target)
+        {
+            return Projectile.Distance(target.Center) < (Projectile.width / 2 + Projectile.height / 2);
         }
         public override void PostDraw(Color lightColor)
         {
