@@ -13,8 +13,8 @@ namespace StarBreaker.Items.Weapon
     public class StarGhostKnife : ModItem
     {
         private int _MyOwner = -1;
-        private int GetGhostAttack(Player player) => player.GetModPlayer<StarPlayer>().GhostSwordAttack;
-        private void SetGhostAttack(Player player, int attack) => player.GetModPlayer<StarPlayer>().GhostSwordAttack = attack;
+        private static StarGhostKnifeAtk GetGhostAttack(Player player) => (StarGhostKnifeAtk)player.GetModPlayer<StarPlayer>().GhostSwordAttack;
+        private static void SetGhostAttack(Player player, int attack) => player.GetModPlayer<StarPlayer>().GhostSwordAttack = attack;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("星辰鬼刀");
@@ -94,7 +94,7 @@ namespace StarBreaker.Items.Weapon
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             player.statLife -= 100;
-            switch ((StarGhostKnifeAtk)GetGhostAttack(player))
+            switch (GetGhostAttack(player))
             {
                 case StarGhostKnifeAtk.Kalla://卡洛
                     {
@@ -116,6 +116,23 @@ namespace StarBreaker.Items.Weapon
                     {
                         break;
                     }
+
+                case StarGhostKnifeAtk.KeiGa:
+                    break;
+                case StarGhostKnifeAtk.Puchumeng:
+                    break;
+                case StarGhostKnifeAtk.SaYa:
+                    break;
+                case StarGhostKnifeAtk.GhostSlash:
+                    break;
+                case StarGhostKnifeAtk.Rhasa:
+                    break;
+                case StarGhostKnifeAtk.Kazan:
+                    break;
+                case StarGhostKnifeAtk.Buraxiu:
+                    break;
+                default:
+                    break;
             }
             if (player.statLife <= 0)
             {

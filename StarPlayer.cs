@@ -263,7 +263,6 @@ namespace StarBreaker
         }
         public override void PostUpdate()
         {
-
         }
         public override void OnEnterWorld(Player Player)
         {

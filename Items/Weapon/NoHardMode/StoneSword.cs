@@ -24,9 +24,6 @@ namespace StarBreaker.Items.Weapon.NoHardMode
             Item.useStyle = ItemUseStyleID.Swing;
             Item.value = 230;
         }
-        public override void AddRecipes()
-        {
-            CreateRecipe().AddIngredient(ItemID.StoneBlock, 30).AddTile(TileID.WorkBenches).Register();
-        }
+        public override void AddRecipes() => CreateRecipe().AddIngredient(ItemID.StoneBlock, 30).AddTile(TileID.WorkBenches).Register();
     }
 }

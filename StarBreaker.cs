@@ -66,6 +66,7 @@ namespace StarBreaker
             MusicLoader.AddMusic(this, "Music/AttackOfTheKillerQueen");
             MusicLoader.AddMusic(this, "Music/StarGloveProvingGround");
             MusicLoader.AddMusic(this, "Music/DarkPurgatoryIntrusion");
+            MusicLoader.AddMusic(this, "Music/RedMist");
             MusicLoader.AddMusic(this, "Sounds/Music/StarBreakerOP");
             MusicLoader.AddMusic(this, "Music/Atk1");
             MusicLoader.AddMusic(this, "Music/Atk2");
@@ -97,7 +98,22 @@ namespace StarBreaker
             }
             #endregion
             StarBreakerLoadString.LoadString();
+            On.Terraria.Main.UpdateAudio_DecideOnNewMusic += Main_UpdateAudio_DecideOnNewMusic;//可以修改原版曲子
         }
+
+        private void Main_UpdateAudio_DecideOnNewMusic(On.Terraria.Main.orig_UpdateAudio_DecideOnNewMusic orig, Main self)
+        {
+            orig(self);
+            if (Main.gameMenu) return;
+            if (Main.LocalPlayer.TryGetModPlayer(out StarPlayer starPlayer))
+            {
+                if (starPlayer.EGO)
+                {
+                    Main.newMusic = MusicLoader.GetMusicSlot(this, "Music/RedMist");
+                }
+            }
+        }
+
         public override void PostSetupContent()
         {
             #region 鼠标按键
@@ -139,8 +155,6 @@ namespace StarBreaker
         }
         public override void Unload()
         {
-            //SkyManager.Instance["StarBreaker:StarSky"] = null;
-            //SkyManager.Instance["StarBreaker:Portal"] = null;
             starBreaker_UI = null;
             _userInterface = null;
             Instantiate = null;
@@ -148,12 +162,12 @@ namespace StarBreaker
             LightStar = null;
             ToggleGhostSwordAttack = null;
             EliminateRaysShader = null;
-            //Filters.Scene["StarBreaker:GhostSlash"] = null;
-            On.Terraria.Graphics.Effects.FilterManager.EndCapture -= FilterManager_EndCapture;
+            EndCapture -= FilterManager_EndCapture;
             On.Terraria.Main.LoadWorlds -= Main_LoadWorlds;
-            Terraria.Main.OnResolutionChanged += Main_OnResolutionChanged;
+            On.Terraria.Main.UpdateAudio_DecideOnNewMusic -= Main_UpdateAudio_DecideOnNewMusic;
+            Terraria.Main.OnResolutionChanged -= Main_OnResolutionChanged;
         }
-        private void FilterManager_EndCapture(orig_EndCapture orig, global::Terraria.Graphics.Effects.FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
+        private void FilterManager_EndCapture(orig_EndCapture orig,FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
         {
             if (render == null) return;
             GraphicsDevice gd = Main.instance.GraphicsDevice;

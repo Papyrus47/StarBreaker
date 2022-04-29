@@ -35,8 +35,14 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         {
             for (int i = 1; i <= 5;i++)
             {
+                if(type == Item.shoot)
+                {
+                    damage += (int)(damage * 0.5f);
+                }
                 velocity *= 1 + i / 5;
-                Main.projectile[Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI)].GetGlobalProjectile<Projs.StarBreakerGlobalProj>().ProjectileForLastBow = true;
+                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI);
+                projectile.GetGlobalProjectile<Projs.StarBreakerGlobalProj>().ProjectileForLastBow = true;
+                projectile.penetrate = 5;
             }
             return false;
         }

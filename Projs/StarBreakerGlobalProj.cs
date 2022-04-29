@@ -227,6 +227,7 @@ namespace StarBreaker.Projs
                 projectile.tileCollide = false;
                 if(projectile.velocity.Length() > 2f && projectile.timeLeft % 5 == 0)
                 {
+                    projectile.damage++;
                     projectile.velocity *= 0.9f;
                 }
             }
