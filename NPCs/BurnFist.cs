@@ -97,7 +97,7 @@ namespace StarBreaker.NPCs
                             {
                                 for (int i = -1; i <= 1; i++)
                                 {
-                                    int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<Projs.FireFist>(), 110, 1.2f, Main.myPlayer);
+                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<Projs.FireFist>(), 110, 1.2f, Main.myPlayer);
                                     Main.projectile[proj].friendly = false;
                                     Main.projectile[proj].hostile = true;
                                 }
@@ -181,7 +181,7 @@ namespace StarBreaker.NPCs
                         Vector2 ves = NPC.velocity.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
                         if (Main.netMode != 1)
                         {
-                            int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
+                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
                                 170, 2f, Main.myPlayer);
                             Main.projectile[proj].alpha = Main.rand.Next(100);
                         }
@@ -255,7 +255,7 @@ namespace StarBreaker.NPCs
                                     for (int i = -2; i <= 2; i++)
                                     {
                                         Vector2 projCenter = center + new Vector2(i * 50, 0);
-                                        Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), projCenter, new Vector2(0, -5), ModContent.ProjectileType<Projs.FireFist>(),
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), projCenter, new Vector2(0, -5), ModContent.ProjectileType<Projs.FireFist>(),
                                             110, 1.5f, Main.myPlayer);
                                     }
                                 }
@@ -303,7 +303,7 @@ namespace StarBreaker.NPCs
                                 if (Main.netMode != 1)
                                 {
                                     Vector2 ves = toTarget.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
-                                    int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
+                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
                                         20, 2f, Main.myPlayer);
                                     Main.projectile[proj].alpha = Main.rand.Next(100);
                                 }
@@ -340,7 +340,7 @@ namespace StarBreaker.NPCs
                             Vector2 ves = toTarget.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
                             if (Main.netMode != 1)
                             {
-                                int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
+                                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
                                     170, 2f, Main.myPlayer);
                                 Main.projectile[proj].alpha = Main.rand.Next(100);
                             }
@@ -377,7 +377,7 @@ namespace StarBreaker.NPCs
                                         {
                                             for (int i = -1; i <= 1; i++)
                                             {
-                                                int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<Projs.FireFist>(), 110, 1.2f, Main.myPlayer);
+                                                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<Projs.FireFist>(), 110, 1.2f, Main.myPlayer);
                                                 Main.projectile[proj].friendly = false;
                                                 Main.projectile[proj].hostile = true;
                                             }
@@ -410,7 +410,7 @@ namespace StarBreaker.NPCs
                             Timer2++;
                             if (Main.netMode != 1)
                             {
-                                Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.position, Vector2.One,
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, Vector2.One,
                                                         ModContent.ProjectileType<Projs.SniperGloves>(), 150, 4f, Main.myPlayer, Target.whoAmI, ModContent.ProjectileType<Projs.FireFist>());
                             }
                             if (Timer2 > 3)
@@ -439,7 +439,7 @@ namespace StarBreaker.NPCs
                                             {
                                                 for (int i = -1; i <= 1; i++)
                                                 {
-                                                    int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 40) * 10, ModContent.ProjectileType<Projs.FireFist>(), 70, 1.2f, Main.myPlayer);
+                                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 40) * 10, ModContent.ProjectileType<Projs.FireFist>(), 70, 1.2f, Main.myPlayer);
                                                     Main.projectile[proj].friendly = false;
                                                     Main.projectile[proj].hostile = true;
                                                 }
@@ -472,7 +472,7 @@ namespace StarBreaker.NPCs
                                     Vector2 ves = NPC.velocity.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
                                     if (Main.netMode != 1)
                                     {
-                                        int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
+                                        int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
                                             170, 2f, Main.myPlayer);
                                         Main.projectile[proj].alpha = Main.rand.Next(100);
                                     }

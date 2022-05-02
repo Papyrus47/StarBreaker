@@ -53,7 +53,7 @@ namespace StarBreaker.NPCs
             }
             if(StarBreakerSystem.downedStarBreakerNom && !Main.player[projectile.owner].HasItem(ModContent.ItemType<StarBreakerW>()))
             {
-                Item.NewItem(npc.GetItemSource_Loot(), npc.Hitbox, ModContent.ItemType<StarBreakerW>());
+                Item.NewItem(npc.GetSource_Loot(), npc.Hitbox, ModContent.ItemType<StarBreakerW>());
             }
             base.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
         }

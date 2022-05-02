@@ -154,7 +154,7 @@ namespace StarBreaker.NPCs
                                         NPC.velocity = end - start;
                                         if (Main.netMode != 1)
                                         {
-                                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSpawnSourceForNPCFromNPCAI(),
+                                            Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(),
                                                 NPC.Center, Vector2.Zero, ModContent.ProjectileType<GhostSlash>(), 430, 2f, Main.myPlayer);
                                             GhostSlash slash = proj.ModProjectile as GhostSlash;
                                             slash.StartingPoint = start;
@@ -209,7 +209,7 @@ namespace StarBreaker.NPCs
                         if (Timer1 >= 10 && Main.netMode != 1)
                         {
                             Vector2 center = Target.Center + new Vector2(Main.rand.Next(-100, 100), -300);
-                            Projectile.NewProjectileDirect(NPC.GetSpawnSourceForNPCFromNPCAI(),
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(),
                                 center, Vector2.Normalize(center - Target.Center), ModContent.ProjectileType<Projs.BeamLight>(),
                                 1000, 2.3f, Main.myPlayer, 0, 1);
                             Timer2++;
@@ -236,7 +236,7 @@ namespace StarBreaker.NPCs
                         }
                         if (Main.netMode != 1 && !canSum)
                         {
-                            Projectile.NewProjectileDirect(NPC.GetSpawnSourceForNPCFromNPCAI(),
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(),
                                 NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projs.TheGhost.Saya>(),
                                     1000, 2.3f, Main.myPlayer, NPC.whoAmI);
                             State++;

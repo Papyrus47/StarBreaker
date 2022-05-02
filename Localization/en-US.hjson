@@ -1,0 +1,22 @@
+#英文翻译添加文本
+
+Mods: {		
+		StarBreaker:{
+			StarBreakerText:{
+				WeaponText:{
+					PickupText:{
+						Text1:Nope.
+						Text2:emm...hello?
+						Text3:Finally! A place for me to rest.
+						Text4:I'm coming~
+					}
+					OnThrow:{
+						Text1:This is a joke?
+						Text2:You...throw me? No! I'm so sorry... Please let me go back...
+						Text3:No!I still want to sleep a little longer
+					}
+					ShieldTimeCooldown:emm...I think mu shield is ok,let's go!
+				}
+			}
+		}
+}

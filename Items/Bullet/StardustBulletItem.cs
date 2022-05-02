@@ -36,7 +36,7 @@ namespace StarBreaker.Items.Bullet
             {
                 for (int i = -1; i <= 1; i++)
                 {
-                    int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, Projectile.velocity.RotatedBy(i * 0.1f) * -1,
+                    int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.velocity.RotatedBy(i * 0.1f) * -1,
                         Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, 1);
                     Main.projectile[proj].friendly = true;
                     Main.projectile[proj].hostile = false;

@@ -194,7 +194,7 @@ namespace StarBreaker.NPCs
                                 for (int i = 0; i < 8; i++)
                                 {
                                     Vector2 vel = Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 8 * i) * 10;
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, vel,
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                                 }
                             }
@@ -204,7 +204,7 @@ namespace StarBreaker.NPCs
                                 {
                                     Vector2 pos = NPC.Center + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 4 * i - MathHelper.PiOver4) * 800);
                                     Vector2 vel = (pos - NPC.position).SafeNormalize(default).RotatedBy(MathHelper.PiOver4) * -10;
-                                    Main.projectile[Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), pos, vel,
+                                    Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer)].extraUpdates = 3;
                                 }
                             }
@@ -213,7 +213,7 @@ namespace StarBreaker.NPCs
                                 for (int i = -1; i <= 1; i++)
                                 {
                                     Vector2 vel = (Target.position - NPC.position).SafeNormalize(default).RotatedBy(0.2 * i) * 10;
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, vel,
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer, 3, i);
                                 }
                             }
@@ -273,7 +273,7 @@ namespace StarBreaker.NPCs
                                     }
                                     else if (Timer1 % 6 == findProj && Main.netMode != NetmodeID.MultiplayerClient)
                                     {
-                                        Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.position, Vector2.Zero, ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, Vector2.Zero, ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                                     }
                                     break;
                                 }
@@ -363,12 +363,12 @@ namespace StarBreaker.NPCs
                             {
                                 if (State == 22)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, Vector2.Zero,
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.32f, Main.myPlayer);
                                 }
                                 else
                                 {
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, (targetOldPos - NPC.position).SafeNormalize(default) * 20,
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (targetOldPos - NPC.position).SafeNormalize(default) * 20,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.32f, Main.myPlayer);
                                 }
                             }
@@ -437,7 +437,7 @@ namespace StarBreaker.NPCs
                                             {
                                                 Vector2 vel = new(i - 5, -5);
                                                 vel.X *= 2.3f;
-                                                Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, vel,
+                                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
                                                     ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                                             }
                                         }
@@ -446,7 +446,7 @@ namespace StarBreaker.NPCs
                                             for (int i = 0; i < 10; i++)
                                             {
                                                 Vector2 vel = Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 10 * i) * 10;
-                                                Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, vel,
+                                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
                                                     ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                                             }
                                         }
@@ -478,7 +478,7 @@ namespace StarBreaker.NPCs
                                 {
                                     if (Main.netMode != NetmodeID.MultiplayerClient)
                                     {
-                                        Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, Vector2.Zero,
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
                                                 ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                                     }
                                     break;
@@ -539,7 +539,7 @@ namespace StarBreaker.NPCs
                                     {
                                         center = NPC.Center;
                                     }
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), center, (targetOldPos - center).SafeNormalize(default) * 10,
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), center, (targetOldPos - center).SafeNormalize(default) * 10,
                                     ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.32f, Main.myPlayer);
                                 }
                             }
@@ -573,7 +573,7 @@ namespace StarBreaker.NPCs
                                 {
                                     if (Main.netMode != NetmodeID.MultiplayerClient)
                                     {
-                                        Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, Vector2.Zero,
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
                                                 ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                                     }
                                     break;
@@ -605,7 +605,7 @@ namespace StarBreaker.NPCs
                                     break;
                                 }
                                 Timer2++;
-                                Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, NPC.velocity,
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity,
                                     ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                             }
                         }
@@ -645,7 +645,7 @@ namespace StarBreaker.NPCs
                                 for (int i = 0; i < 4; i++)
                                 {
                                     Vector2 pos = NPC.position + Vector2.UnitX.RotatedBy((MathHelper.TwoPi / 4 * i) + (Timer2 / 10)) * DIS_OLD_POS;
-                                    Main.projectile[Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), pos, (NPC.Center - pos).SafeNormalize(default) * 10,
+                                    Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, (NPC.Center - pos).SafeNormalize(default) * 10,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer)].timeLeft = 80;
                                 }
                             }
@@ -664,7 +664,7 @@ namespace StarBreaker.NPCs
                                 Timer2++;
                                 for (int i = 0; i < 4 + (Timer2 * 2); i++)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.position, Vector2.UnitX.RotatedBy(MathHelper.TwoPi / (4 + (Timer2 * 2)) * i) * 10,
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, Vector2.UnitX.RotatedBy(MathHelper.TwoPi / (4 + (Timer2 * 2)) * i) * 10,
                                         ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer, 1);
                                 }
                             }
@@ -685,7 +685,7 @@ namespace StarBreaker.NPCs
                         }
                         else if (Timer1 % 15 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, Vector2.UnitY * 5,
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * 5,
                                 ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                         }
                         Timer1 += 7;
@@ -853,7 +853,7 @@ namespace StarBreaker.NPCs
 
                         if (Timer2 > 0 && Timer1 % 3 == 0 && Main.netMode != NetmodeID.MultiplayerClient && State == 16)
                         {
-                            Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, Vector2.Zero,
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
                                 ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
                         }
                         if (Vector2.Distance(endPos, NPC.position) < 20)

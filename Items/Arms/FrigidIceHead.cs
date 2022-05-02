@@ -31,6 +31,8 @@ namespace StarBreaker.Items.Arms
             player.GetDamage(DamageClass.Melee) += 0.3f;
             player.setBonus = "提升30%的近战伤害\n" +
                 "攻击概率使敌人减速\n" +
+                "如果使用\"宣雨\"对应武器\"寒冰刺枪\",向目标施加一层\"霜冻\"n" +
+                "\"霜冻\"达到六层之后,冻结敌人,每5秒减低1层\n" +
                 "当装备全套的时候,你总感觉这一个套装冻结了周围的事物";
         }
     }

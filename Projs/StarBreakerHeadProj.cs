@@ -95,7 +95,7 @@ namespace StarBreaker.Projs
                     for (float i = -5; i <= 5; i++)
                     {
                         Vector2 vec = (i.ToRotationVector2() * MathHelper.Pi / 18) + Projectile.velocity.SafeNormalize(Vector2.Zero);
-                        int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vec * 10, shootID, player.GetWeaponDamage(player.HeldItem) + shootDamage,
+                        int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vec * 10, shootID, player.GetWeaponDamage(player.HeldItem) + shootDamage,
                             player.GetWeaponKnockback(player.HeldItem, 1), player.whoAmI, 0);
                         Main.projectile[proj].friendly = true;
                         Main.projectile[proj].hostile = false;

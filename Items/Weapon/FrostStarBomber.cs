@@ -42,7 +42,7 @@ namespace StarBreaker.Items.Weapon
         public override bool CanConsumeAmmo(Player player) => false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(player.GetProjectileSource_Item(Item), position, velocity, Item.shoot, damage, knockback, player.whoAmI);
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), position, velocity, Item.shoot, damage, knockback, player.whoAmI);
             return false;
         }
         public override bool AltFunctionUse(Player player) => true;//可以右键使用
@@ -50,9 +50,9 @@ namespace StarBreaker.Items.Weapon
         {
             foreach(TooltipLine line in tooltips)
             {
-                if(line.mod == "Terraria" && line.Name == "ItemName")
+                if(line.Mod == "Terraria" && line.Name == "ItemName")
                 {
-                    line.overrideColor = Color.Blue;
+                    line.OverrideColor = Color.Blue;
                 }
             }
         }

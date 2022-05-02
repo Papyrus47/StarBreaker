@@ -86,7 +86,7 @@ namespace StarBreaker.Projs
                                     toTarget.Normalize();
                                     toTarget = toTarget.RotatedBy(MathHelper.Pi / 32 * i);
                                     toTarget *= 10f;
-                                    Projectile.NewProjectile(projectile.GetProjectileSource_FromThis(), projectile.Center, toTarget, ProjectileID.HornetStinger,
+                                    Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center, toTarget, ProjectileID.HornetStinger,
                                         projectile.damage, 0f, Main.myPlayer);
                                 }
                                 projectile.netUpdate = true;
@@ -185,7 +185,7 @@ namespace StarBreaker.Projs
                             {
                                 Vector2 vel = (projectile.OwnerMinionAttackTargetNPC.Center - projectile.Center).SafeNormalize(default) * 10;
                                 vel *= (i + 1) / 1.1f;
-                                Projectile fireProj = Main.projectile[Projectile.NewProjectile(projectile.GetProjectileSource_FromThis(),
+                                Projectile fireProj = Main.projectile[Projectile.NewProjectile(projectile.GetSource_FromThis(),
                                     projectile.Center, vel,
                                     376, projectile.damage, 0f, projectile.owner)];
                                 fireProj.extraUpdates = 2;

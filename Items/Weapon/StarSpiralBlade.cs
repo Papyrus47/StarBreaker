@@ -49,7 +49,7 @@ namespace StarBreaker.Items.Weapon
                 {
                     ai0 = 0;
                 }
-                Main.projectile[Projectile.NewProjectile(player.GetProjectileSource_Item(Item), position, velocity, type, damage, knockback, player.whoAmI, ai0)].originalDamage = damage;
+                Main.projectile[Projectile.NewProjectile(player.GetSource_ItemUse(Item), position, velocity, type, damage, knockback, player.whoAmI, ai0)].originalDamage = damage;
             }
             return false;
         }

@@ -34,7 +34,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.useTime = 10;
             for (int i = -1; i <= 1; i++)
             {
-                Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(default).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<CopperFlyAxe>(), Item.damage, Item.knockBack, player.whoAmI);
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, (Main.MouseWorld - player.Center).SafeNormalize(default).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<CopperFlyAxe>(), Item.damage, Item.knockBack, player.whoAmI);
             }
             return true;
         }

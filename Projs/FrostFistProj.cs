@@ -234,7 +234,7 @@ namespace StarBreaker.Projs
                             }
                             else
                             {
-                                Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetProjectileSource_FromThis(), Projectile.position, Vector2.Zero, Type, Projectile.damage,
+                                Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, Type, Projectile.damage,
                                     Projectile.knockBack, Projectile.owner);
                                 projectile.localAI[0] = Projectile.ai[1] / 2 + 1;
                                 projectile.localAI[1] = Projectile.whoAmI;

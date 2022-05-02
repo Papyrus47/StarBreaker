@@ -97,7 +97,6 @@ namespace StarBreaker
                 chargeUser.SetState(chargeUIState);
             }
             #endregion
-            StarBreakerLoadString.LoadString();
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic += Main_UpdateAudio_DecideOnNewMusic;//可以修改原版曲子
         }
 

@@ -82,7 +82,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                _ = Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, NPC.velocity.RealSafeNormalize() * 20
+                _ = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RealSafeNormalize() * 20
                     , ModContent.ProjectileType<AntiTankBoom>(), 40, 2.3f, Main.myPlayer);
             }
         }

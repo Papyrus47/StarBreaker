@@ -119,13 +119,13 @@ namespace StarBreaker.NPCs
                             }
                             else if (Timer1 / 50 >= 10 && Timer1 / 50 < 11)
                             {
-                                int npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.AntiTankGun>());
+                                int npc1 = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X - 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.AntiTankGun>());
                                 Main.npc[npc1].realLife = NPC.whoAmI;
-                                npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.FocusFlamethrower>());
+                                npc1 = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X + 100, (int)NPC.position.Y - 500, ModContent.NPCType<StarBreakerEXGunNPC.FocusFlamethrower>());
                                 Main.npc[npc1].realLife = NPC.whoAmI;
-                                npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X - 100, (int)NPC.position.Y + 500, ModContent.NPCType<StarBreakerEXGunNPC.GatlingGun>());
+                                npc1 = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X - 100, (int)NPC.position.Y + 500, ModContent.NPCType<StarBreakerEXGunNPC.GatlingGun>());
                                 Main.npc[npc1].realLife = NPC.whoAmI;
-                                npc1 = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X + 100, (int)NPC.position.Y + 500, ModContent.NPCType<StarBreakerEXGunNPC.SpikedCannon>());
+                                npc1 = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X + 100, (int)NPC.position.Y + 500, ModContent.NPCType<StarBreakerEXGunNPC.SpikedCannon>());
                                 Main.npc[npc1].realLife = NPC.whoAmI;
                             }
                             Main.NewText(_sayText[(int)(Timer1 / 50)], color);
@@ -146,7 +146,7 @@ namespace StarBreaker.NPCs
                             }
                             if(Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                _ = Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<StarShield>(),
+                                _ = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<StarShield>(),
                                     0, 0, Main.myPlayer, NPC.whoAmI);
                             }
                         }
@@ -183,7 +183,7 @@ namespace StarBreaker.NPCs
                                     for (float i = -5; i <= 5; i++)
                                     {
                                         Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + NPC.velocity.RealSafeNormalize();
-                                        Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
                                     }
                                     SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                                 }
@@ -218,7 +218,7 @@ namespace StarBreaker.NPCs
                                 for (float i = -5; i <= 5; i++)
                                 {
                                     Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + NPC.velocity.RealSafeNormalize();
-                                    Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
                                 }
                                 SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                             }
@@ -329,13 +329,13 @@ namespace StarBreaker.NPCs
             #endregion
             return true;
         }
-        private void FightSayText(string text)
+        private void FightSayText(string Text)
         {
             PopupText.NewText(new()
             {
                 Color = Color.Purple,
                 DurationInFrames = 120,
-                Text = text,
+                Text = Text,
                 Velocity = Vector2.UnitY * -5
             }, NPC.Center);
         }

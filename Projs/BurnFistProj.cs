@@ -69,7 +69,7 @@ namespace StarBreaker.Projs
                                                 for (int i = -1; i <= 1; i++)
                                                 {
                                                     Vector2 vel = (Main.MouseWorld - Projectile.position).SafeNormalize(default).RotatedBy(i * 0.1f) * 10;
-                                                    Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vel,
+                                                    Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, vel,
                                                         ModContent.ProjectileType<FireFist>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                                                     projectile.friendly = true;
                                                     projectile.hostile = false;
@@ -88,7 +88,7 @@ namespace StarBreaker.Projs
                                             if (Main.netMode != NetmodeID.MultiplayerClient)
                                             {
                                                 Vector2 vel = (Main.MouseWorld - Projectile.position).SafeNormalize(default) * 10;
-                                                Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vel,
+                                                Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, vel,
                                                     ModContent.ProjectileType<FireFist>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                                                 projectile.friendly = true;
                                                 projectile.hostile = false;
@@ -195,7 +195,7 @@ namespace StarBreaker.Projs
                                         for (int i = -1; i <= 1; i++)
                                         {
                                             Vector2 vel = (Main.MouseWorld - Projectile.position).SafeNormalize(default).RotatedBy(i * 0.1f) * 10;
-                                            Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vel,
+                                            Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, vel,
                                                 ModContent.ProjectileType<FireFist>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                                             projectile.friendly = true;
                                             projectile.hostile = false;

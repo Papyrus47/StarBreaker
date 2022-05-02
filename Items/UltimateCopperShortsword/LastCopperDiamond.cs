@@ -39,7 +39,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(player.GetProjectileSource_Item(Item), position, (Main.MouseWorld - player.position).SafeNormalize(default) * 20, type,
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), position, (Main.MouseWorld - player.position).SafeNormalize(default) * 20, type,
                 Item.damage, knockback, player.whoAmI);
             return base.Shoot(player, source, position, velocity, type, damage, knockback);
         }

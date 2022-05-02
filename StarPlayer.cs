@@ -207,7 +207,7 @@ namespace StarBreaker
                 Player.moveSpeed += 5;
                 Player.accRunSpeed += 5;
                 Player.maxRunSpeed += 5;
-                Player.meleeSpeed += 1.2f;
+                Player.GetAttackSpeed(DamageClass.Generic) += 1.2f;
                 Player.noFallDmg = true;
                 Player.fallStart += 10;
                 Player.maxFallSpeed += 10;

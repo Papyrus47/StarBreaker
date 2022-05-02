@@ -45,7 +45,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             };
             for (int i = 0; i < ID.Length; i++)
             {
-                player.QuickSpawnItem(player.GetItemSource_OpenItem(Type), ID[i]);
+                player.QuickSpawnItem(player.GetSource_OpenItem(Type), ID[i]);
             }
         }
     }

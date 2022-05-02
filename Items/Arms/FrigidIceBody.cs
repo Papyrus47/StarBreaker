@@ -11,7 +11,7 @@ namespace StarBreaker.Items.Arms
         {
             DisplayName.SetDefault("极寒之冰");
             Tooltip.SetDefault("用魔法凝聚的冰之护甲\n" +
-                "固定增加20的近战伤害");
+                "在伤害加成前,固定增加20的近战伤害");
         }
         public override void SetDefaults()
         {
@@ -23,7 +23,7 @@ namespace StarBreaker.Items.Arms
         }
         public override void UpdateEquip(Player player)
         {
-            player.meleeAddDamage = 20;
+            player.GetDamage(DamageClass.Melee).Base += 20;//添加固定伤害
         }
     }
 }

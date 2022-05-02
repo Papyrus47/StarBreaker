@@ -10,21 +10,14 @@ namespace StarBreaker.Items.DamageClasses
             ClassName.SetDefault("Energy Damage");
             ClassName.AddTranslation((int)GameCulture.CultureName.Chinese, "能量伤害");
         }
-        protected override float GetBenefitFrom(DamageClass damageClass)
+        public override bool GetEffectInheritance(DamageClass damageClass) => true;
+        public override StatInheritanceData GetModifierInheritance(DamageClass damageClass)
         {
             if (damageClass == Generic)
             {
-                return 1f;
+                return StatInheritanceData.Full;
             }
-            if (damageClass == Ranged)
-            {
-                return 0.8f;
-            }
-            return 0f;
-        }
-        public override bool CountsAs(DamageClass damageClass)
-        {
-            return false;
+            return StatInheritanceData.None;
         }
     }
 }

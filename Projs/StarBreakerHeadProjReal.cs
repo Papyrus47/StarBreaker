@@ -85,7 +85,7 @@ namespace StarBreaker.Projs
             }
             if (player.altFunctionUse == 2 && player.ownedProjectileCounts[ModContent.ProjectileType<OmnipotentGun>()] < 2)
             {
-                int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), player.Center, Vector2.Zero,
+                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), player.Center, Vector2.Zero,
                     ModContent.ProjectileType<OmnipotentGun>(), 1, 1, player.whoAmI);
                 (Main.projectile[proj].ModProjectile as OmnipotentGun).States[4] = player.ownedProjectileCounts[ModContent.ProjectileType<OmnipotentGun>()];
             }
@@ -127,7 +127,7 @@ namespace StarBreaker.Projs
                                 for (float i = -5; i <= 5; i++)
                                 {
                                     Vector2 vec = (i.ToRotationVector2() * MathHelper.Pi / 18) + Projectile.velocity.SafeNormalize(Vector2.Zero);
-                                    int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vec * 10,
+                                    int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vec * 10,
                                         shootID, damage + shootDamage, knockBack, player.whoAmI, 0);
                                     Main.projectile[proj].friendly = true;
                                     Main.projectile[proj].hostile = false;
@@ -161,7 +161,7 @@ namespace StarBreaker.Projs
                                     for (float i = -5; i <= 5; i++)
                                     {
                                         Vector2 center = Projectile.Center + ((Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * i * 10);
-                                        int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), center, Projectile.velocity.SafeNormalize(Vector2.Zero) * 10,
+                                        int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, Projectile.velocity.SafeNormalize(Vector2.Zero) * 10,
                                             shootID, damage + shootDamage, knockBack, player.whoAmI, 0);
                                         Main.projectile[proj].friendly = true;
                                         Main.projectile[proj].hostile = false;
@@ -190,7 +190,7 @@ namespace StarBreaker.Projs
                         };
                         for (int s = 0; s < rad.Length; s++)
                         {
-                            Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center,
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
                                 (Projectile.velocity.ToRotation() + rad[s]).ToRotationVector2(), ModContent.ProjectileType<StarLine>(), damage * 5, knockBack, player.whoAmI);
                         }
                         if (canUse && Timer > 30)
@@ -198,7 +198,7 @@ namespace StarBreaker.Projs
                             for (float i = -2; i <= 2; i++)
                             {
                                 Vector2 vec = (i.ToRotationVector2() * MathHelper.Pi / 10) + Projectile.velocity.SafeNormalize(Vector2.Zero);
-                                int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center + Projectile.rotation.ToRotationVector2() * 14, vec * 5, ModContent.ProjectileType<StarRocket>(), damage, knockBack, player.whoAmI);
+                                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + Projectile.rotation.ToRotationVector2() * 14, vec * 5, ModContent.ProjectileType<StarRocket>(), damage, knockBack, player.whoAmI);
                                 Main.projectile[proj].friendly = true;
                                 Main.projectile[proj].hostile = false;
                             }
@@ -297,7 +297,7 @@ namespace StarBreaker.Projs
                 int rand = Main.rand.Next(5);
                 if (rand == 4)
                 {
-                    int npc = NPC.NewNPC(Projectile.GetNPCSource_FromThis(), (int)target.position.X, (int)target.position.Y, target.type);
+                    int npc = NPC.NewNPC(Projectile.GetSource_FromThis(), (int)target.position.X, (int)target.position.Y, target.type);
                     NPC newNPC = Main.npc[npc];
                     newNPC.life = 1;
                 }

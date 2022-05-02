@@ -91,23 +91,23 @@ namespace StarBreaker.NPCs.CupricOxideSword
                         Timer1++;
                         if(Timer1 % 50 == 0)
                         {
-                            string text;
+                            string Text;
                             switch((int)Timer1 / 50)
                             {
-                                case 1:text = "看来我拥有了自我意识啊"; break;
+                                case 1:Text = "看来我拥有了自我意识啊"; break;
                                     
-                                case 2: text = "那么准备好了?"; break;
-                                case 3: text = "这会是我最后的复仇"; break;
+                                case 2: Text = "那么准备好了?"; break;
+                                case 3: Text = "这会是我最后的复仇"; break;
                                 default:
                                     {
-                                        text = "开始吧";
+                                        Text = "开始吧";
                                         Timer1 = 0;
                                         State++;
                                         NPC.dontTakeDamage = false;
                                         break;
                                     }
                             }
-                            Main.NewText(text, Color.Black);
+                            Main.NewText(Text, Color.Black);
                         }
                         break;
                     }
@@ -124,7 +124,7 @@ namespace StarBreaker.NPCs.CupricOxideSword
                         {
                             if(Timer1 % 5==0)
                             {
-                                _ = Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, NPC.velocity / 5, ModContent.ProjectileType<CupricOxide>(),
+                                _ = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity / 5, ModContent.ProjectileType<CupricOxide>(),
                                     Damage, 1.3f, Main.myPlayer);
                             }
                         }

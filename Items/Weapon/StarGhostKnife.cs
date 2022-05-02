@@ -98,7 +98,7 @@ namespace StarBreaker.Items.Weapon
             {
                 case StarGhostKnifeAtk.Kalla://卡洛
                     {
-                        Projectile.NewProjectile(player.GetProjectileSource_Item(Item), position, velocity, ModContent.ProjectileType<GhostFire>(),
+                        Projectile.NewProjectile(player.GetSource_ItemUse(Item), position, velocity, ModContent.ProjectileType<GhostFire>(),
                             damage * 50, knockback, player.whoAmI);
                         return false;
                     }
@@ -148,13 +148,13 @@ namespace StarBreaker.Items.Weapon
         {
             foreach (TooltipLine line in tooltips)
             {
-                if (line.mod == "Terraria" && (line.Name == "ItemName" || line.Name == "Damage"))
+                if (line.Mod == "Terraria" && (line.Name == "ItemName" || line.Name == "Damage"))
                 {
-                    line.overrideColor = new Color?(new Color((int)Math.Sqrt(Main.time), 1, (int)Math.Sqrt(Main.time)));
+                    line.OverrideColor = new Color?(new Color((int)Math.Sqrt(Main.time), 1, (int)Math.Sqrt(Main.time)));
                 }
-                if(line.mod == "Terraria" && line.Name == "Tooltip3")
+                if(line.Mod == "Terraria" && line.Name == "Tooltip3")
                 {
-                    line.overrideColor = Color.Red;
+                    line.OverrideColor = Color.Red;
                 }
             }
         }

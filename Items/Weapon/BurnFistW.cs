@@ -36,7 +36,7 @@ namespace StarBreaker.Items.Weapon
         {
             if (burnFistProjWhoAmI == -1 && player.ownedProjectileCounts[ModContent.ProjectileType<BurnFistProj>()] == 0)
             {
-                burnFistProjWhoAmI = Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.position, Vector2.Zero, ModContent.ProjectileType<BurnFistProj>(),
+                burnFistProjWhoAmI = Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.position, Vector2.Zero, ModContent.ProjectileType<BurnFistProj>(),
                     Item.damage, Item.knockBack, player.whoAmI, -1);
             }
         }
@@ -50,16 +50,16 @@ namespace StarBreaker.Items.Weapon
         {
             foreach (TooltipLine line in tooltips)
             {
-                if (line.mod == "Terraria")
+                if (line.Mod == "Terraria")
                 {
                     if (line.Name == "Tooltip0")
                     {
-                        line.overrideColor = new Color(200, 100, 100, 0);
+                        line.OverrideColor = new Color(200, 100, 100, 0);
                     }
                     else if (line.Name == "ItemName")
                     {
-                        line.text = "炎拳";
-                        line.overrideColor = new Color(200, 100, 100, 0);
+                        line.Text = "炎拳";
+                        line.OverrideColor = new Color(200, 100, 100, 0);
                     }
                 }
             }
@@ -72,7 +72,7 @@ namespace StarBreaker.Items.Weapon
             }
             else if (player.HeldItem.type == ModContent.ItemType<FrostFistW>() && player.ownedProjectileCounts[ModContent.ProjectileType<BurnFistProj>()] == 0)
             {
-                Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.position, Vector2.Zero, ModContent.ProjectileType<BurnFistProj>(),
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.position, Vector2.Zero, ModContent.ProjectileType<BurnFistProj>(),
                     Item.damage, Item.knockBack, player.whoAmI, -1);
             }
         }

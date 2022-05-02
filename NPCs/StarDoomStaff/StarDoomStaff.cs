@@ -263,7 +263,7 @@ namespace StarBreaker.NPCs.StarDoomStaff
                             }
                             else if (Timer1 % 5 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, (Target.position - NPC.position).SafeNormalize(default) * 20,
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (Target.position - NPC.position).SafeNormalize(default) * 20,
                                     ModContent.ProjectileType<StarBoomCrystal_Boss>(), damage, 1.2f, Main.myPlayer);
                             }
                             Timer1++;
@@ -288,7 +288,7 @@ namespace StarBreaker.NPCs.StarDoomStaff
                                     for (int i = 0; i < 50; i++)
                                     {
                                         Vector2 projPos = pos + (pos - NPC.position) / 50 * i;
-                                        Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), projPos, (pos - projPos) * 0.5f,
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), projPos, (pos - projPos) * 0.5f,
                                             ModContent.ProjectileType<StarBoomCrystal_Boss>(), damage, 1.2f, Main.myPlayer);
                                     }
                                 }
@@ -314,7 +314,7 @@ namespace StarBreaker.NPCs.StarDoomStaff
                                 Timer1 = 0;
                                 if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), Target.position + new Vector2(Target.direction * 500, Target.velocity.Y),
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), Target.position + new Vector2(Target.direction * 500, Target.velocity.Y),
                                         Vector2.UnitX * Target.direction * -10, ModContent.ProjectileType<StarBoomCrystal_Boss>(), damage, 1.2f, Main.myPlayer);
                                 }
                                 if (Timer2 >= 5)
@@ -334,7 +334,7 @@ namespace StarBreaker.NPCs.StarDoomStaff
                             {
                                 if (!Main.projectile[(int)Timer2].active || Main.projectile[(int)Timer2].type != ModContent.ProjectileType<EliminateRays_Boss>())
                                 {
-                                    Timer2 = Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, Vector2.UnitX, ModContent.ProjectileType<EliminateRays_Boss>(),
+                                    Timer2 = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitX, ModContent.ProjectileType<EliminateRays_Boss>(),
                                         damage, 1.2f, Main.myPlayer);
                                 }
                             }

@@ -6,7 +6,7 @@ namespace StarBreaker
     {
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/StarBreakerOP");
         public override string DisplayName => "星辰击碎者";
-        public override bool IsLoadingEnabled(Mod mod)
+        public override bool IsLoadingEnabled(Mod Mod)
         {
             return true;
         }

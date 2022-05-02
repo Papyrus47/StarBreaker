@@ -83,7 +83,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile projectile = Main.projectile[Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, NPC.velocity.RealSafeNormalize() * 10
+                Projectile projectile = Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RealSafeNormalize() * 10
                     , ModContent.ProjectileType<StarRocket_Hostile>(), 40, 2.3f, Main.myPlayer)];
                 Timer1++;
                 if(Timer1 > 3)

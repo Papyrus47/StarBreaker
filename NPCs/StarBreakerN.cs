@@ -165,7 +165,7 @@ namespace StarBreaker.NPCs
                                     for (float i = -5;i<=5;i++)
                                     {
                                         Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + NPC.velocity.RealSafeNormalize();
-                                        Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, vel * 10,type, damage, 1.2f, Main.myPlayer);
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel * 10,type, damage, 1.2f, Main.myPlayer);
                                     }
                                     SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                                 }
@@ -176,7 +176,7 @@ namespace StarBreaker.NPCs
                                 State++;
                                 if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(),NPC.Center,Vector2.Zero,ModContent.ProjectileType<Projs.StarShield>(),0,0,Main.myPlayer,NPC.whoAmI);//生成护盾
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,Vector2.Zero,ModContent.ProjectileType<Projs.StarShield>(),0,0,Main.myPlayer,NPC.whoAmI);//生成护盾
                                 }
                                 break;
                             }
@@ -210,7 +210,7 @@ namespace StarBreaker.NPCs
                                     {
                                         Vector2 center = Target.Center + new Vector2(80 * j, -400 - Math.Abs(j * 30));
                                         Vector2 RealCenter = Target.Center + (center - Target.Center).RotatedBy(MathHelper.PiOver2 * i);
-                                        Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), RealCenter, (Target.Center - RealCenter).RealSafeNormalize() * 2f, type, damage, 1.2f, Main.myPlayer);
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), RealCenter, (Target.Center - RealCenter).RealSafeNormalize() * 2f, type, damage, 1.2f, Main.myPlayer);
                                     }
                                 }
                             }
@@ -258,7 +258,7 @@ namespace StarBreaker.NPCs
                             for (float i = -8; i <= 8; i++)
                             {
                                 Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 10) + NPC.velocity.RealSafeNormalize();
-                                Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
+                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
                             }
                             SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                         }
@@ -282,7 +282,7 @@ namespace StarBreaker.NPCs
                                 Timer2 = RandBullets();
                                 for (int i = 0; i < 10; i++)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center,NPC.velocity.RealSafeNormalize() * 5f,(int)Timer2, damage, 1.2f, Main.myPlayer);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center,NPC.velocity.RealSafeNormalize() * 5f,(int)Timer2, damage, 1.2f, Main.myPlayer);
                                 }
                             }
                         }

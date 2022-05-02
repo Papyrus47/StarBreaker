@@ -125,28 +125,28 @@ namespace StarBreaker.NPCs
                         }
                         else if (Timer1 % 50 == 0)
                         {
-                            string text = "等等我还没做完";
+                            string Text = "等等我还没做完";
                             switch ((int)Timer1 / 50)
                             {
                                 case 1:
                                     {
-                                        text = "那我是不是...要先加入你";
+                                        Text = "那我是不是...要先加入你";
                                         break;
                                     }
                                 case 2:
                                     {
-                                        text = "...我来了";
+                                        Text = "...我来了";
                                         break;
                                     }
                                 case 3:
                                     {
-                                        text = "星 辰 拳 套 合 体 前 提 武 器 - 霜 拳 与 炎 拳 加 入 了 队 伍 !";
+                                        Text = "星 辰 拳 套 合 体 前 提 武 器 - 霜 拳 与 炎 拳 加 入 了 队 伍 !";
                                         break;
                                     }
                             }
                             PopupText.NewText(new AdvancedPopupRequest
                             {
-                                Text = text,
+                                Text = Text,
                                 Color = color,
                                 Velocity = new Vector2(0, -2),
                                 DurationInFrames = 50
@@ -170,7 +170,7 @@ namespace StarBreaker.NPCs
                             NPC.dontTakeDamage = false;
                             if (Target.name == "paparyus")
                             {
-                                int npc = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X, (int)NPC.position.Y - 100, ModContent.NPCType<BurnFist>());
+                                int npc = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y - 100, ModContent.NPCType<BurnFist>());
                                 Main.npc[npc].localAI[0] = NPC.whoAmI;
                                 State++;
                             }
@@ -210,7 +210,7 @@ namespace StarBreaker.NPCs
                             }
                             if (Main.netMode != 1)
                             {
-                                int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), center, toTarget.SafeNormalize(toTarget) * 10, ModContent.ProjectileType<Projs.IceThorn>(), 110, 1.2f, Main.myPlayer);
+                                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, toTarget.SafeNormalize(toTarget) * 10, ModContent.ProjectileType<Projs.IceThorn>(), 110, 1.2f, Main.myPlayer);
                                 Main.projectile[proj].friendly = false;
                                 Main.projectile[proj].hostile = true;
                             }
@@ -295,7 +295,7 @@ namespace StarBreaker.NPCs
                         Vector2 ves = NPC.velocity.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
                         if (Main.netMode != 1)
                         {
-                            int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
+                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
                                 170, 2f, Main.myPlayer);
                             Main.projectile[proj].alpha = Main.rand.Next(100);
                         }
@@ -329,7 +329,7 @@ namespace StarBreaker.NPCs
                                         {
                                             for (int i = -1; i <= 1; i++)
                                             {
-                                                Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.position, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 20) * 10, ModContent.ProjectileType<Projs.IceThorn>(), 110, 1.2f, Main.myPlayer);
+                                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 20) * 10, ModContent.ProjectileType<Projs.IceThorn>(), 110, 1.2f, Main.myPlayer);
                                             }
                                         }
                                         Timer1 = 0;
@@ -362,7 +362,7 @@ namespace StarBreaker.NPCs
                                     else Timer1--;
                                     if (Main.netMode != 1)
                                     {
-                                        int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
+                                        int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
                                             170, 2f, Main.myPlayer);
                                         Main.projectile[proj].alpha = Main.rand.Next(100);
                                     }
@@ -372,7 +372,7 @@ namespace StarBreaker.NPCs
                                 {
                                     if (Main.netMode != 1)
                                     {
-                                        int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
+                                        int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
                                             170, 2f, Main.myPlayer);
                                         Main.projectile[proj].alpha = Main.rand.Next(100);
                                         Main.projectile[proj].timeLeft = 90;
@@ -388,7 +388,7 @@ namespace StarBreaker.NPCs
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
+                                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
                                                 170, 2f, Main.myPlayer);
                                             Main.projectile[proj].alpha = Main.rand.Next(100);
                                             Main.projectile[proj].timeLeft = 30;
@@ -426,7 +426,7 @@ namespace StarBreaker.NPCs
                                 {
                                     for (float r = 0; r <= MathHelper.TwoPi; r += MathHelper.Pi / 10)
                                     {
-                                        Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.position, r.ToRotationVector2() * 5, ModContent.ProjectileType<Projs.IceThorn>(),
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, r.ToRotationVector2() * 5, ModContent.ProjectileType<Projs.IceThorn>(),
                                             110, 2.3f, Main.myPlayer);
                                     }
                                 }
@@ -495,7 +495,7 @@ namespace StarBreaker.NPCs
                                             dust.scale = 1.5f;
                                             if (Main.netMode != 1)
                                             {
-                                                Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), NPC.Center,
+                                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center,
                                                     NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(Main.rand.NextBool() ? MathHelper.PiOver2 : -MathHelper.PiOver2) * 8, ModContent.ProjectileType<Projs.IceThorn>(),
                                                     170, 2f, Main.myPlayer);
                                             }
@@ -546,7 +546,7 @@ namespace StarBreaker.NPCs
                                             Vector2 center = Target.position + new Vector2((400 - (Timer1 * 2)) * i, Main.screenPosition.Y - Target.position.Y);
                                             if (Main.netMode != 1)
                                             {
-                                                int proj = Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), center, new Vector2(0, 5), ModContent.ProjectileType<Projs.IceThorn>(),
+                                                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, new Vector2(0, 5), ModContent.ProjectileType<Projs.IceThorn>(),
                                                     120, 4f, Main.myPlayer);
                                                 Main.projectile[proj].alpha = 255;
                                             }
@@ -593,7 +593,7 @@ namespace StarBreaker.NPCs
                                                 Vector2 center = Target.position + i.ToRotationVector2() * 500;
                                                 if (Main.netMode != 1)
                                                 {
-                                                    Projectile.NewProjectile(NPC.GetSpawnSourceForNPCFromNPCAI(), center, (Target.position - center).SafeNormalize(toTarget) * 20,
+                                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), center, (Target.position - center).SafeNormalize(toTarget) * 20,
                                                         ModContent.ProjectileType<Projs.IceThorn>(), 120, 4f, Main.myPlayer);
                                                 }
                                             }

@@ -78,7 +78,7 @@ namespace StarBreaker.Projs.Waste
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        int proj = Projectile.NewProjectile(player.GetProjectileSource_Item(player.HeldItem), Projectile.Center, Projectile.rotation.ToRotationVector2() * Projectile.spriteDirection * speed, ID, Timer > 180 ? (int)Timer * 2 * damage : damage, kn, Projectile.owner);
+                        int proj = Projectile.NewProjectile(player.GetSource_ItemUse(player.HeldItem), Projectile.Center, Projectile.rotation.ToRotationVector2() * Projectile.spriteDirection * speed, ID, Timer > 180 ? (int)Timer * 2 * damage : damage, kn, Projectile.owner);
                         Main.projectile[proj].extraUpdates = 5;
                         Main.projectile[proj].friendly = true;
                         Main.projectile[proj].hostile = false;

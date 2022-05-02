@@ -42,7 +42,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         {
             if (player.altFunctionUse != 2)
             {
-                var proj = Projectile.NewProjectileDirect(player.GetProjectileSource_Item(Item), player.Center, velocity,
+                var proj = Projectile.NewProjectileDirect(player.GetSource_ItemUse(Item), player.Center, velocity,
                     ModContent.ProjectileType<LostSword2>(), damage, knockback, player.whoAmI);
                 proj.friendly = true;
                 proj.hostile = false;

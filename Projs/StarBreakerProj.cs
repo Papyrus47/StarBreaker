@@ -225,7 +225,7 @@ namespace StarBreaker.Projs
                                     for (float i = -10; i <= 10; i++)
                                     {
                                         Vector2 center = Projectile.Center + (Projectile.velocity.RotatedBy(i * 0.1f) * 50);
-                                        int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), center, Projectile.velocity.SafeNormalize(Vector2.Zero) * 10, shoot, 100 + Projectile.damage, Projectile.knockBack, player.whoAmI);
+                                        int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, Projectile.velocity.SafeNormalize(Vector2.Zero) * 10, shoot, 100 + Projectile.damage, Projectile.knockBack, player.whoAmI);
                                         Main.projectile[proj].friendly = true;
                                         Main.projectile[proj].hostile = false;
                                     }
@@ -255,7 +255,7 @@ namespace StarBreaker.Projs
                     for (float i = -5; i <= 5; i++)
                     {
                         Vector2 vec = (i + Projectile.rotation).ToRotationVector2() * MathHelper.Pi / 5;
-                        int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vec * 10, shoot, 100 + Projectile.damage, Projectile.knockBack, player.whoAmI);
+                        int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vec * 10, shoot, 100 + Projectile.damage, Projectile.knockBack, player.whoAmI);
                         Main.projectile[proj].friendly = true;
                         Main.projectile[proj].hostile = true;
                     }
@@ -293,7 +293,7 @@ namespace StarBreaker.Projs
             for (float i = -5; i <= 5; i++)
             {
                 Vector2 vec = (i.ToRotationVector2() * MathHelper.Pi / 18) + Projectile.velocity.SafeNormalize(Vector2.Zero);
-                int proj = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vec * 10, shoot, 100 + Projectile.damage, Projectile.knockBack, player.whoAmI, 0, -114);
+                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vec * 10, shoot, 100 + Projectile.damage, Projectile.knockBack, player.whoAmI, 0, -114);
                 Main.projectile[proj].friendly = true;
                 Main.projectile[proj].hostile = false;
             }

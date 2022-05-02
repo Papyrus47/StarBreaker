@@ -37,7 +37,7 @@ namespace StarBreaker.Projs
                 {
                     if (Main.netMode != 1)
                     {
-                        Projectile.NewProjectile(Projectile.GetNoneSource(), center, (Projectile.position - center).SafeNormalize(Vector2.One) * 20,
+                        Projectile.NewProjectile(Projectile.GetSource_Death(), center, (Projectile.position - center).SafeNormalize(Vector2.One) * 20,
                             Bullet, Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                 }

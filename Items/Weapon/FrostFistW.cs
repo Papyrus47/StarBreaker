@@ -40,7 +40,7 @@ namespace StarBreaker.Items.Weapon
             }
             if (frostFistProjWhoAmI == -1 && player.ownedProjectileCounts[ModContent.ProjectileType<FrostFistProj>()] < 1)
             {
-                frostFistProjWhoAmI = Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.position, Vector2.Zero, ModContent.ProjectileType<FrostFistProj>(),
+                frostFistProjWhoAmI = Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.position, Vector2.Zero, ModContent.ProjectileType<FrostFistProj>(),
                     Item.damage, Item.knockBack, player.whoAmI, -1);
             }
         }
@@ -57,16 +57,16 @@ namespace StarBreaker.Items.Weapon
         {
             foreach (TooltipLine line in tooltips)
             {
-                if (line.mod == "Terraria")
+                if (line.Mod == "Terraria")
                 {
                     if (line.Name == "Tooltip0")
                     {
-                        line.overrideColor = new Color(100, 100, 200, 0);
+                        line.OverrideColor = new Color(100, 100, 200, 0);
                     }
                     else if (line.Name == "ItemName")
                     {
-                        line.text = "霜拳";
-                        line.overrideColor = new Color(100, 100, 200, 0);
+                        line.Text = "霜拳";
+                        line.OverrideColor = new Color(100, 100, 200, 0);
                     }
                 }
             }

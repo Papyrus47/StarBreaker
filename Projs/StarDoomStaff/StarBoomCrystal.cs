@@ -35,7 +35,7 @@ namespace StarBreaker.Projs.StarDoomStaff
         {
             if (Projectile.ai[0] < 2 && Main.player[Projectile.owner].HasMinionAttackTargetNPC)
             {
-                Main.projectile[Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(),
+                Main.projectile[Projectile.NewProjectile(Projectile.GetSource_FromThis(),
                     Main.player[Projectile.owner].Center, Projectile.velocity.SafeNormalize(default) * 20, Type,
                     Projectile.damage, Projectile.knockBack, Projectile.owner, ++Projectile.ai[0], --Projectile.ai[1])].originalDamage = Projectile.damage;
             }

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace EnW.NPCs.TheBoss//填入你mod的命名空间
+namespace EnW.NPCs.TheBoss//填入你Mod的命名空间
 {
     /// <summary>
     /// 一个蠕虫基类
@@ -105,15 +105,15 @@ namespace EnW.NPCs.TheBoss//填入你mod的命名空间
                         NPC.ai[3] = NPC.whoAmI;//锁定头的AI[3]
                         NPC.realLife = NPC.whoAmI;//让它realLife锁它自己
                         NPC.ai[2] = summonBody;//生成的身体的长度
-                        NPC.ai[0] = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X, (int)NPC.position.Y, bodyType, NPC.whoAmI);//生成npc
+                        NPC.ai[0] = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y, bodyType, NPC.whoAmI);//生成npc
                     }
                     else if (NPC.ai[2] > 0)
                     {
-                        NPC.ai[0] = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X, (int)NPC.position.Y, Type, NPC.whoAmI);//体节生成npc
+                        NPC.ai[0] = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y, Type, NPC.whoAmI);//体节生成npc
                     }
                     else
                     {
-                        NPC.ai[0] = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X, (int)NPC.position.Y, tilaType, NPC.whoAmI);//生成尾部
+                        NPC.ai[0] = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y, tilaType, NPC.whoAmI);//生成尾部
                     }
                     NPC theWorm = Main.npc[(int)NPC.ai[0]];
                     theWorm.ai[3] = NPC.ai[3];//让它知道它的头

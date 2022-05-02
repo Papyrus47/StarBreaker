@@ -50,7 +50,7 @@ namespace StarBreaker.Items.Weapon
         {
             if (player.ownedProjectileCounts[ModContent.ProjectileType<StarDoomStaffProj>()] == 0)
             {
-                Main.projectile[Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.Center, Vector2.Zero,
+                Main.projectile[Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, Vector2.Zero,
                     ModContent.ProjectileType<StarDoomStaffProj>(),Item.damage,Item.knockBack, player.whoAmI)].originalDamage = Item.damage;
             }
         }
@@ -58,19 +58,19 @@ namespace StarBreaker.Items.Weapon
         {
             foreach (TooltipLine line in tooltips)
             {
-                if (line.mod == "Terraria")
+                if (line.Mod == "Terraria")
                 {
                     if (line.Name == "Tooltip0" || line.Name == "Tooltip3" || line.Name == "Tooltip9")
                     {
-                        line.overrideColor = Color.Purple * 0.8f;
+                        line.OverrideColor = Color.Purple * 0.8f;
                     }
                     else if (line.Name == "Tooltip10")
                     {
-                        line.overrideColor = Color.Red * 0.8f;
+                        line.OverrideColor = Color.Red * 0.8f;
                     }
                     else if (line.Name == "ItemName")
                     {
-                        line.overrideColor = new Color(100, 21, 203);
+                        line.OverrideColor = new Color(100, 21, 203);
                     }
                 }
             }

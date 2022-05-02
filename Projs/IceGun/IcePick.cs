@@ -35,7 +35,7 @@ namespace StarBreaker.Projs.IceGun
                 for (int i = 0; i < 30; i++)
                 {
                     Vector2 vel = Main.rand.NextVector2Unit();
-                    Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetProjectileSource_FromThis(), Projectile.Center + (vel * 100), vel * 1.5f, ModContent.ProjectileType<BigIcePick>(),
+                    Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center + (vel * 100), vel * 1.5f, ModContent.ProjectileType<BigIcePick>(),
                         Projectile.damage, Projectile.knockBack, Projectile.owner,Main.rand.NextFloat(1f,2f));
                     projectile.Opacity = 0;
                     projectile.scale = 0;

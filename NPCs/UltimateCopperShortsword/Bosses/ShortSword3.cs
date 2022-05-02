@@ -350,8 +350,8 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int axe = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperAxe>());
-                                            int pick = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperPick>());
+                                            int axe = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperAxe>());
+                                            int pick = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperPick>());
                                             Main.npc[pick].localAI[3] = NPC.whoAmI;
                                             Main.npc[pick].localAI[2] = axe;
                                             if (Main.netMode == 2)
@@ -419,8 +419,8 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int dia = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperDiamond>());
-                                            int chainSaw = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperChainSaw>());
+                                            int dia = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperDiamond>());
+                                            int chainSaw = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperChainSaw>());
                                             Main.npc[chainSaw].localAI[3] = NPC.whoAmI;
                                             Main.npc[chainSaw].localAI[2] = dia;
                                             if (Main.netMode == 2)
@@ -488,7 +488,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int bow = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperBow>());
+                                            int bow = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperBow>());
                                             Main.npc[bow].localAI[3] = NPC.whoAmI;
                                             if (Main.netMode == 2)
                                             {
@@ -542,7 +542,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int hammer = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperHammer>());
+                                            int hammer = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperHammer>());
                                             Main.npc[hammer].localAI[3] = NPC.whoAmI;
                                             if (Main.netMode == 2)
                                             {
@@ -596,7 +596,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int bow = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperKnife>());
+                                            int bow = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperKnife>());
                                             Main.npc[bow].localAI[3] = NPC.whoAmI;
                                             if (Main.netMode == 2)
                                             {
@@ -661,7 +661,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     {
                                         if (Main.netMode != 1)
                                         {
-                                            int spear = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperSpear>());
+                                            int spear = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<UltimateCopperSpear>());
                                             Main.npc[spear].localAI[3] = NPC.whoAmI;
                                             if (Main.netMode == 2)
                                             {
@@ -750,7 +750,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                 NPC.velocity = ToTarget.SafeNormalize(default) * 10;
                                 if (Main.netMode != 1)
                                 {
-                                    int NPC_WhoAmi = NPC.NewNPC(NPC.GetSpawnSourceForNPCFromNPCAI(), (int)NPC.position.X, (int)NPC.position.Y, NPC.type);
+                                    int NPC_WhoAmi = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y, NPC.type);
                                     NPC n = Main.npc[NPC_WhoAmi];
                                     n.realLife = NPC.whoAmI;
                                     n.life = n.lifeMax = 30000;

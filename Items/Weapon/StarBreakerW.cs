@@ -7,6 +7,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Localization;
 
 namespace StarBreaker.Items.Weapon
 {
@@ -15,7 +16,8 @@ namespace StarBreaker.Items.Weapon
         private bool _hasMe;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("星辰击碎者");
+            DisplayName.SetDefault("Star Breaker");
+            DisplayName.AddTranslation(7, "星辰击碎者");
             Tooltip.SetDefault("星辰之力,寄宿于之上，强度可以击碎星空\n" +
                 "使用能量子弹/能量聚集器作为子弹");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
@@ -39,14 +41,16 @@ namespace StarBreaker.Items.Weapon
             Item.shootSpeed = 5f;
             Item.noUseGraphic = true;
             Item.noMelee = true;
+            _hasMe = true;
         }
         public override bool OnPickup(Player player)
         {
-            if(player.HasItem(Type))
+            const string Text = "Mods.StarBreaker.StarBreakerText.WeaponText.PickupText.";
+            if (player.HasItem(Type))
             {
                 PopupText.NewText(new AdvancedPopupRequest()
                 {
-                    Text = "另一个我?看来是时间线错乱了啊",
+                    Text = Language.GetTextValue(Text + "Text1"),
                     DurationInFrames = 120,
                     Velocity = new Vector2(0, -4),
                     Color = Color.Purple
@@ -59,9 +63,9 @@ namespace StarBreaker.Items.Weapon
                 {
                     Text = Main.rand.Next(new string[]
                     {
-                    "额...你好?",
-                    "YaHo~",
-                    "我来了~"
+                    Language.GetTextValue(Text + "Text2"),
+                    Language.GetTextValue(Text + "Text3"),
+                    Language.GetTextValue(Text + "Text4")
                     }),
                     DurationInFrames = 120,
                     Velocity = new Vector2(0, -4),
@@ -114,13 +118,14 @@ namespace StarBreaker.Items.Weapon
         {
             if (_hasMe)//丢弃时的语句
             {
+                const string Text = "Mods.StarBreaker.StarBreakerText.WeaponText.OnThrow.";
                 PopupText.NewText(new AdvancedPopupRequest()
                 {
                     Text = Main.rand.Next(new string[]
                     {
-                    "你不是开玩笑的吧?",
-                    "呜呜呜别这样吓我",
-                    "QAQ别这样"
+                    Language.GetTextValue(Text + "Text1"),
+                    Language.GetTextValue(Text + "Text2"),
+                    Language.GetTextValue(Text + "Text3")
                     }),
                     DurationInFrames = 120,
                     Velocity = new Vector2(0, -4),
@@ -138,7 +143,7 @@ namespace StarBreaker.Items.Weapon
             {
                 PopupText.NewText(new AdvancedPopupRequest()
                 {
-                    Text = "我觉得护盾快好了",
+                    Text = Language.GetTextValue("Mods.StarBreaker.StarBreakerText.WeaponText.ShieldTimeCooldown"),
                     DurationInFrames = 120,
                     Velocity = new Vector2(0, -4),
                     Color = Color.Purple
@@ -150,7 +155,7 @@ namespace StarBreaker.Items.Weapon
                 int type = ModContent.ProjectileType<StarBreakerProj>();
                 if (player.ownedProjectileCounts[type] < 1 && Item.favorited)
                 {
-                    int who = Projectile.NewProjectile(player.GetProjectileSource_Item(Item), player.Center, Vector2.Zero, type, Item.damage * 2, Item.knockBack, player.whoAmI);
+                    int who = Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, Vector2.Zero, type, Item.damage * 2, Item.knockBack, player.whoAmI);
                     Main.projectile[who].originalDamage = Item.damage * 2;
                 }
             }
@@ -161,7 +166,7 @@ namespace StarBreaker.Items.Weapon
             if (starPlayer.SummonStarShieldTime <= 0)
             {
                 starPlayer.SummonStarShieldTime = 3600;
-                Projectile.NewProjectile(player.GetProjectileSource_Item(Item),
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item),
                     player.position, Vector2.Zero, ModContent.ProjectileType<StarShieldPlayer>(), 1, 1, player.whoAmI);
             }
             return true;
@@ -170,12 +175,19 @@ namespace StarBreaker.Items.Weapon
         {
             if (StarBreakerSystem.downedStarBreakerEX)
             {
-                TooltipLine tooltip1 = new(Mod, "StarBreaker", "星辰之力 得到解放:");
-                tooltip1.overrideColor = Color.MediumPurple;
+                TooltipLine tooltip1 = new(Mod, "StarBreaker", "封印解除:");
+                tooltip1.OverrideColor = Color.MediumPurple;
                 tooltips.Add(tooltip1);
-                TooltipLine tooltip2 = new(Mod, "StarBreaker1", "星辰击碎者真正的信任你,获得控制使用能量的枪的能力");
-                tooltip2.overrideColor = Color.MediumPurple;
-                tooltips.Add(tooltip2);
+                TooltipLine[] starBreaker = new TooltipLine[]{
+                    new(Mod, "StarBreaker1", "攻击方法更改"),
+                    new(Mod, "StarBreaker2", "可以召唤\"星辰击碎者\"所用的四把特殊武器(右键)"),
+                    new(Mod, "StarBreaker3", "上升伤害至30"),
+                };
+                for(int i =0;i<starBreaker.Length;i++)
+                {
+                    starBreaker[i].OverrideColor = Color.MediumPurple;
+                }
+                tooltips.AddRange(starBreaker);
             }
         }
     }

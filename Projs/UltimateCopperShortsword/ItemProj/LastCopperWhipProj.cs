@@ -64,7 +64,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                 Dust.NewDustDirect(pos, 2, 2, ModContent.DustType<Dusts.LastCopperWhipDust>());
                 if (!Main.tile[(int)pos.X / 16, (int)pos.Y / 16].HasTile)
                 {
-                    Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetProjectileSource_FromThis(), pos, Projectile.velocity,
+                    Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), pos, Projectile.velocity,
                         ModContent.ProjectileType<LastCopperWhipOnUseProj>(), Projectile.damage / 2, Projectile.knockBack, player.whoAmI, 3);
                     projectile.friendly = true;
                     projectile.hostile = false;

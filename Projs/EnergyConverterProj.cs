@@ -25,7 +25,7 @@ namespace StarBreaker.Projs
         }
         public override void PostAI()
         {
-            Item.NewItem(Projectile.GetItemSource_FromThis(), Main.player[Projectile.owner].Hitbox, Main.rand.Next(new int[] {ModContent.ItemType<NebulaBulletItem>(),
+            Item.NewItem(Projectile.GetSource_FromThis(), Main.player[Projectile.owner].Hitbox, Main.rand.Next(new int[] {ModContent.ItemType<NebulaBulletItem>(),
                 ModContent.ItemType<SolarBulletItem>(),
                 ModContent.ItemType<StardustBulletItem>(),
                 ModContent.ItemType<VortexBulletItem>()}));

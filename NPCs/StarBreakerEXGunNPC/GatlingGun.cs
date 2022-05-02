@@ -82,7 +82,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
         {
             if(Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile projectile = Main.projectile[Projectile.NewProjectile(NPC.GetSpawnSource_ForProjectile(), NPC.Center, NPC.velocity.RealSafeNormalize() * 20
+                Projectile projectile = Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RealSafeNormalize() * 20
                  , ProjectileID.Bullet, 40, 2.3f, Main.myPlayer)];
                 projectile.hostile = true;
                 projectile.friendly = false;

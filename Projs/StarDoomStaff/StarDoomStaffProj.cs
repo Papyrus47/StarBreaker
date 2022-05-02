@@ -51,7 +51,7 @@ namespace StarBreaker.Projs.StarDoomStaff
                         }
                         Vector2 center = player.Center + Main.rand.NextVector2Unit() * 50;
                         Vector2 vel = (Main.MouseWorld - center).RealSafeNormalize();
-                        Main.projectile[Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), center, vel * 20,
+                        Main.projectile[Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, vel * 20,
                             type, Projectile.damage, Projectile.knockBack, player.whoAmI)].originalDamage = Projectile.damage;
                         for(int i = 0;i<20;i++)
                         {

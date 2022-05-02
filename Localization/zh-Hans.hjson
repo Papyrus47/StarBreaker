@@ -1,0 +1,22 @@
+#中文的
+
+Mods: {		
+		StarBreaker:{
+			StarBreakerText:{
+				WeaponText:{
+					PickupText:{
+						Text1:不可能的
+						Text2:额...你好?
+						Text3:终于有个地方让我休息了
+						Text4:我来了~
+					}
+					OnThrow:{
+						Text1:你不是的开玩笑吧?
+						Text2:你丢弃了我?我错了...让我回到你的背包里面吧
+						Text3:不!我还想在背包里再睡一会呢
+					}
+					ShieldTimeCooldown:我觉得我的护盾好了,一起上吧!
+				}
+			}
+		}
+}

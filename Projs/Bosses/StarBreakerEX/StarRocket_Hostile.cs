@@ -64,7 +64,7 @@ namespace StarBreaker.Projs.Bosses.StarBreakerEX
                 {
                     Vector2 vel = Vector2.UnitY * 5;
                     vel = vel.RotatedBy(MathHelper.Pi / 18 * i);
-                    _ = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), Projectile.Center, vel, Type, Projectile.damage, Projectile.knockBack, Projectile.owner,1);
+                    _ = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vel, Type, Projectile.damage, Projectile.knockBack, Projectile.owner,1);
                 }
             }
         }

@@ -426,7 +426,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
         }
         public override void OnKill()
         {
-            NPC.NewNPC(NPC.GetSpawnSource_NPCHurt(), (int)Target.Center.X + Main.rand.Next(500, 600),
+            NPC.NewNPC(NPC.GetSource_Death(), (int)Target.Center.X + Main.rand.Next(500, 600),
                 (int)Target.Center.Y + Main.rand.Next(500, 600), ModContent.NPCType<ShortSword3>());
             foreach (Player player in Main.player)
             {

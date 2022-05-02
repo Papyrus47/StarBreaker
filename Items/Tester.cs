@@ -9,7 +9,7 @@ namespace StarBreaker.Items
         public override string Texture => "StarBreaker/Projs/Star";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("本mod测试用翅膀");
+            DisplayName.SetDefault("本Mod测试用翅膀");
             Tooltip.SetDefault("开发者所用，用于Hero无法使用时，直接芜湖起飞的boss测试器(拥有极高血量与防御)\n" +
                 "可空手合成");
         }
