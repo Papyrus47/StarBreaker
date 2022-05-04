@@ -26,7 +26,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             Projectile.penetrate = -1;
             Projectile.extraUpdates = 1;
             Projectile.tileCollide = false;
-            Projectile.DamageType = DamageClass.Summon;
+            Projectile.DamageType = DamageClass.SummonMeleeSpeed;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.aiStyle = -1;

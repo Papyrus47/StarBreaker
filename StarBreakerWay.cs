@@ -201,5 +201,6 @@ namespace StarBreaker
             }
             return null;
         }
+        public static Vector2 NormalVector(this Vector2 vector) => new Vector2(-vector.Y, vector.X);
     }
 }

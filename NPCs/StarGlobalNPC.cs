@@ -15,6 +15,7 @@ namespace StarBreaker.NPCs
         public int CursedWhipHit = 0;//诅咒鞭
         public int StarSpiralBladeProj = -1;//星辰旋刃弹幕
         public int DrumHitDamage = 0;//鼓的标记伤害
+        public int XuanYuSlowTime = 0;//宣雨减速
         public static int StarBreaker = -1;
         public static int StarGhostKnife = -1;
         public static int StarFrostFist = -1;
@@ -25,9 +26,8 @@ namespace StarBreaker.NPCs
             if (npc.type == ModContent.NPCType<FrostFist>()) StarFrostFist = -1;
             return true;
         }
-        public override void AI(NPC npc)
+        public override void PostAI(NPC npc)
         {
-            base.AI(npc);
             if (StarSpiralBladeProj > -1 && StarSpiralBladeProj <= 200)
             {
                 if (!Main.projectile[StarSpiralBladeProj].active || npc.type == ModContent.NPCType<StarSpiralBladeN>())
@@ -36,6 +36,11 @@ namespace StarBreaker.NPCs
                     return;
                 }
                 npc.velocity += (Main.projectile[StarSpiralBladeProj].position - npc.position).SafeNormalize(default);
+            }
+            if(XuanYuSlowTime > 0)
+            {
+                XuanYuSlowTime--;
+                if(npc.velocity.Length() > 10f) npc.velocity = npc.velocity.RealSafeNormalize() * 10;
             }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -92,6 +97,10 @@ namespace StarBreaker.NPCs
             if (EnergySmash)
             {
                 drawColor = new(100, 100, 255);
+            }
+            if(XuanYuSlowTime > 0)
+            {
+                drawColor = Color.Blue;
             }
             base.DrawEffects(npc, ref drawColor);
         }
