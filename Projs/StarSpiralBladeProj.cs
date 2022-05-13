@@ -182,8 +182,7 @@ namespace StarBreaker.Projs
             {
                 int dama = (int)((damage * 5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
                 if (dama <= 0) dama = 1;
-                target.StrikeNPC(dama, knockback, 10);
-                Main.player[Projectile.owner].dpsDamage += dama;
+                Main.player[Projectile.owner].dpsDamage += (int)target.StrikeNPC(dama, knockback, 10);
                 if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
             }
             else
@@ -192,7 +191,7 @@ namespace StarBreaker.Projs
                 {
                     int dama = (int)((damage * 2.5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
                     if (dama <= 0) dama = 1;
-                    target.StrikeNPC(dama, knockback, 10);
+                    Main.player[Projectile.owner].dpsDamage += (int)target.StrikeNPC(dama, knockback, 10);
                     if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
                 }
                 target.HitEffect(0, 10);

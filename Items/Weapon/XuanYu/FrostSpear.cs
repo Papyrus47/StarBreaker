@@ -40,9 +40,9 @@ namespace StarBreaker.Items.Weapon.XuanYu
             Item.useTurn = true;
         }
         public override bool? PrefixChance(int pre, UnifiedRandom rand) => false;
-        public override bool CanUseItem(Player player)
+        public override void UpdateInventory(Player player)
         {
-            return base.CanUseItem(player);
+            Item.prefix = -1;
         }
     }
 }

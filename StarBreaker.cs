@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StarBreaker.Projs.Waste;
 using StarBreaker.StarUI;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.Localization;
@@ -18,6 +21,7 @@ namespace StarBreaker
         public static Effect LightStar;
         public static Effect GhostSlash;
         public static Effect EliminateRaysShader;
+        public static Effect OffsetShader;//偏移用的shader
 
         RenderTarget2D render;
 
@@ -37,10 +41,11 @@ namespace StarBreaker
             #region 鼠标按键
             ToggleGhostSwordAttack = KeybindLoader.RegisterKeybind(this, "星辰鬼刀-状态切换", "E");
             #endregion
-            #region 盔甲shader（
+            #region 普通shader
             FrostFistHealMagic = ModContent.Request<Effect>("StarBreaker/Effects/Content/FrostFistHealMagic").Value;
             LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
             EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader").Value;
+            OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset").Value;
             #endregion
             #region 屏幕shader
             if (!Main.dedServ)
@@ -118,10 +123,11 @@ namespace StarBreaker
             #region 鼠标按键
             ToggleGhostSwordAttack = KeybindLoader.RegisterKeybind(this, "星辰鬼刀-状态切换", "E");
             #endregion
-            #region 盔甲shader（
+            #region 普通shader
             FrostFistHealMagic = ModContent.Request<Effect>("StarBreaker/Effects/Content/FrostFistHealMagic").Value;
             LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
             EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader").Value;
+            OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset").Value;
             #endregion
             #region 屏幕shader
             if (!Main.dedServ)
@@ -172,33 +178,103 @@ namespace StarBreaker
             GraphicsDevice gd = Main.instance.GraphicsDevice;
             SpriteBatch sb = Main.spriteBatch;
 
-            gd.SetRenderTarget(Main.screenTargetSwap);//在上面绘制原图片，就相当于保存
-            gd.Clear(Color.Transparent);//使用透明清除这个图片
-            sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);
-            sb.End();
+            //gd.SetRenderTarget(Main.screenTargetSwap);//在上面绘制原图片，就相当于保存
+            //gd.Clear(Color.Transparent);//使用透明清除这个图片
+            //sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            //sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);
+            //sb.End();
 
-            gd.SetRenderTarget(render);//设置在自己的RT2D上的
-            gd.Clear(Color.Transparent);//使用透明清除这个图片
-            sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, Main.DefaultSamplerState,
-                DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            //gd.SetRenderTarget(render);//设置在自己的RT2D上的
+            //gd.Clear(Color.Transparent);//使用透明清除这个图片
+            //sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, Main.DefaultSamplerState,
+            //    DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
+            #region 繁星刺破 绘制
+            foreach (Projectile Projectile in Main.projectile)
+            {
+                if (Projectile.active && Projectile.type == ModContent.ProjectileType<StarsPierceProj_Pierce>())
+                {
+                    List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
 
-            sb.End();
+                    // 把所有的点都生成出来，按照顺序
+                    for (int i = 1; i < Projectile.oldPos.Length; ++i)
+                    {
+                        if (Projectile.oldPos[i] == Vector2.Zero) break;
 
-            gd.SetRenderTarget(Main.screenTarget);//切换回屏幕的
-            gd.Clear(Color.Transparent);
-            sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            sb.Draw(Main.screenTargetSwap, Vector2.Zero, Color.White);
-            sb.End();
-            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            gd.Textures[1] = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB").Value;
-            LightStar.CurrentTechnique.Passes[0].Apply();
-            LightStar.Parameters["m"].SetValue(0.5f);
-            LightStar.Parameters["n"].SetValue(0.02f);
-            sb.Draw(render, Vector2.Zero, Color.White);
-            sb.End();
+                        int width = 5 * (i < 10 ? i : 10);
+                        var normalDir = Projectile.oldPos[i - 1] - Projectile.oldPos[i];
+                        normalDir = Vector2.Normalize(new Vector2(-normalDir.Y, normalDir.X));
 
+                        var factor = i / (float)Projectile.oldPos.Length;
+                        var color = Color.Lerp(Color.White, Color.Purple, factor);
+                        var w = MathHelper.Lerp(1f, 0.05f, factor);
+
+                        bars.Add(new CustomVertexInfo(Projectile.oldPos[i] + Projectile.Size * 0.5f + normalDir * width - Main.screenPosition, color, new Vector3((float)Math.Sqrt(factor), 1, w)));
+                        bars.Add(new CustomVertexInfo(Projectile.oldPos[i] + Projectile.Size * 0.5f + normalDir * -width - Main.screenPosition, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
+                    }
+                    if (bars.Count > 2)
+                    {
+                        List<CustomVertexInfo> triangleList = new List<CustomVertexInfo>();
+                        for (int i = 0; i < bars.Count - 2; i += 2)
+                        {
+                            triangleList.Add(bars[i]);
+                            triangleList.Add(bars[i + 2]);
+                            triangleList.Add(bars[i + 1]);
+
+                            triangleList.Add(bars[i + 1]);
+                            triangleList.Add(bars[i + 2]);
+                            triangleList.Add(bars[i + 3]);
+                        }
+                        gd.SetRenderTarget(render);//在自己的画
+                        gd.Clear(Color.Transparent);
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                        Main.graphics.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_1").Value;
+                        Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, triangleList.ToArray(), 0, triangleList.Count / 3);
+                        sb.End();
+                        //这里这一步顶点绘制已经完成
+                        //我们需要切换screenTarget
+                        //以便绘制"星辰背景"与空间切割
+
+                        gd.SetRenderTarget(Main.screenTargetSwap);//每一次切换RenderTarget,都会是这个被切换到的RenderTarget变成纯紫色图片
+                        gd.Clear(Color.Transparent);//透明清除图片
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+                        //这一个是切割空间
+                        OffsetShader.CurrentTechnique.Passes[0].Apply();
+                        OffsetShader.Parameters["tex0"].SetValue(render);//render可以当成贴图使用或者绘制
+                        //(前提是当前gd.SetRenderTarget的不是这个render,否则会报错)
+                        OffsetShader.Parameters["offset"].SetValue(new Vector2(0.05f, 0.01f));//偏移度
+                        OffsetShader.Parameters["invAlpha"].SetValue(0);//反色
+                        sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);//这个Draw是空间切割对应的
+                        sb.End();
+
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                        //这一个是绘制星辰
+                        gd.Textures[1] = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB").Value;
+                        LightStar.CurrentTechnique.Passes[0].Apply();
+                        LightStar.Parameters["m"].SetValue(0.5f);
+                        LightStar.Parameters["n"].SetValue(0.01f);
+
+                        sb.Draw(render, Vector2.Zero, Color.White);//这里把自己的画 画上去
+                        sb.End();
+
+                        gd.SetRenderTarget(Main.screenTarget);//设置为screenTarget
+                        gd.Clear(Color.Transparent);//透明清除图片
+                        sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);//Draw开始
+                        sb.Draw(Main.screenTargetSwap, Vector2.Zero, Color.White);//绘制修改的画
+                        sb.End();
+                    }
+                }
+            }
+            #endregion
+            //sb.End();
+            //sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            //gd.Textures[1] = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB").Value;
+            //LightStar.CurrentTechnique.Passes[0].Apply();
+            //LightStar.Parameters["m"].SetValue(0.5f);
+            //LightStar.Parameters["n"].SetValue(0.01f);
+            //sb.Draw(render, Vector2.Zero, Color.White);
+            //sb.End();
 
             orig(self, finalTexture, screenTarget1, screenTarget2, clearColor);
         }

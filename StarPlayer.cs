@@ -124,6 +124,9 @@ namespace StarBreaker
             if (EGO)
             {
                 Player.whipRangeMultiplier += 2f;
+                Player.GetAttackSpeed(DamageClass.Generic) += 1.2f;
+                Player.pickSpeed -= 1.2f;
+                Player.GetDamage(DamageClass.Melee) += 0.2f;
             }
             EGO = false;
             if (PlayerEmotion < 0)
@@ -204,15 +207,13 @@ namespace StarBreaker
             if (EGO)
             {
                 PlayerVectorZero = 300;
-                Player.moveSpeed += 5;
-                Player.accRunSpeed += 5;
+                Player.moveSpeed += 40;
+                Player.accRunSpeed += 40;
                 Player.maxRunSpeed += 5;
-                Player.GetAttackSpeed(DamageClass.Generic) += 1.2f;
                 Player.noFallDmg = true;
                 Player.fallStart += 10;
                 Player.maxFallSpeed += 10;
-                Player.GetDamage(DamageClass.Melee) += 0.2f;
-                if (Player.HeldItem.type == ModContent.ItemType<LastShortSowrd>()) Player.maxRunSpeed += 5;
+                if (Player.HeldItem.type == ModContent.ItemType<LastShortSowrd>()) Player.maxRunSpeed += 10;
             }
 
             else if (PlayerVectorZero > 0 && !EGO)
@@ -237,6 +238,7 @@ namespace StarBreaker
                 Player.controlHook = false;
                 Player.statDefense = 0;
                 PlayerEmotion = 0;
+                Player.statDefense = 0;
                 Main.mapFullscreen = false;
                 Main.playerInventory = false;
             }

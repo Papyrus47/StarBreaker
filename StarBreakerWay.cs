@@ -184,6 +184,12 @@ namespace StarBreaker
             if (vector.HasNaNs()) vector = Vector2.Zero;
             return vector;
         }
+        public static Vector2 AbsVector2(this Vector2 vector2)
+        {
+            float x = Math.Abs(vector2.X);
+            float y = Math.Abs(vector2.Y);
+            return new Vector2(x, y);
+        }
         public static NPC FindTargetNPC(this Player player,float maxDis = 800)
         {
             foreach(NPC npc in Main.npc)
