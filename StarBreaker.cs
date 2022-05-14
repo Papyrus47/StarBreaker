@@ -78,6 +78,7 @@ namespace StarBreaker
             MusicLoader.AddMusic(this, "Music/Atk3");
             MusicLoader.AddMusic(this, "Sounds/Music/Bloodtower2");
             MusicLoader.AddMusic(this, "Music/Argalia");
+            MusicLoader.AddMusic(this, "Music/UnderfootEnterenceBoss");
             #endregion
             #region 声音加载
             for (int i = 1; i <= 5; i++)

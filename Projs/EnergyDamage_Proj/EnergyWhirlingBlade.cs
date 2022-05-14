@@ -22,8 +22,6 @@ namespace StarBreaker.Projs.EnergyDamage_Proj
             Projectile.width = 80;
             Projectile.height = 90;
             Projectile.alpha = 0;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 7;
             DrawBulletBody = null;
         }
         public override void StateAI()

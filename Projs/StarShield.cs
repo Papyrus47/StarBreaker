@@ -41,7 +41,6 @@ namespace StarBreaker.Projs
                 }
                 else
                 {
-                    int i = 0;
                     foreach (Projectile target in Main.projectile)
                     {
                         if ((target.friendly || !target.hostile)&& target.active && !target.minion &&
@@ -49,16 +48,11 @@ namespace StarBreaker.Projs
                         {
                             if (target.Colliding(target.Hitbox, Projectile.Hitbox))
                             {
-                                target.Kill();
-                                Projectile.timeLeft -= target.damage - (int)(npc.defense * (Main.expertMode ? 0.75f : 0.5f));
-                                npc.life += target.damage / 2;
+                                if(target.Distance(Projectile.Center) < 100) target.Kill();
+                                Projectile.timeLeft -= (target.damage - (int)(npc.defense * (Main.expertMode ? 0.75f : 0.5f))) * 3;
+                                npc.life += target.damage / 5;
                                 if (npc.life > npc.lifeMax) npc.life = npc.lifeMax;
-                                i++;
-                                if (i > 3)
-                                {
-                                    i = 0;
-                                    return;
-                                }
+                                break;
                             }
                         }
                     }

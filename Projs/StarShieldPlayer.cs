@@ -66,8 +66,8 @@ namespace StarBreaker.Projs
                                 CombatText.NewText(Projectile.Hitbox, Color.MediumVioletRed, da);
                                 player.statLife += da;
                                 if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
-                                target.Kill();
-                                if(player.HeldItem.type != ModContent.ItemType<StarBreakerW>())
+                                if (target.Distance(Projectile.Center) < 100) target.Kill();
+                                if (player.HeldItem.type != ModContent.ItemType<StarBreakerW>())
                                 {
                                     Projectile.Kill();
                                 }

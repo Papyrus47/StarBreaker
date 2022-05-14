@@ -37,6 +37,7 @@ namespace StarBreaker.NPCs
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Bloodtower2");
+                SceneEffectPriority = SceneEffectPriority.BossMedium;//曲子优先度
             }
         }
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

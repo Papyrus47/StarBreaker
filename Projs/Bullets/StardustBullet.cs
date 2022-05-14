@@ -16,7 +16,7 @@ namespace StarBreaker.Projs.Bullets
             Projectile.velocity.Y += 0.05f;
             if (Projectile.timeLeft % 5 == 0)
             {
-                Projectile.damage += 10;
+                Projectile.damage++;
             }
         }
         public override void NewSetDef()

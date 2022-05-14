@@ -53,6 +53,7 @@ namespace StarBreaker.NPCs
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Music/AttackOfTheKillerQueen");
+                SceneEffectPriority = SceneEffectPriority.BossMedium;//曲子优先度
             }
         }
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -144,7 +145,7 @@ namespace StarBreaker.NPCs
                     {
                         NPC.velocity = toTarget * 0.015f;
                         Timer1++;
-                        if(Timer1 > 20 - (toTarget.Length() * 0.01f))//根据距离微调发射时间
+                        if(Timer1 > 30 - (toTarget.Length() * 0.01f))//根据距离微调发射时间
                         {
                             if(Timer2 < 10)
                             {

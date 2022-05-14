@@ -68,6 +68,7 @@ namespace StarBreaker.NPCs
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Music/AttackOfTheKillerQueen");
+                SceneEffectPriority = SceneEffectPriority.BossMedium;//曲子优先度
             }
         }
         public override void AI()
