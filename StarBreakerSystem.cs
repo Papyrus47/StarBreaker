@@ -15,12 +15,14 @@ namespace StarBreaker
         public static bool downedStarBreakerEX;
         public static bool downedStarSpiralBlade;
         public static bool downedStarFist;
+        public static bool downedOnyxBlaster;
         public override void SaveWorldData(TagCompound tag)
         {
             if(downedStarBreakerNom) tag["downedStarBrekerNom"] = downedStarBreakerNom;
             if(downedStarBreakerEX) tag["downedStarBreakerEX"] = downedStarBreakerEX;
             if(downedStarSpiralBlade) tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
             if(downedStarFist) tag["downedStarFist"] = downedStarFist;
+            if (downedOnyxBlaster) tag["downedOnyxBlaster"] = downedOnyxBlaster;
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -28,6 +30,7 @@ namespace StarBreaker
             downedStarBreakerEX = tag.ContainsKey("downedStarBreakerEX");
             downedStarSpiralBlade = tag.ContainsKey("downedStarSpiralBlade");
             downedStarFist = tag.ContainsKey("downedStarFist");
+            downedOnyxBlaster = tag.ContainsKey("downedOnyxBlaster");
         }
         public override void OnWorldLoad()
         {

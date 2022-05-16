@@ -105,7 +105,10 @@ namespace StarBreaker
             #endregion
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic += Main_UpdateAudio_DecideOnNewMusic;//可以修改原版曲子
         }
-
+        public override void AddRecipeGroups()
+        {
+            base.AddRecipeGroups();
+        }
         private void Main_UpdateAudio_DecideOnNewMusic(On.Terraria.Main.orig_UpdateAudio_DecideOnNewMusic orig, Main self)
         {
             orig(self);
@@ -121,9 +124,6 @@ namespace StarBreaker
 
         public override void PostSetupContent()
         {
-            #region 鼠标按键
-            ToggleGhostSwordAttack = KeybindLoader.RegisterKeybind(this, "星辰鬼刀-状态切换", "E");
-            #endregion
             #region 普通shader
             FrostFistHealMagic = ModContent.Request<Effect>("StarBreaker/Effects/Content/FrostFistHealMagic").Value;
             LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
@@ -139,24 +139,61 @@ namespace StarBreaker
                 Filters.Scene["StarBreaker:GhostSlash"].Load();
             }
             #endregion
-            #region sky
-            SkyManager.Instance["StarBreaker:StarSky"] = new Backgronuds.StarSky();
-            SkyManager.Instance["StarBreaker:Portal"] = new Backgronuds.Portal();
-            #endregion
-            #region RT2D
-            On.Terraria.Graphics.Effects.FilterManager.EndCapture += FilterManager_EndCapture;
-            On.Terraria.Main.LoadWorlds += Main_LoadWorlds;
-            Terraria.Main.OnResolutionChanged += Main_OnResolutionChanged;
-            #endregion
             #region 标题更改
             try
             {
-                if (Main.rand.NextBool() && Language.ActiveCulture == GameCulture.FromCultureName(GameCulture.CultureName.Chinese))
+                if (Main.rand.NextBool(5))
                 {
-                    Main.instance.Window.Title = "泰拉瑞亚:星辰击碎者!";
+                    const int MaxTitle = 6;
+                    int i = Main.rand.Next(MaxTitle);
+                    switch(i++)
+                    {
+                        case 1:
+                            {
+                                Text("泰拉瑞亚:星辰击碎者!", "Terraria:Star Breaker!");
+                                break;
+                            }
+                        case 2:
+                            {
+                                Text("泰拉瑞亚:星辰旋刃,你在做什么!", "Terraria:Star Spiral Blade,What are you do in!");
+                                break;
+                            }
+                        case 3:
+                            {
+                                Text("泰拉瑞亚:试试废墟图书馆", "Terraria:Try Library of Ruina");
+                                break;
+                            }
+                        case 4:
+                            {
+                                Text("泰拉瑞亚:试试地下层与勇士", "Terraria:Try Dungeon and Fighter");
+                                break;
+                            }
+                        case 5:
+                            {
+                                Text("泰拉瑞亚:试试Toby Fox的传说之下和三角符文", "Terraria:Try Deltarune and UnderTale by Toby Fox");
+                                break;
+                            }
+                        case 6:
+                            {
+                                Text("星辰之主:额...我是不是强行霸占了标题?欢迎来到A-245a-0-1时间线,泰拉瑞亚(?)",
+                                    "Star Owenr:Emmm...I'm control title just now? Welcome to the A-245a-0-1 Time Line,Terraria(?)");
+                                break;
+                            }
+                    }    
                 }
             }
             catch { }
+            void Text(string Cn_Name, string Name)
+            {
+                if (Language.ActiveCulture == GameCulture.FromCultureName(GameCulture.CultureName.Chinese))
+                {
+                    Main.instance.Window.Title = Cn_Name;
+                }
+                else
+                {
+                    Main.instance.Window.Title = Name;
+                }
+            }
             #endregion
         }
         public override void Unload()

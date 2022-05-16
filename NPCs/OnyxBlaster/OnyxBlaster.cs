@@ -1,18 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.UltimateCopperShortsword;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameInput;
-using Terraria.ModLoader;
-using Terraria.GameContent;
-using StarBreaker.Items.Weapon;
-using Terraria.Utilities;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.Localization;
-using Terraria.ID;
+using StarBreaker.Items.Weapon.HradMode;
+using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs.OnyxBlaster
 {
@@ -59,7 +53,11 @@ namespace StarBreaker.NPCs.OnyxBlaster
                 SceneEffectPriority = SceneEffectPriority.BossMedium;//曲子优先度
             }
         }
-        public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;//boss头像旋转
+        public override void BossHeadRotation(ref float rotation)
+        {
+            rotation = NPC.rotation;//boss头像旋转
+        }
+
         public override void BossHeadSpriteEffects(ref SpriteEffects spriteEffects)//boss头像翻转
         {
             if (NPC.spriteDirection == -1)
@@ -100,14 +98,18 @@ namespace StarBreaker.NPCs.OnyxBlaster
             }
             NPC.direction = NPC.spriteDirection;//改变朝向
 
-            if(NPC.direction == 1)
+            if (NPC.direction == 1)
             {
                 NPC.rotation += MathHelper.Pi;
             }//修正朝向带来的问题
-            if(Target.dead)//玩家死亡ai
+            if (Target.dead)//玩家死亡ai
             {
                 NPC.velocity.Y++;
-                if (NPC.velocity.Y > 30) NPC.active = false;
+                if (NPC.velocity.Y > 30)
+                {
+                    NPC.active = false;
+                }
+
                 return;
             }
             switch (State)
@@ -163,19 +165,19 @@ namespace StarBreaker.NPCs.OnyxBlaster
                         {
                             NPC.velocity = (NPC.velocity * 5 + (Target.Center - NPC.Center).RealSafeNormalize()) / 6;//渐变速度,好看一些
                         }
-                        else if(Timer1 == 60)//开始冲刺
+                        else if (Timer1 == 60)//开始冲刺
                         {
                             NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize() * 25;
                         }
-                        else if(Timer1 > 90)//减速
+                        else if (Timer1 > 90)//减速
                         {
                             NPC.velocity *= 0.98f;//减速
-                            if(Timer1 > 120)
+                            if (Timer1 > 120)
                             {
                                 Timer1 = 0;
                                 State++;
                             }
-                            else if(Timer1 % 15 == 0)//每有15帧
+                            else if (Timer1 % 15 == 0)//每有15帧
                             {
                                 ShootOnyx(NPC.Center, (Target.Center - NPC.Center).RealSafeNormalize() * 8);
                             }
@@ -188,6 +190,14 @@ namespace StarBreaker.NPCs.OnyxBlaster
                         break;
                     }
             }
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<OnyxBlasterGun>()));
+        }
+        public override void OnKill()
+        {
+            StarBreakerSystem.downedOnyxBlaster = true;
         }
         private void ShootOnyx(Vector2 center, Vector2 vel)//私自定义的方法
         {
