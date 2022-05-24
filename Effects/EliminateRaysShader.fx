@@ -24,7 +24,7 @@ float4 PixelShaderFunction(PSInput input) : COLOR0
 	color.a = coord.z;
 	return color;
 }
-	PSInput VertexShaderFunction(VSInput input)//这段是顶点绘制的重要组合部分!
+PSInput VertexShaderFunction(VSInput input)//这段是顶点绘制的重要组合部分!
 {
 	PSInput output;
 	output.Color = input.Color;
@@ -34,7 +34,7 @@ float4 PixelShaderFunction(PSInput input) : COLOR0
 }
 technique Technique1
 {
-	pass FrostFistHealMagic
+	pass EliminateRaysShader
 	{
 		VertexShader = compile vs_2_0 VertexShaderFunction();
 		PixelShader = compile ps_2_0 PixelShaderFunction();

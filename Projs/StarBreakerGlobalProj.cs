@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,6 +12,18 @@ namespace StarBreaker.Projs
         public bool ProjectileForSporadicBow = false;
         public bool ProjectileForLastBow = false;
         public int Bloody = 0;
+        public int ProjOwner_NPC;
+        public override void OnSpawn(Projectile projectile, IEntitySource source)
+        {
+            ProjOwner_NPC = -1;
+            if(source is EntitySource_Parent entity)
+            {
+                if(entity.Entity is NPC npc)
+                {
+                    ProjOwner_NPC = npc.whoAmI;
+                }
+            }
+        }
         public override void SetDefaults(Projectile projectile)
         {
             base.SetDefaults(projectile);

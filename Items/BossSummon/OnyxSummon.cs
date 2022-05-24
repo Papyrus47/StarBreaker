@@ -36,7 +36,7 @@ namespace StarBreaker.Items.BossSummon
         public override bool? UseItem(Player player)
         {
             if (Main.CurrentFrameFlags.AnyActiveBossNPC) return false;
-            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<NPCs.OnyxBlaster.OnyxBlaster>());
+            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<NPCs.NorBoss.OnyxBlaster.OnyxBlaster>());
             return base.UseItem(player);
         }
     }

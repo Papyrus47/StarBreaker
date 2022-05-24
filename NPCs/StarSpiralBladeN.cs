@@ -8,6 +8,8 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Localization;
+using System;
 
 namespace StarBreaker.NPCs
 {
@@ -31,7 +33,8 @@ namespace StarBreaker.NPCs
             NPC.defense = 12;
             NPC.damage = 90;
             NPC.noGravity = NPC.noTileCollide = true;
-            NPC.width = NPC.height = 80;
+            NPC.width = 112;
+            NPC.height = 114;
             NPC.HitSound = SoundID.NPCHit4;
             NPC.friendly = false;
             if (!Main.dedServ)
@@ -65,7 +68,25 @@ namespace StarBreaker.NPCs
             {
                 NPC.TargetClosest(true);
             }
-            NPC.rotation += Main.GlobalTimeWrappedHourly;
+            NPC.rotation += NPC.localAI[3];
+            #region 旋转速度改变
+            if (NPC.localAI[2] != 0)
+            {
+                NPC.localAI[3] += 0.1f;
+                if (NPC.localAI[3] > 500)
+                {
+                    NPC.localAI[2]++;
+                }
+            }
+            else
+            {
+                NPC.localAI[3] -= 0.1f;
+                if (NPC.localAI[3] < -500)
+                {
+                    NPC.localAI[2]++;
+                }
+            }
+            #endregion
             if (Target.immuneTime > 5)
             {
                 Target.immuneTime = 5;
@@ -83,18 +104,41 @@ namespace StarBreaker.NPCs
                 }
                 return;
             }
-            int damage = NPC.damage;
-            if (Main.expertMode) damage /= 2;
-            else if (Main.masterMode) damage /= 3;
-            if (NPC.life < NPC.lifeMax * 0.75f && State < 7)
+            if (State < 7)
             {
-                State = 7;
-                Main.NewText("准备好迎接无尽回旋了吗", Color.Purple);
+                #region 控制旋转
+                if (NPC.localAI[3] > 20)
+                {
+                    NPC.localAI[2]++;
+                }
+                else if (NPC.localAI[3] < -20)
+                {
+                    NPC.localAI[2] = 0;
+                }
+                #endregion
+                if (NPC.life < NPC.lifeMax * 0.75f)
+                {
+                    State = 7;
+                    Main.NewText(Language.GetTextValue("Mods.StarBreaker.StarSpiralBladeText.Boss.BossText.T5"), Color.Purple);
+                }
             }
-            else if (NPC.life < NPC.lifeMax * 0.35f && State < 14)
+            else if (State < 14)
             {
-                State = 14;
-                Main.NewText("一起来跳最后一支舞吧", Color.Purple);
+                #region 控制旋转
+                if (NPC.localAI[3] > 50)
+                {
+                    NPC.localAI[2]++;
+                }
+                else if (NPC.localAI[3] < -50)
+                {
+                    NPC.localAI[2] = 0;
+                }
+                #endregion
+                if (NPC.life < NPC.lifeMax * 0.35f)
+                {
+                    State = 14;
+                    Main.NewText(Language.GetTextValue("Mods.StarBreaker.StarSpiralBladeText.Boss.BossText.T6"), Color.Purple);
+                }
             }
             switch (State)
             {
@@ -105,863 +149,75 @@ namespace StarBreaker.NPCs
                         if (Timer1 > 50)
                         {
                             Timer1 = 0;
-                            string sayText = "";
-                            switch (Timer2)
+                            string sayText = Language.GetTextValue("Mods.StarBreaker.StarSpiralBladeText.Boss.BossText.T" + (int)(Timer2 + 1));
+                            Color color = Color.LightBlue;//霜拳
+                            string weaponText = Language.GetTextValue("Mods.StarBreaker.StarSpiralBladeText.Boss.WeaponText.T" + (int)(Timer2 + 1));
+                            if (Timer2 == 0 || Timer2 == 3)//炎拳说话颜色
                             {
-                                case 0:
-                                    {
-                                        sayText = "看起来你拿到了他们";
-                                        break;
-                                    }
-                                case 1:
-                                    {
-                                        sayText = "不得不开打了...";
-                                        break;
-                                    }
-                                case 2:
-                                    {
-                                        if (Target.name == "paparyus") sayText = "我会试图打败你的";
-                                        else sayText = "等等,我可以投靠你啊";
-                                        break;
-                                    }
-                                case 3:
-                                    {
-                                        if (Target.name == "paparyus") sayText = "废话不多说了,来吧";
-                                        else sayText = "星 辰 旋 刃 加 入 了 队 伍 !";
-                                        break;
-                                    }
+                                color = Color.Orange;
                             }
                             if (Timer2 >= 4)
                             {
                                 Timer2 = 0;
-                                if (Target.name != "paparyus")
-                                {
-                                    NPC.life = 0;
-                                    NPC.checkDead();
-                                    break;
-                                }
                                 State++;
-                                #region 沙雕部分
-                                #endregion
                                 break;
                             }
                             Main.NewText(sayText, Color.Purple);
-
+                            PopupText.NewText(new()
+                            {
+                                Color = color,
+                                DurationInFrames = 120,
+                                Text = weaponText,
+                                Velocity = Vector2.UnitY * 3
+                            }, Target.Center);
                             Timer2++;
                         }
                         break;
                     }
-                case 1://冲刺
-                case 11://冲刺并散发
-                case 13://死亡绞杀
-                case 14://最后的共舞
-                case 17://无尽绞杀(原左右横杀)
-                case 23://投掷血牙运动弹幕
+                case 1://记录位置冲刺
                     {
-                        if (State == 11)
-                        {
-                            if (Timer2 < 2) Timer2 = 2;
-                        }
-                        else if (State == 14 && NPC.life >= NPC.lifeMax * 0.35f)
-                        {
-                            State = 7;
-                        }
                         if (Timer1 <= 0)
                         {
-                            Timer1 = 60;
-                            if (State == 13)
+                            Timer1 = 40;
+                            targetOldPos = Target.Center;
+                            if(Timer2 > 5)
                             {
-                                targetOldPos = Target.position + ((Target.position - NPC.position).SafeNormalize(default).RotatedBy(0.1) * 200);
-                            }
-                            else
-                            {
-                                targetOldPos = Target.position;
+                                Timer1 = Timer2 = 0;
+                                State++;
                             }
                             Timer2++;
-                            if (Timer2 > 5)
-                            {
-                                Timer2 = 0;
-                                Timer1 = 0;
-                                targetOldPos = Vector2.Zero;
-                                State++;
-                                NPC.netUpdate = true;
-                            }
                         }
                         else
                         {
                             Timer1--;
-                            if (State == 11 && Timer1 == 1 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                for (int i = 0; i < 8; i++)
-                                {
-                                    Vector2 vel = Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 8 * i) * 10;
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                                }
-                            }
-                            else if (State == 14 && Timer1 % 5 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    Vector2 pos = NPC.Center + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 4 * i - MathHelper.PiOver4) * 800);
-                                    Vector2 vel = (pos - NPC.position).SafeNormalize(default).RotatedBy(MathHelper.PiOver4) * -10;
-                                    Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer)].extraUpdates = 3;
-                                }
-                            }
-                            else if (State == 23 && Timer1 == 1 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                for (int i = -1; i <= 1; i++)
-                                {
-                                    Vector2 vel = (Target.position - NPC.position).SafeNormalize(default).RotatedBy(0.2 * i) * 10;
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer, 3, i);
-                                }
-                            }
-                            if (State == 17 && Timer1 > 50)
-                            {
-                                NPC.position = Target.position + new Vector2(600 * (Timer2 % 2 == 0).ToDirectionInt(), 0);
-                                targetOldPos = Target.position + ((Target.position - NPC.position).SafeNormalize(default) * 600);
-                            }
-                            NPC.velocity = (targetOldPos - NPC.Center) * 0.2f;
-                            if (State == 13)
-                            {
-                                NPC.velocity *= 0.4f;
-                            }
-                            else if (State == 17) NPC.velocity = (targetOldPos - NPC.Center) * 0.06f;
-                        }
-                        break;
-                    }
-                case 2://回旋冲刺拦路
-                    {
-                        switch (Timer3)
-                        {
-                            case 0://瞬移到上或者下后，开始拦路
-                                //瞬移上下根据玩家瞬移前速度决定
-                                {
-                                    if (NPC.alpha < 255) NPC.alpha += 10;
-                                    else if (NPC.alpha > 255) NPC.alpha = 255;
-                                    else
-                                    {
-                                        Vector2 pos;
-                                        if (Target.velocity.X > 0)
-                                        {
-                                            pos = Target.position + new Vector2(0, 800);
-                                            Timer2 = 1;
-                                        }
-                                        else
-                                        {
-                                            pos = Target.position + new Vector2(0, -800);
-                                            Timer2 = -1;
-                                        }
-                                        NPC.position = pos;
-                                        targetOldPos = Target.position;
-                                        Timer3++;
-                                        NPC.alpha = 0;
-                                    }
-                                    break;
-                                }
-                            case 1://开始回旋
-                                {
-                                    Timer1++;
-                                    if (NPC.velocity.Length() < 1) NPC.velocity = Vector2.UnitX * 5;
-                                    NPC.position = targetOldPos + ((targetOldPos - NPC.position).SafeNormalize(default).RotatedBy(MathHelper.ToRadians(1.5f) * Timer2) * 800);
-                                    int findProj = Timer2 == -1 ? 0 : 1;
-                                    if (Timer1 > 90)
-                                    {
-                                        Timer3++;
-                                        Timer1 = 0;
-                                    }
-                                    else if (Timer1 % 6 == findProj && Main.netMode != NetmodeID.MultiplayerClient)
-                                    {
-                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, Vector2.Zero, ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                                    }
-                                    break;
-                                }
-                            default:
-                                State++;
-                                Timer1 = 0;
-                                Timer2 = 0;
-                                Timer3 = 0;
-                                break;
-                        }
-                        break;
-                    }
-                case 3://四角冲刺
-                    {
-                        switch (Timer1)
-                        {
-                            case 0://归零
-                                {
-                                    Timer1++;
-                                    return;
-                                }
-                            case 1://左下角
-                            case 5:
-                                {
-                                    targetOldPos = Target.position + new Vector2(500, 100);
-                                    break;
-                                }
-                            case 2://右下角
-                                {
-                                    targetOldPos = Target.position + new Vector2(-500, 100);
-                                    break;
-                                }
-                            case 3://右上角
-                                {
-                                    targetOldPos = Target.position + new Vector2(-500, -100);
-                                    break;
-                                }
-                            case 4://左上角
-                                {
-                                    targetOldPos = Target.position + new Vector2(500, -100);
-                                    break;
-                                }
-                        }
-                        if (Vector2.Distance(NPC.position, targetOldPos) > NPC.width)
-                        {
-                            NPC.velocity = (targetOldPos - NPC.Center) * 0.15f;
+                            NPC.velocity = (targetOldPos - NPC.Center) * 0.3f;//高速追击旧位置
 
-                        }
-                        else if (Timer1 == 5)
-                        {
-                            Timer1 = 0;
-                            State++;
-                        }
-                        else
-                        {
-                            Timer1++;
-                        }
-                        break;
-                    }
-                case 4://经典回旋
-                case 22://绕一圈冲刺
-                    {
-                        float oldPosDis = 800;
-                        if (State == 22) oldPosDis -= 400;
-                        if (Timer1 == 0)
-                        {
-                            targetOldPos = Target.position;
-                        }
-                        else if (Timer1 < 200)
-                        {
-                            #region 限制圈
-                            for (int i = 0; i < 200; i++)
+                            if(Math.Abs(NPC.localAI[3]) > 20)//消耗旋转速度使用弹幕攻击
                             {
-                                Vector2 dustCenter = targetOldPos + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 200 * i) * oldPosDis);
-                                Dust dust = Dust.NewDustDirect(dustCenter, 1, 1, DustID.PurpleCrystalShard);
-                                dust.noGravity = true;
-                                dust.velocity *= 0;
-                            }
-                            if (Vector2.Distance(Target.position, targetOldPos) > oldPosDis)
-                            {
-                                Target.position = targetOldPos + (((Target.position - targetOldPos).SafeNormalize(default) * (oldPosDis - 1)));
-                            }
-                            #endregion
-                            Vector2 pos = targetOldPos + ((NPC.position - targetOldPos).SafeNormalize(default).RotatedBy(0.1) * oldPosDis);
-                            NPC.velocity = (pos - NPC.position) * 0.3f;
-                            if (Timer1 % 5 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                if (State == 22)
-                                {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.32f, Main.myPlayer);
-                                }
-                                else
-                                {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (targetOldPos - NPC.position).SafeNormalize(default) * 20,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.32f, Main.myPlayer);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (State == 22)
-                            {
-                                if (Timer2 == 1) NPC.velocity = (Target.position - NPC.position).SafeNormalize(default) * 20;
-                                else if (Timer2 > 30)
-                                {
-                                    Timer1 = Timer2 = 0;
-                                    State++;
-                                }
-                                Timer2++;
-                            }
-                            else
-                            {
-                                Timer1 = 0;
-                                State++;
-                                break;
-                            }
-                        }
-                        Timer1++;
-                        break;
-                    }
-                case 5://隐身，向下冲刺
-                case 19://向上冲刺
-                    {
-                        switch (Timer3)
-                        {
-                            case 0://隐身
-                                {
-                                    NPC.velocity *= .9f;
-                                    if (NPC.alpha < 255) NPC.alpha += 10;
-                                    else if (NPC.alpha > 255) NPC.alpha = 255;
-                                    else
-                                    {
-                                        NPC.alpha = 0;
-                                        Timer3++;
-                                        Vector2 vector2 = new Vector2(0, -500);
-                                        if (State == 19) vector2.Y = 500;
-                                        NPC.position = Target.position + vector2;
-                                    }
-                                    break;
-                                }
-                            case 1://向下/上冲刺
-                                {
-                                    NPC.velocity.X = 0;
-                                    NPC.velocity.Y += State == 19 ? -1 : 1;
-                                    Timer1++;
-                                    if (Timer1 > 35)
-                                    {
-                                        Timer1 = 0;
-                                        Timer3++;
-                                    }
-                                    break;
-                                }
-                            case 2://散发并跳出
-                                {
-                                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                                    {
-                                        if (State == 19)
-                                        {
-                                            for (int i = 0; i < 10; i++)
-                                            {
-                                                Vector2 vel = new(i - 5, -5);
-                                                vel.X *= 2.3f;
-                                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
-                                                    ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (int i = 0; i < 10; i++)
-                                            {
-                                                Vector2 vel = Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 10 * i) * 10;
-                                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel,
-                                                    ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                                            }
-                                        }
-                                    }
-                                    Timer3 = 0;
-                                    State++;
-                                    break;
-                                }
-                            default:
-                                Timer3 = 0;
-                                break;
-                        }
-                        break;
-                    }
-                case 6://拦截
-                    {
-                        switch (Timer1)//追踪
-                        {
-                            case < 120:
-                                NPC.velocity = (Target.position - NPC.position) * 0.03f;
-                                break;
-                            case 120:
-                                NPC.velocity = (Target.position - NPC.position).SafeNormalize(default) * 30;
-                                break;
-                            case 140:
-                                NPC.velocity = NPC.velocity.RotatedBy(MathHelper.ToRadians(-60));
-                                break;
-                            case > 140 when Timer1 % 5 == 0:
-                                {
-                                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                                    {
-                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
-                                                ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                                    }
-                                    break;
-                                }
-                            case >= 200:
-                                Timer1 = 0;
-                                State++;
-                                break;
-                        }
-                        Timer1++;
-                        break;
-                    }
-                case 7://无尽回旋
-                    {
-                        if (NPC.life > NPC.lifeMax * 0.75f)
-                        {
-                            State = 1;
-                            break;
-                        }
-                        const float DIS_OLD_POS = 800;
-                        if (Timer1 == 0)
-                        {
-                            targetOldPos = Target.position;
-                        }
-                        else if (Timer1 < 200)
-                        {
-                            #region 限制圈
-                            for (int i = 0; i < 200; i++)
-                            {
-                                Vector2 dustCenter = targetOldPos + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 200 * i) * DIS_OLD_POS);
-                                Dust dust = Dust.NewDustDirect(dustCenter, 1, 1, DustID.PurpleCrystalShard);
-                                dust.noGravity = true;
-                                dust.velocity *= 0;
-                            }
-                            if (Vector2.Distance(Target.position, targetOldPos) > DIS_OLD_POS)
-                            {
-                                Target.position = targetOldPos + (((Target.position - targetOldPos).SafeNormalize(default) * (DIS_OLD_POS - 1)));
-                            }
-                            #endregion
-                            Vector2 pos = targetOldPos + ((NPC.position - targetOldPos).SafeNormalize(default).RotatedBy(0.05) * DIS_OLD_POS);
-                            NPC.velocity = (pos - NPC.position) * 0.3f;
-                            if (Timer1 % 35 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                Vector2[] vectors = new Vector2[3]
-                                {
-                                    targetOldPos - (NPC.Center - targetOldPos),
-                                    new Vector2(NPC.Center.X, (targetOldPos - (NPC.Center - targetOldPos)).Y),
-                                     new Vector2((targetOldPos - (NPC.Center - targetOldPos)).X, NPC.Center.Y)
-                                };
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    Vector2 center;
-                                    if (i < 3)
-                                    {
-                                        center = vectors[i];
-                                    }
-                                    else
-                                    {
-                                        center = NPC.Center;
-                                    }
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), center, (targetOldPos - center).SafeNormalize(default) * 10,
-                                    ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.32f, Main.myPlayer);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Timer1 = 0;
-                            State++;
-                            break;
-                        }
-                        Timer1++;
-                        break;
-                    }
-                case 8://三角形拦截
-                    {
-                        Timer1++;
-                        switch (Timer1)//追踪
-                        {
-                            case < 120:
-                                NPC.velocity = (Target.position - NPC.position) * 0.03f;
-                                break;
-                            case 120:
-                                NPC.velocity = (Target.position - NPC.position).SafeNormalize(default) * 30;
-                                break;
-                            case 160:
-                            case 200:
-                            case 240:
-                                NPC.velocity = NPC.velocity.RotatedBy(MathHelper.ToRadians(120));
-                                break;
-                            case > 140 when Timer1 % 2 == 0:
-                                {
-                                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                                    {
-                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
-                                                ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                                    }
-                                    break;
-                                }
-                            case >= 280:
-                                Timer1 = 0;
-                                State++;
-                                break;
-                        }
-                        break;
-                    }
-                case 9://高速自旋
-                    {
-                        if (NPC.velocity.Length() < 5)
-                        {
-                            NPC.velocity = Vector2.UnitX * 5;
-                        }
-                        else
-                        {
-                            NPC.velocity = NPC.velocity.RotatedBy(0.2);
-                            Timer1++;
-                            if (Timer1 > 10 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                Timer1 = 0;
-                                if (Timer2 > 20)//散发20次后
-                                {
-                                    Timer2 = 0;
-                                    State++;
-                                    break;
-                                }
-                                Timer2++;
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity,
-                                    ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
+                                NPC.localAI[3] *= 0.4f;
+                                ShootProj(Target.Center,Vector2.Zero);
                             }
                         }
                         break;
                     }
-                case 10://旋刃瞬间停止,并朝四周朝玩家投掷弹幕
-                case 18://投掷会回旋的弹幕
+                default:
                     {
-                        NPC.velocity *= 0f;
-                        const float DIS_OLD_POS = 800;
-                        #region 限制圈
-                        for (int i = 0; i < 200; i++)
-                        {
-                            Vector2 dustCenter = NPC.position + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 200 * i) * DIS_OLD_POS);
-                            Dust dust = Dust.NewDustDirect(dustCenter, 1, 1, DustID.PurpleCrystalShard);
-                            dust.noGravity = true;
-                            dust.velocity *= 0;
-                        }
-                        if (Vector2.Distance(Target.position, NPC.position) > DIS_OLD_POS)
-                        {
-                            Target.position = NPC.position + ((Target.position - NPC.position).SafeNormalize(default) * (DIS_OLD_POS - 1));
-                        }
-                        #endregion
-                        Timer1++;
-                        if (State == 10)
-                        {
-                            if (Timer1 > 10 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                Timer1 = 0;
-                                if (Timer2 > 20)
-                                {
-                                    Timer2 = 0;
-                                    State++;
-                                    break;
-                                }
-                                Timer2++;
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    Vector2 pos = NPC.position + Vector2.UnitX.RotatedBy((MathHelper.TwoPi / 4 * i) + (Timer2 / 10)) * DIS_OLD_POS;
-                                    Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, (NPC.Center - pos).SafeNormalize(default) * 10,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer)].timeLeft = 80;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (Timer1 > 10 && Main.netMode != NetmodeID.MultiplayerClient)
-                            {
-                                Timer1 = 0;
-                                if (Timer2 > 3)
-                                {
-                                    Timer2 = 0;
-                                    State++;
-                                    break;
-                                }
-                                Timer2++;
-                                for (int i = 0; i < 4 + (Timer2 * 2); i++)
-                                {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, Vector2.UnitX.RotatedBy(MathHelper.TwoPi / (4 + (Timer2 * 2)) * i) * 10,
-                                        ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer, 1);
-                                }
-                            }
-                        }
-                        break;
-                    }
-                case 12://二次函数运动
-                    {
-                        if (Timer1 == 0)
-                        {
-                            Timer1 = -600;
-                        }
-                        else if (Timer1 > 600)
-                        {
-                            Timer1 = 0;
-                            State++;
-                            break;
-                        }
-                        else if (Timer1 % 15 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                        {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitY * 5,
-                                ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                        }
-                        Timer1 += 7;
-                        float Y = Target.position.Y + ((Timer1 - 600) * (Timer1 + 600) / 600);
-                        NPC.position = new(Target.position.X + Timer1, Y);
-                        break;
-                    }
-                case 15://缓慢接近玩家
-                    {
-                        const float DIS_OLD_POS = 130;
-                        if (Timer1 == 0)
-                        {
-                            targetOldPos = Target.position;
-                        }
-                        else if (Timer1 < 800)
-                        {
-                            #region 限制圈
-                            for (int i = 0; i < 200; i++)
-                            {
-                                Vector2 dustCenter = targetOldPos + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 200 * i) * DIS_OLD_POS);
-                                Dust dust = Dust.NewDustDirect(dustCenter, 1, 1, DustID.PurpleCrystalShard);
-                                dust.noGravity = true;
-                                dust.velocity *= 0;
-                            }
-                            if (Vector2.Distance(Target.position, targetOldPos) > DIS_OLD_POS)
-                            {
-                                Target.position = targetOldPos + (((Target.position - targetOldPos).SafeNormalize(default) * (DIS_OLD_POS - 1)));
-                            }
-                            #endregion
-                            Vector2 pos = targetOldPos + ((NPC.position - targetOldPos).SafeNormalize(default).RotatedBy(0.1) * (800 - Timer1));
-                            NPC.velocity = (pos - NPC.position) * 0.3f;
-                        }
-                        else
-                        {
-                            Timer1 = 0;
-                            State++;
-                            break;
-                        }
-                        Timer1 += 3;
-                        break;
-                    }
-                case 16://五角星冲刺
-                case 20://迷幻阵
-                    {
-                        float oldPosDis = 800;
-                        if (State == 20) oldPosDis -= 400;
-                        if (Timer1 == 0)
-                        {
-                            targetOldPos = Target.position;
-                            Timer1++;
-                        }
-                        #region 限制圈
-                        for (int i = 0; i < 200; i++)
-                        {
-                            Vector2 dustCenter = targetOldPos + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 200 * i) * oldPosDis);
-                            Dust dust = Dust.NewDustDirect(dustCenter, 1, 1, DustID.PurpleCrystalShard);
-                            dust.noGravity = true;
-                            dust.velocity *= 0;
-                        }
-                        if (Vector2.Distance(Target.position, targetOldPos) > oldPosDis)
-                        {
-                            Target.position = targetOldPos + (((Target.position - targetOldPos).SafeNormalize(default) * (oldPosDis - 1)));
-                        }
-                        #endregion
-                        #region 冲刺
-                        List<Vector2> pos = new();
-                        Vector2 endPos;
-                        if (State == 16)
-                        {
-                            for (int i = 0; i < 5; i++)
-                            {
-                                pos.Add(targetOldPos + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 5 * i) * oldPosDis));
-                            }
-                            switch (Timer2)
-                            {
-                                case 0://到达起点
-                                case 5://回归
-                                    {
-                                        endPos = pos[2];
-                                        break;
-                                    }
-                                case 1:
-                                    {
-                                        endPos = pos[4];
-                                        break;
-                                    }
-                                case 2:
-                                    {
-                                        endPos = pos[1];
-                                        break;
-                                    }
-                                case 3:
-                                    {
-                                        endPos = pos[3];
-                                        break;
-                                    }
-                                case 4:
-                                    {
-                                        endPos = pos[0];
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        Timer2 = 0;
-                                        Timer1 = 0;
-                                        State++;
-                                        return;
-                                    }
-                            }
-                        }
-                        else
-                        {
-                            for (int i = 0; i < 8; i++)
-                            {
-                                pos.Add(targetOldPos + (Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 8 * i) * oldPosDis));
-                            }
-                            switch (Timer2)
-                            {
-                                case 0://到达起点
-                                case 7:
-                                    {
-                                        endPos = pos[6];
-                                        break;
-                                    }
-                                case 1:
-                                    {
-                                        endPos = pos[3];
-                                        break;
-                                    }
-                                case 2:
-                                    {
-                                        endPos = pos[5];
-                                        break;
-                                    }
-                                case 3:
-                                    {
-                                        endPos = pos[2];
-                                        break;
-                                    }
-                                case 4:
-                                    {
-                                        endPos = pos[7];
-                                        break;
-                                    }
-                                case 5:
-                                    {
-                                        endPos = pos[4];
-                                        break;
-                                    }
-                                case 6:
-                                    {
-                                        endPos = pos[1];
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        Timer2 = 0;
-                                        Timer1 = 0;
-                                        State++;
-                                        return;
-                                    }
-                            }
-                        }
-                        NPC.velocity = (endPos - NPC.position) * 0.05f;
-
-                        if (Timer2 > 0 && Timer1 % 3 == 0 && Main.netMode != NetmodeID.MultiplayerClient && State == 16)
-                        {
-                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero,
-                                ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(), damage, 1.2f, Main.myPlayer);
-                        }
-                        if (Vector2.Distance(endPos, NPC.position) < 20)
-                        {
-                            Timer2++;
-                        }
-                        Timer1++;
-                        #endregion
-                        break;
-                    }
-                case 21://死亡回旋
-                    {
-                        switch (Timer3)
-                        {
-                            case 0:
-                                {
-                                    switch (Timer2)
-                                    {
-                                        case 0://旋转
-                                            {
-                                                Vector2 pos = Target.position + ((NPC.position - Target.position).SafeNormalize(default).RotatedBy(MathHelper.ToRadians(0.1f) * Timer1 * 0.3f) * 800);
-                                                NPC.velocity = (pos - NPC.position) * 0.3f;
-                                                Timer1++;
-                                                if (Timer1 > 300)
-                                                {
-                                                    Timer2++;
-                                                    Timer1 = 0;
-                                                }
-                                                else if (Timer1 == 1)
-                                                {
-                                                    Main.NewText("来吧...死亡回旋", Color.Purple);
-                                                }
-                                                break;
-                                            }
-                                        case 1://冲刺
-                                            {
-                                                if (Timer1 == 0)
-                                                {
-                                                    NPC.velocity = ((Target.position - NPC.position) + Target.velocity * 0.3f).SafeNormalize(default) * 30;
-                                                }
-                                                else if (Timer1 > 40)
-                                                {
-                                                    Timer1 = 0;
-                                                    Timer2 = 0;
-                                                    Timer3++;
-                                                }
-                                                Timer1++;
-                                                break;
-                                            }
-                                    }
-                                    break;
-                                }
-                            case 1://迷惑玩家
-                                {
-                                    if (Timer1 == 0) targetOldPos = Target.position;
-                                    Vector2 pos = targetOldPos + ((NPC.position - targetOldPos).SafeNormalize(default).RotatedBy(0.3f) * (400 - Timer1));
-                                    NPC.velocity = (pos - NPC.position) * 0.3f;
-                                    Timer1++;
-                                    if (Timer1 > 300)
-                                    {
-                                        Timer1 = 0;
-                                        Timer3 = 0;
-                                        State++;
-                                        NPC.life = NPC.lifeMax = 60000;
-                                        Main.NewText("可恶...没有力气了", Color.Purple);
-                                    }
-                                    else if (Timer1 == 2)
-                                    {
-                                        Main.NewText("你能看清我的位置?", Color.Purple);
-                                    }
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-                default://其他模式
-                    {
-                        if (State >= 21)
-                        {
-                            State = 22;
-                            break;
-                        }
                         State = 1;
-                        if (NPC.life < NPC.lifeMax * 0.75f)
-                        {
-                            State = 7;
-                        }
-                        else if (NPC.life < NPC.lifeMax * 0.35f)
-                        {
-                            State = 15;
-                        }
+                        
                         break;
                     }
             }
         }
-        public override bool CheckActive()
-        {
-            return false;
-        }
+
+        public override bool CheckActive() => false;
 
         public override bool CheckDead()
         {
-            if (State <= 21 && State > 0)
-            {
-                NPC.life = 1;
-                return false;
-            }
+            //if (State <= 21 && State > 0)
+            //{
+            //    NPC.life = 1;
+            //    return false;
+            //}
             return base.CheckDead();
         }
         public override void BossHeadSlot(ref int index)
@@ -983,6 +239,7 @@ namespace StarBreaker.NPCs
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             StarBreakerWay.NPCDrawTail(NPC, Color.White, drawColor);
+            Utils.DrawBorderString(spriteBatch, ((int)NPC.localAI[3] * 60).ToString(), NPC.Center + new Vector2(-10,-50) - Main.screenPosition, Color.MediumPurple);
             switch (State)
             {
                 case 3://幻影
@@ -997,44 +254,18 @@ namespace StarBreaker.NPCs
                             origin, 1f, SpriteEffects.None, 0);
                         break;
                     }
-                case 7://无尽回旋
-                    {
-                        Texture2D texture = TextureAssets.Npc[Type].Value;
-                        Vector2 origin = texture.Size() * 0.5f;
-                        Main.spriteBatch.Draw(texture, targetOldPos - (NPC.Center - targetOldPos) - screenPos, null, Color.White * 0.7f, NPC.rotation,
-                            origin, 1f, SpriteEffects.None, 0);
-                        Main.spriteBatch.Draw(texture, new Vector2(NPC.Center.X, (targetOldPos - (NPC.Center - targetOldPos)).Y) - screenPos, null, Color.White * 0.7f, NPC.rotation,
-                            origin, 1f, SpriteEffects.None, 0);
-                        Main.spriteBatch.Draw(texture, new Vector2((targetOldPos - (NPC.Center - targetOldPos)).X, NPC.Center.Y) - screenPos, null, Color.White * 0.7f, NPC.rotation,
-                            origin, 1f, SpriteEffects.None, 0);
-                        break;
-                    }
-                case 20://迷幻阵
-                    {
-                        Texture2D texture = TextureAssets.Npc[Type].Value;
-                        Vector2 origin = texture.Size() * 0.5f;
-                        for (int i = 1; i < 8; i++)
-                        {
-                            Vector2 pos = targetOldPos + (NPC.Center - targetOldPos).RotatedBy(MathHelper.PiOver4 * i);
-                            Main.spriteBatch.Draw(texture, pos - screenPos, null, drawColor, NPC.rotation,
-                           origin, 1f, SpriteEffects.None, 0);
-                        }
-                        break;
-                    }
-                case 21://死亡回旋
-                    {
-                        Texture2D texture = TextureAssets.Npc[Type].Value;
-                        Vector2 origin = texture.Size() * 0.5f;
-                        for (int i = 1; i < 16; i++)
-                        {
-                            Vector2 pos = targetOldPos + (NPC.Center - targetOldPos).RotatedBy(MathHelper.PiOver4 / 2 * i);
-                            Main.spriteBatch.Draw(texture, pos - screenPos, null, drawColor, NPC.rotation,
-                           origin, 1f, SpriteEffects.None, 0);
-                        }
-                        break;
-                    }
             }
             return base.PreDraw(spriteBatch, screenPos, drawColor);
+        }
+        private int ShootProj(Vector2 center,Vector2 vel)
+        {
+            int i = 0;
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                i = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, vel, ModContent.ProjectileType<StarSpiralBladeProj_Hostile>(),
+                    Damage, 2.3f, Main.myPlayer);
+            }
+            return i;
         }
     }
 }

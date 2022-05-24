@@ -8,24 +8,13 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace StarBreaker.NPCs.OnyxBlaster
+namespace StarBreaker.NPCs.NorBoss.OnyxBlaster
 {
     [AutoloadBossHead]//自动加载boss头像
     public class OnyxBlaster : FSMNPC //作为开源mod的一个屑教程boss
     {
+        public override string Texture => "Terraria/Images/Item_" + ItemID.OnyxBlaster;
         public override string BossHeadTexture => Texture;//调用同Texture一样的算法
-        private int Damage//这一个是属性,获取伤害用的
-        {
-            get
-            {
-                int damage = NPC.damage;
-                if (Main.masterMode || Main.expertMode)//大师或者专家模式
-                {
-                    damage /= 2;
-                }
-                return damage;//一套普通与其他模式的伤害切换
-            }
-        }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Onyx Blaster");//设置名字

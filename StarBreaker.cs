@@ -22,6 +22,7 @@ namespace StarBreaker
         public static Effect GhostSlash;
         public static Effect EliminateRaysShader;
         public static Effect OffsetShader;//偏移用的shader
+        public static Effect UseSwordShader;//剑类挥动
 
         RenderTarget2D render;
 
@@ -46,6 +47,7 @@ namespace StarBreaker
             LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
             EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader").Value;
             OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset").Value;
+            UseSwordShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/UseSwordShader").Value;
             #endregion
             #region 屏幕shader
             if (!Main.dedServ)
@@ -129,6 +131,7 @@ namespace StarBreaker
             LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
             EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader").Value;
             OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset").Value;
+            UseSwordShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/UseSwordShader").Value;
             #endregion
             #region 屏幕shader
             if (!Main.dedServ)
@@ -264,8 +267,9 @@ namespace StarBreaker
                             triangleList.Add(bars[i + 3]);
                         }
                         gd.SetRenderTarget(render);//在自己的画
-                        gd.Clear(Color.Transparent);
-                        sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                        gd.Clear(Color.Transparent);//透明清除紫色
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, 
+                            DepthStencilState.Default, RasterizerState.CullNone);//顶点绘制
                         Main.graphics.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_1").Value;
                         Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, triangleList.ToArray(), 0, triangleList.Count / 3);
                         sb.End();
@@ -281,9 +285,11 @@ namespace StarBreaker
                         OffsetShader.CurrentTechnique.Passes[0].Apply();
                         OffsetShader.Parameters["tex0"].SetValue(render);//render可以当成贴图使用或者绘制
                         //(前提是当前gd.SetRenderTarget的不是这个render,否则会报错)
+                        //因为这个render保存的是刚刚顶点绘制的图像,所以tex0会是顶点绘制绘制到的区域
                         OffsetShader.Parameters["offset"].SetValue(new Vector2(0.05f, 0.01f));//偏移度
                         OffsetShader.Parameters["invAlpha"].SetValue(0);//反色
                         sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);//这个Draw是空间切割对应的
+                        //Draw目前的世界图像,也就是screenTarget内容
                         sb.End();
 
                         sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -294,6 +300,7 @@ namespace StarBreaker
                         LightStar.Parameters["n"].SetValue(0.01f);
 
                         sb.Draw(render, Vector2.Zero, Color.White);//这里把自己的画 画上去
+                        //通过上面的shader,会影响其绘制的内容
                         sb.End();
 
                         gd.SetRenderTarget(Main.screenTarget);//设置为screenTarget

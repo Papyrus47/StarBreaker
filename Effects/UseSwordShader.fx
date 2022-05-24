@@ -18,15 +18,16 @@ struct PSInput
     float3 Texcoord : TEXCOORD0;
 };
 
-float4 PixelShaderFunction(PSInput input) : COLOR0
+float4 PixelShaderFunction(PSInput input) : COLOR0//使用挥动剑类武器的shader
 {
     float3 coord = input.Texcoord; //获取纹理坐标
     float4 color = tex2D(uImage0, float2(coord.x,coord.y));//获取对应在贴图上的颜色
-    if (all(color))
+    if (all(color))//返回透明
     {
-        return float4(1,1,1,1);
+        return float4(1, 1, 1, 1);
     }
-    color.rbg = input.Color.rbg;
+    color.rbg = input.Color.rbg;//取颜色为传入color的rbg
+    color.a = coord.z * input.Color.a;//透明度
     return color;//返回其颜色
 
 }
@@ -40,7 +41,7 @@ PSInput VertexShaderFunction(VSInput input)
 }
 technique Technique1
 {
-    pass FrostFistHealMagic
+    pass UseSwordShader
     {
         VertexShader = compile vs_2_0 VertexShaderFunction();
         PixelShader = compile ps_2_0 PixelShaderFunction();

@@ -36,6 +36,7 @@ namespace StarBreaker.Items.Weapon.HradMode
             Item.height = 23;
             Item.noUseGraphic = true;
             Item.channel = true;
+            Item.noMelee = true;
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
@@ -155,7 +156,7 @@ namespace StarBreaker.Items.Weapon.HradMode
                         }
                         else
                         {
-                            for (int i = 0; i < Projectile.ai[1] + 5; i++)
+                            for (int i = 0; i < Projectile.ai[1] + 1; i++)
                             {
                                 if (i > 10) break;
                                 Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity.RotatedByRandom(0.2) * Main.rand.NextFloat(15,20),

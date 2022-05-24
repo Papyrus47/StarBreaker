@@ -9,14 +9,33 @@ Mods: {
 						Text2:emm...hello?
 						Text3:Finally! A place for me to rest.
 						Text4:I'm coming~
-					}
+								}
 					OnThrow:{
 						Text1:This is a joke?
 						Text2:You...throw me? No! I'm so sorry... Please let me go back...
 						Text3:No!I still want to sleep a little longer
-					}
+							}
 					ShieldTimeCooldown:emm...I think mu shield is ok,let's go!
-				}
-			}
+						}
+					}
+
+			StarSpiralBladeText:{
+					Boss:{
+						BossText:{
+							T1:Fire fist.Why you follow him?
+							T2:Sure enough,my owner told me to come out and bring you back ...
+							T3:I've heard that people make very strange groans before they die.
+							T4:Well, today I'm going to let her witness, a man's death groans.
+							T5:Are you ready for the Endless Whirl?
+							T6:I never thought I'd have to be this bad to beat you.
+								}
+						WeaponText:{
+							T1:Star Spiral Blade ? It seems that my owner let him come out and look for us?
+							T2:Watch out for Endless Whirl and Death Whirl, and he's so fast, he should be able to force his revs up even without my onwer around.
+							T3:Keep an eye on his revs, he's definitely going to improvise with his revs.
+							T4:Star Spiral Blade...I hate to see you kill for me...
+								}
+						}
+					}
 		}
 }

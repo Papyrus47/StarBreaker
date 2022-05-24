@@ -12,6 +12,7 @@ using Terraria.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Localization;
 using StarBreaker.Projs.StarGhostKnife;
+using StarBreaker.Projs;
 
 namespace StarBreaker
 {
@@ -184,7 +185,7 @@ namespace StarBreaker
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
-            if (Main.rand.Next(3) == 0)
+            if (Main.rand.NextBool(3))
             {
                 PlayerEmotion++;
             }
@@ -193,13 +194,21 @@ namespace StarBreaker
         {
             PlayerEmotion--;
             if (EGO) PlayerEmotion -= 20;
+            if (Player.ownedProjectileCounts[ModContent.ProjectileType<StarSpiralBladeProj>()] > 0)
+            {
+                Player.MinionAttackTargetNPC = npc.whoAmI;
+            }
         }
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
-            if (Main.rand.Next(3) == 0)
+            if (Main.rand.NextBool(3))
             {
                 PlayerEmotion--;
                 if (EGO) PlayerEmotion -= 20;
+            }
+            if (Player.ownedProjectileCounts[ModContent.ProjectileType<StarSpiralBladeProj>()] > 0 && proj.GetGlobalProjectile<StarBreakerGlobalProj>().ProjOwner_NPC > -1)
+            {
+                Player.MinionAttackTargetNPC = proj.GetGlobalProjectile<StarBreakerGlobalProj>().ProjOwner_NPC;
             }
         }
         public override void SetControls()

@@ -15,10 +15,10 @@ namespace StarBreaker.Projs
         }
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 1000;
+            Projectile.timeLeft = 200;
             Projectile.tileCollide = false;
             Projectile.extraUpdates = 0;
-            Projectile.width = Projectile.height = 80;
+            Projectile.width = Projectile.height = 112;
             Projectile.hostile = false;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
@@ -44,145 +44,62 @@ namespace StarBreaker.Projs
                     Projectile.localAI[1]--;
                 }
             }
-            Projectile.damage = Projectile.originalDamage + (int)Math.Abs(Projectile.localAI[0] * 5);
             Player player = Main.player[Projectile.owner];
-            if (Projectile.timeLeft <= 950)
+            Projectile.damage = player.GetWeaponDamage(player.HeldItem) + (int)Math.Abs(Projectile.localAI[0] * 5);
+            if (Main.mouseLeft && player.HeldItem.type == ModContent.ItemType<StarSpiralBlade>() && Projectile.timeLeft < 170)
             {
-                Projectile.hostile = Projectile.ai[0] == 3;
-                switch (Projectile.ai[0])
+                Projectile.timeLeft = 5;
+            }
+            else if(player.ownedProjectileCounts[Type] > 1)
+            {
+                Projectile.Kill();
+            }
+            if (Projectile.timeLeft < 100)
+            {
+                Projectile.timeLeft = 5;
+                Projectile.velocity = (player.Center - Projectile.Center).RealSafeNormalize() * 30;
+                if (Vector2.Distance(player.Center, Projectile.Center) < 112)
                 {
-                    case 0://左键使用
-                        {
-                            if (!player.active)
-                            {
-                                Projectile.active = false;
-                                return;
-                            }
-                            if (!player.channel)
-                            {
-                                Projectile.ai[0] = 2;
-                            }
-                            Projectile.direction = Projectile.spriteDirection = (Projectile.velocity.X > 0f) ? 1 : -1;
-                            if (Projectile.spriteDirection == -1)
-                            {
-                                Projectile.rotation += MathHelper.Pi;
-                            }
-                            Projectile.timeLeft = 950;
-                            player.ChangeDir(Projectile.direction);
-                            player.heldProj = Projectile.whoAmI;
-                            player.itemTime = 2;
-                            player.itemAnimation = 2;
-                            player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
-                                Projectile.velocity.X * Projectile.direction);
-                            if (Projectile.owner == Main.myPlayer)
-                            {
-                                Projectile.velocity = (Main.MouseWorld - Projectile.Center) * 0.2f;
-                            }
-                            break;
-                        }
-                    case 1://右键使用
-                        {
-                            if (Projectile.OwnerMinionAttackTargetNPC == null || !Projectile.OwnerMinionAttackTargetNPC.active || !Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy() || player.altFunctionUse == 2)
-                            {
-                                float max = 3000;
-                                foreach (NPC npc in Main.npc)
-                                {
-                                    float dis = npc.Center.Distance(player.Center);
-                                    if (npc.active && npc.CanBeChasedBy() && !npc.friendly && dis < max)
-                                    {
-                                        player.MinionAttackTargetNPC = npc.whoAmI;
-                                        max = dis;
-
-                                    }
-                                }
-                                if (player.whoAmI == Main.myPlayer && Projectile.timeLeft % 30 == 0)
-                                {
-                                    Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 30;
-                                }
-                            }
-                            else
-                            {
-                                Vector2 toTarget = Projectile.OwnerMinionAttackTargetNPC.position - Projectile.position;
-                                float vel = toTarget.Length() > 200 ? toTarget.Length() * 0.1f : 30;
-                                Projectile.velocity = toTarget.SafeNormalize(default) * vel;
-                                Projectile.timeLeft = 950;
-                            }
-                            if (player.altFunctionUse == 2) Projectile.ai[0] = 3;
-                            if (Projectile.timeLeft < 800 || player.channel)
-                            {
-                                Projectile.ai[0] = 0;
-                            }
-                            break;
-                        }
-                    case 2://星辰旋刃-回来
-                        {
-                            Projectile.velocity = (player.Center - Projectile.Center).RealSafeNormalize() * 30;
-                            if (Vector2.Distance(player.Center, Projectile.Center) < 50)
-                            {
-                                Projectile.Kill();
-                            }
-                            if (player.altFunctionUse == 2)
-                            {
-                                Projectile.ai[0] = 3;
-                            }
-                            if (player.channel)
-                            {
-                                Projectile.ai[0] = 0;
-                            }
-                            break;
-                        }
-                    case 3://切割其他弹幕
-                        {
-                            Projectile projectile = null;
-                            Projectile.timeLeft = 950;
-                            float max = 1200;
-                            foreach(Projectile proj in Main.projectile)
-                            {
-                                float dis = Vector2.Distance(player.Center, proj.Center);
-                                if(proj.active && (!proj.friendly || proj.hostile) && max > dis && proj != Projectile)
-                                {
-                                    max = dis;
-                                    projectile = proj;
-                                }
-                            }
-                            if (projectile != null)
-                            { 
-                                Projectile.velocity = (projectile.Center - Projectile.Center).RealSafeNormalize() * 30;
-                                if (Vector2.Distance(projectile.Center, Projectile.Center) < Projectile.width)
-                                {
-                                    projectile.Kill();
-                                }
-                            }
-                            else
-                            {
-                                Projectile.ai[0] = 1;
-                                if (player.channel)
-                                {
-                                    Projectile.ai[0] = 0;
-                                }
-                            }
-                            break;
-                        }
+                    Projectile.Kill();
                 }
-                if (player.HeldItem.type != ModContent.ItemType<StarSpiralBlade>())
+            }
+            else
+            {
+                if (player.HasMinionAttackTargetNPC)
                 {
-                    Projectile.timeLeft = 950;
-                    Projectile.hostile = true;
-                    Vector2 toTarget = player.Center - Projectile.Center;
-                    float vel = toTarget.Length() > 200 ? toTarget.Length() * 0.1f : 30;
-                    Projectile.velocity = toTarget.SafeNormalize(default) * vel;
+                    if (!Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy())
+                    {
+                        player.MinionAttackTargetNPC = -1;
+                        return;
+                    }
+                    if(Projectile.timeLeft < 150) Projectile.timeLeft = 200;
+                    Projectile.velocity = (Projectile.velocity * 9f + (Projectile.OwnerMinionAttackTargetNPC.Center - Projectile.Center) * 0.3f) / 10f;
+                }
+                else
+                {
+                    float max = 3000;
+                    foreach (NPC npc in Main.npc)
+                    {
+                        float dis = Vector2.Distance(npc.Center, Projectile.Center);
+                        if (npc.active && !npc.friendly && npc.CanBeChasedBy() && dis < max)
+                        {
+                            max = dis;
+                            player.MinionAttackTargetNPC = npc.whoAmI;
+                        }
+                    }
                 }
             }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             if (target.immortal) return;
+            Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
             target.GetGlobalNPC<NPCs.StarGlobalNPC>().StarSpiralBladeProj = Projectile.whoAmI;
             if (Projectile.localAI[1] == 0)
             {
                 int dama = (int)((damage * 5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
                 if (dama <= 0) dama = 1;
-                Main.player[Projectile.owner].dpsDamage += (int)target.StrikeNPC(dama, knockback, 10);
+                Main.player[Projectile.owner].addDPS((int)target.StrikeNPC(dama, knockback, 10));
                 if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
             }
             else
@@ -191,85 +108,12 @@ namespace StarBreaker.Projs
                 {
                     int dama = (int)((damage * 2.5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
                     if (dama <= 0) dama = 1;
-                    Main.player[Projectile.owner].dpsDamage += (int)target.StrikeNPC(dama, knockback, 10);
+                    Main.player[Projectile.owner].addDPS((int)target.StrikeNPC(dama, knockback, 10));
                     if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
                 }
                 target.HitEffect(0, 10);
                 target.checkDead();
             }
         }
-        //public override bool PreDraw(ref Color lightColor)
-        //{
-        //    List<CustomVertexInfo> customs = new List<CustomVertexInfo>();
-
-        //    for (int i = 1; i < Projectile.oldPos.Length; i++)
-        //    {
-        //        if (Projectile.oldPos[i] == Vector2.Zero) continue;
-
-        //        Vector2 normalDir = Projectile.oldPos[i - 1] - Projectile.oldPos[i];//这一个位置距离上一个位置的朝向
-        //        normalDir = Vector2.Normalize(new Vector2(-normalDir.Y, normalDir.X));//逆时针旋转90度
-
-        //        float factor = i / (float)Projectile.oldPos.Length;//插值
-        //        Color color = Color.Lerp(Color.White, Color.Red, factor);//颜色
-        //        float w = MathHelper.Lerp(1f, 0.05f, factor);//透明度获取
-        //        customs.Add(new CustomVertexInfo(Projectile.oldPos[i] + new Vector2(Projectile.width / 2,Projectile.height / 2) + normalDir * 80, color, new Vector3((float)Math.Sqrt(factor), 1, w)));//为顶点赋值
-        //        customs.Add(new CustomVertexInfo(Projectile.oldPos[i] + new Vector2(Projectile.width / 2, Projectile.height / 2) + normalDir * -80, color, new Vector3((float)Math.Sqrt(factor), 0, w)));//为顶点赋值
-        //    }
-
-        //    List<CustomVertexInfo> triangleList = new List<CustomVertexInfo>();
-
-        //    if (customs.Count > 2)
-        //    {
-        //        triangleList.Add(customs[0]);//底边第一个点
-        //        CustomVertexInfo vertex = new CustomVertexInfo((customs[0].Position + customs[1].Position) * 0.5f + Vector2.Normalize(Projectile.velocity) * 40, Color.White,
-        //            new Vector3(0, 0.5f, 1));//底边两个点取位置的中心,加上弹幕速度为顶点
-        //        triangleList.Add(customs[1]);//第二个
-        //        triangleList.Add(vertex);//顶点
-        //        for (int i = 0; i < customs.Count - 2; i += 2)//取其他的点
-        //        {
-        //            #region 生成一个由两个三角形组合的四边形
-        //            #region 这个是左边(放水平的时候)的三角形连接
-        //            triangleList.Add(customs[i]);
-        //            triangleList.Add(customs[i + 2]);
-        //            triangleList.Add(customs[i + 1]);
-        //            #endregion
-        //            #region 这个是右边
-        //            triangleList.Add(customs[i + 1]);
-        //            triangleList.Add(customs[i + 2]);
-        //            triangleList.Add(customs[i + 3]);
-        //            #endregion
-        //            #endregion
-        //        }
-
-        //        var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
-        //        var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0)) * Main.GameViewMatrix.ZoomMatrix;
-
-        //        StarBreaker.TheDrawEffect.Parameters["uTransform"].SetValue(model * projection);
-        //        StarBreaker.TheDrawEffect.Parameters["uTime"].SetValue(Main.GlobalTimeWrappedHourly);
-        //        Main.spriteBatch.End();
-        //        Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap,
-        //            DepthStencilState.Default, RasterizerState.CullNone);
-
-        //        RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
-
-        //        Main.graphics.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("StarBreaker/Images/Extra_189").Value;
-        //        Main.graphics.GraphicsDevice.Textures[1] = ModContent.Request<Texture2D>("StarBreaker/Images/BlackColor").Value;
-
-        //        Main.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
-        //        Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointWrap;
-
-        //        StarBreaker.TheDrawEffect.CurrentTechnique.Passes[0].Apply();
-
-        //        Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList,
-        //            triangleList.ToArray(), 0, triangleList.Count / 3);
-
-        //        triangleList.Count / 3 是三角形的个数
-
-        //        Main.graphics.GraphicsDevice.RasterizerState = originalState;
-        //        Main.spriteBatch.End();
-        //        Main.spriteBatch.Begin();
-        //    }
-        //    return base.PreDraw(ref lightColor);
-        //}
     }
 }
