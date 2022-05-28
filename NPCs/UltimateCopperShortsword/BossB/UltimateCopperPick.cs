@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.UltimateCopperShortsword;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.UltimateCopperShortsword;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.BossB
 {
@@ -105,7 +100,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.BossB
                             }
                             NPC.velocity = ToTarget.SafeNormalize(default) * 20;
                         }
-                        else Timer1--;
+                        else
+                        {
+                            Timer1--;
+                        }
+
                         break;
                     }
                 default:

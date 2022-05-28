@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.StarDoomStaff
+﻿namespace StarBreaker.Projs.StarDoomStaff
 {
     public abstract class StarCrystal : ModProjectile
     {
@@ -28,7 +24,7 @@ namespace StarBreaker.Projs.StarDoomStaff
             {
                 Projectile.timeLeft = 2;
             }
-            if(Main.player[Projectile.owner].HasMinionAttackTargetNPC)
+            if (Main.player[Projectile.owner].HasMinionAttackTargetNPC)
             {
                 Projectile.extraUpdates = 2;
                 Projectile.velocity = (Projectile.velocity * 10 + (Projectile.OwnerMinionAttackTargetNPC.position - Projectile.position) * 0.1f) / 11;

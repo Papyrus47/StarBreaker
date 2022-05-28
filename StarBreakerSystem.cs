@@ -1,11 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.NPCs;
-using System.Collections.Generic;
+﻿using StarBreaker.NPCs;
 using System.IO;
-using Terraria;
-using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
+using StarBreaker.SpecialBattles;
 
 namespace StarBreaker
 {
@@ -16,13 +13,33 @@ namespace StarBreaker
         public static bool downedStarSpiralBlade;
         public static bool downedStarFist;
         public static bool downedOnyxBlaster;
+        public static SpecialBattle specialBattle = null;
         public override void SaveWorldData(TagCompound tag)
         {
-            if(downedStarBreakerNom) tag["downedStarBrekerNom"] = downedStarBreakerNom;
-            if(downedStarBreakerEX) tag["downedStarBreakerEX"] = downedStarBreakerEX;
-            if(downedStarSpiralBlade) tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
-            if(downedStarFist) tag["downedStarFist"] = downedStarFist;
-            if (downedOnyxBlaster) tag["downedOnyxBlaster"] = downedOnyxBlaster;
+            if (downedStarBreakerNom)
+            {
+                tag["downedStarBrekerNom"] = downedStarBreakerNom;
+            }
+
+            if (downedStarBreakerEX)
+            {
+                tag["downedStarBreakerEX"] = downedStarBreakerEX;
+            }
+
+            if (downedStarSpiralBlade)
+            {
+                tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
+            }
+
+            if (downedStarFist)
+            {
+                tag["downedStarFist"] = downedStarFist;
+            }
+
+            if (downedOnyxBlaster)
+            {
+                tag["downedOnyxBlaster"] = downedOnyxBlaster;
+            }
         }
         public override void LoadWorldData(TagCompound tag)
         {
@@ -38,6 +55,10 @@ namespace StarBreaker
             downedStarBreakerEX = false;
             downedStarSpiralBlade = false;
             downedStarFist = false;
+        }
+        public override void PostUpdateEverything()
+        {
+            specialBattle.Update();
         }
         public override void OnWorldUnload()
         {
@@ -73,13 +94,13 @@ namespace StarBreaker
         }
         public override void PostUpdateWorld()
         {
-            if(Main.LocalPlayer.ZoneSkyHeight && Main.rand.NextBool(100) && !Main.CurrentFrameFlags.AnyActiveBossNPC)
+            if (Main.LocalPlayer.ZoneSkyHeight && Main.rand.NextBool(100) && !Main.CurrentFrameFlags.AnyActiveBossNPC)
             {
-                if(NPC.downedAncientCultist && !downedStarBreakerNom)
+                if (NPC.downedAncientCultist && !downedStarBreakerNom)
                 {
                     NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<StarBreakerN>());
                 }
-                else if(downedStarBreakerNom && !downedStarBreakerEX)
+                else if (downedStarBreakerNom && !downedStarBreakerEX)
                 {
                     NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<StarBreakerN>());
                 }
@@ -105,6 +126,13 @@ namespace StarBreaker
                     StarBreaker.Instantiate.chargeUser.Draw(Main.spriteBatch, new GameTime());
                     return true;
                 }, InterfaceScaleType.UI));
+
+                layers.Insert(mouseTextIndex - 1, new LegacyGameInterfaceLayer("StarBreaker:Special Battles",
+                    delegate
+                    {
+                        specialBattle.Draw(Main.spriteBatch);
+                        return true;
+                    }, InterfaceScaleType.Game));//特殊战背景
             }
         }
     }

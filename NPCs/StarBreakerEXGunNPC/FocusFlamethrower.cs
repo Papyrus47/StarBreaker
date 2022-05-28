@@ -1,14 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Utilities;
-using Terraria.GameContent;
-using StarBreaker.Projs.Bosses.StarBreakerEX;
-
-namespace StarBreaker.NPCs.StarBreakerEXGunNPC
+﻿namespace StarBreaker.NPCs.StarBreakerEXGunNPC
 {
     public class FocusFlamethrower : EXGunNPC
     {
@@ -33,7 +23,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
                         NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize() * 8;
                         if (StarBreakerEX_NPC.ai[3] == 1)
                         {
-                            NPC.Center = Vector2.Lerp(NPC.Center, StarBreakerEX_NPC.Center + new Vector2(-200, 0),0.1f);
+                            NPC.Center = Vector2.Lerp(NPC.Center, StarBreakerEX_NPC.Center + new Vector2(-200, 0), 0.1f);
                             if (StarBreakerEX_NPC.ai[2] == 3)//对应的状态
                             {
                                 if (StarBreakerEX_NPC.ai[0] % 10 == 0)

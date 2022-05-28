@@ -1,7 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Dusts
+﻿namespace StarBreaker.Dusts
 {
     public class LastCopperWhipDust : ModDust
     {

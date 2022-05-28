@@ -1,15 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Projs.Bosses;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.GameContent;
+﻿using StarBreaker.Projs.Bosses;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Localization;
-using System;
 
 namespace StarBreaker.NPCs
 {
@@ -180,7 +171,7 @@ namespace StarBreaker.NPCs
                         {
                             Timer1 = 40;
                             targetOldPos = Target.Center;
-                            if(Timer2 > 5)
+                            if (Timer2 > 5)
                             {
                                 Timer1 = Timer2 = 0;
                                 State++;
@@ -192,10 +183,10 @@ namespace StarBreaker.NPCs
                             Timer1--;
                             NPC.velocity = (targetOldPos - NPC.Center) * 0.3f;//高速追击旧位置
 
-                            if(Math.Abs(NPC.localAI[3]) > 20)//消耗旋转速度使用弹幕攻击
+                            if (Math.Abs(NPC.localAI[3]) > 20)//消耗旋转速度使用弹幕攻击
                             {
                                 NPC.localAI[3] *= 0.4f;
-                                ShootProj(Target.Center,Vector2.Zero);
+                                ShootProj(Target.Center, Vector2.Zero);
                             }
                         }
                         break;
@@ -203,13 +194,16 @@ namespace StarBreaker.NPCs
                 default:
                     {
                         State = 1;
-                        
+
                         break;
                     }
             }
         }
 
-        public override bool CheckActive() => false;
+        public override bool CheckActive()
+        {
+            return false;
+        }
 
         public override bool CheckDead()
         {
@@ -239,7 +233,7 @@ namespace StarBreaker.NPCs
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             StarBreakerWay.NPCDrawTail(NPC, Color.White, drawColor);
-            Utils.DrawBorderString(spriteBatch, ((int)NPC.localAI[3] * 60).ToString(), NPC.Center + new Vector2(-10,-50) - Main.screenPosition, Color.MediumPurple);
+            Utils.DrawBorderString(spriteBatch, ((int)NPC.localAI[3] * 60).ToString(), NPC.Center + new Vector2(-10, -50) - Main.screenPosition, Color.MediumPurple);
             switch (State)
             {
                 case 3://幻影
@@ -257,7 +251,7 @@ namespace StarBreaker.NPCs
             }
             return base.PreDraw(spriteBatch, screenPos, drawColor);
         }
-        private int ShootProj(Vector2 center,Vector2 vel)
+        private int ShootProj(Vector2 center, Vector2 vel)
         {
             int i = 0;
             if (Main.netMode != NetmodeID.MultiplayerClient)

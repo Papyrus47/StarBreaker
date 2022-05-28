@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.Weapon;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Items.Weapon;
 
 namespace StarBreaker.NPCs
 {
@@ -21,9 +17,21 @@ namespace StarBreaker.NPCs
         public static int StarFrostFist = -1;
         public override bool PreAI(NPC npc)
         {
-            if (npc.type == ModContent.NPCType<StarBreakerN>() || npc.type == ModContent.NPCType<StarBreakerEX>()) StarBreaker = -1;
-            if (npc.type == ModContent.NPCType<StarGhostKnife>()) StarGhostKnife = -1;
-            if (npc.type == ModContent.NPCType<FrostFist>()) StarFrostFist = -1;
+            if (npc.type == ModContent.NPCType<StarBreakerN>() || npc.type == ModContent.NPCType<StarBreakerEX>())
+            {
+                StarBreaker = -1;
+            }
+
+            if (npc.type == ModContent.NPCType<StarGhostKnife>())
+            {
+                StarGhostKnife = -1;
+            }
+
+            if (npc.type == ModContent.NPCType<FrostFist>())
+            {
+                StarFrostFist = -1;
+            }
+
             return true;
         }
         public override void PostAI(NPC npc)
@@ -37,10 +45,13 @@ namespace StarBreaker.NPCs
                 }
                 npc.velocity += (Main.projectile[StarSpiralBladeProj].position - npc.position).SafeNormalize(default);
             }
-            if(XuanYuSlowTime > 0)
+            if (XuanYuSlowTime > 0)
             {
                 XuanYuSlowTime--;
-                if(npc.velocity.Length() > 10f) npc.velocity = npc.velocity.RealSafeNormalize() * 10;
+                if (npc.velocity.Length() > 10f)
+                {
+                    npc.velocity = npc.velocity.RealSafeNormalize() * 10;
+                }
             }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -56,7 +67,7 @@ namespace StarBreaker.NPCs
                 damage += DrumHitDamage;
                 DrumHitDamage = 0;
             }
-            if(StarBreakerSystem.downedStarBreakerNom && !Main.player[projectile.owner].HasItem(ModContent.ItemType<StarBreakerW>()))
+            if (StarBreakerSystem.downedStarBreakerNom && !Main.player[projectile.owner].HasItem(ModContent.ItemType<StarBreakerW>()))
             {
                 Item.NewItem(npc.GetSource_Loot(), npc.Hitbox, ModContent.ItemType<StarBreakerW>());
             }
@@ -74,16 +85,27 @@ namespace StarBreaker.NPCs
             {
                 npc.life -= BloodyBleed;
                 CombatText.NewText(npc.Hitbox, Color.Red, BloodyBleed);
-                if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, BloodyBleed);
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, BloodyBleed);
+                }
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     for (int i = 0; i < BloodyBleed; i++)
                     {
-                        if (i > 20) break;
+                        if (i > 20)
+                        {
+                            break;
+                        }
+
                         Dust.NewDust(npc.position, npc.width, npc.height, DustID.Blood);
                     }
                 }
-                if (!crit) BloodyBleed -= BloodyBleed / 3;
+                if (!crit)
+                {
+                    BloodyBleed -= BloodyBleed / 3;
+                }
             }
             if (CursedWhipHit >= 5)//诅咒鞭
             {
@@ -98,7 +120,7 @@ namespace StarBreaker.NPCs
             {
                 drawColor = new(100, 100, 255);
             }
-            if(XuanYuSlowTime > 0)
+            if (XuanYuSlowTime > 0)
             {
                 drawColor = Color.Blue;
             }

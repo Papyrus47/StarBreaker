@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {

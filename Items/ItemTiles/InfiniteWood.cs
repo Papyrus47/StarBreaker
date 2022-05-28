@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.ItemTiles
+﻿namespace StarBreaker.Items.ItemTiles
 {
     public class InfiniteWood : ModItem
     {
@@ -28,6 +24,9 @@ namespace StarBreaker.Items.ItemTiles
             Item.height = 12;
             Item.value = 0;
         }
-        public override void AddRecipes() => CreateRecipe().AddIngredient(ItemID.Wood, 999).AddTile(TileID.WorkBenches).Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe().AddIngredient(ItemID.Wood, 999).AddTile(TileID.WorkBenches).Register();
+        }
     }
 }

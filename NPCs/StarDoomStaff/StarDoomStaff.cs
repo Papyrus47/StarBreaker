@@ -1,13 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Projs.StarDoomStaff.Boss;
+﻿using StarBreaker.Projs.StarDoomStaff.Boss;
 using System.IO;
-using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs.StarDoomStaff
 {
@@ -56,7 +50,11 @@ namespace StarBreaker.NPCs.StarDoomStaff
             base.ModifyNPCLoot(npcLoot);
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapon.StarDoomStaff>()));
         }
-        public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;
+        public override void BossHeadRotation(ref float rotation)
+        {
+            rotation = NPC.rotation;
+        }
+
         public override void SendExtraAI(BinaryWriter writer)
         {
             base.SendExtraAI(writer);
@@ -74,8 +72,15 @@ namespace StarBreaker.NPCs.StarDoomStaff
                 NPC.TargetClosest();
             }
             int damage = NPC.damage;
-            if (Main.expertMode) damage /= 2;
-            else if (Main.masterMode) damage /= 3;
+            if (Main.expertMode)
+            {
+                damage /= 2;
+            }
+            else if (Main.masterMode)
+            {
+                damage /= 3;
+            }
+
             if (Target.dead || !Target.active)
             {
                 if (!TargetInDead)
@@ -124,7 +129,11 @@ namespace StarBreaker.NPCs.StarDoomStaff
                     CombatText.NewText(NPC.Hitbox, Color.Purple, NPC_Say_Text, true);
                     TargerPlayerDeadCounts++;
                     NPC.life += (int)(NPC.lifeMax * 0.05f);
-                    if (TargerPlayerDeadCounts == 50) NPC.active = false;
+                    if (TargerPlayerDeadCounts == 50)
+                    {
+                        NPC.active = false;
+                    }
+
                     State = 1;
                     Timer1 = Timer2 = Timer3 = 0;
                     NPC.netUpdate = true;

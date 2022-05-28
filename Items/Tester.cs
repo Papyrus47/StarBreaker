@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items
+﻿namespace StarBreaker.Items
 {
     public class Tester : ModItem
     {

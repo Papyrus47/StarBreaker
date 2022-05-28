@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class EnergyWhirlingBlade : BaseEnergyMelee
     {

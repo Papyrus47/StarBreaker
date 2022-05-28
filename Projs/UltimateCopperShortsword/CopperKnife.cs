@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword
 {
     public class CopperKnife : ModProjectile
     {

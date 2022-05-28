@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.StarDoomStaff.Boss
+﻿namespace StarBreaker.Projs.StarDoomStaff.Boss
 {
     public class EliminateRays_Boss : ModProjectile
     {
@@ -25,13 +19,17 @@ namespace StarBreaker.Projs.StarDoomStaff.Boss
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.ai[0] = 2000f;
         }
-        public override bool ShouldUpdatePosition() => false;
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float r = 0;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(),
                 Projectile.Center, Projectile.Center + Projectile.velocity.RealSafeNormalize() * Projectile.ai[0],
-                50, ref r);        
+                50, ref r);
         }
         public override bool PreDraw(ref Color lightColor)
         {
@@ -101,8 +99,8 @@ namespace StarBreaker.Projs.StarDoomStaff.Boss
             Vector2 vel = Projectile.velocity.RealSafeNormalize();
             vel = new Vector2(vel.Y, -vel.X);
             const float dis = 50;
-            customs[0] = new(Projectile.Center + (vel * 100 * Projectile.scale) + (Projectile.velocity.RealSafeNormalize() * dis), Color.Purple, new Vector3(0,0,0f));
-            customs[1] = customs[3]= new(Projectile.Center + (vel * -100 * Projectile.scale) + (Projectile.velocity.RealSafeNormalize() * dis), Color.Purple, new Vector3(0, 1, 0f));
+            customs[0] = new(Projectile.Center + (vel * 100 * Projectile.scale) + (Projectile.velocity.RealSafeNormalize() * dis), Color.Purple, new Vector3(0, 0, 0f));
+            customs[1] = customs[3] = new(Projectile.Center + (vel * -100 * Projectile.scale) + (Projectile.velocity.RealSafeNormalize() * dis), Color.Purple, new Vector3(0, 1, 0f));
             customs[2] = customs[5] = new(Projectile.Center + (vel * 100 * Projectile.scale) + (Projectile.velocity.RealSafeNormalize() * Projectile.ai[0]), Color.Purple, new Vector3(1, 0, 1f));
             customs[4] = new(Projectile.Center + (vel * -100 * Projectile.scale) + (Projectile.velocity.RealSafeNormalize() * Projectile.ai[0]), Color.Purple, new Vector3(1, 1, 1f));
 

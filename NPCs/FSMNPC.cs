@@ -1,7 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.NPCs
+﻿namespace StarBreaker.NPCs
 {
     public abstract class FSMNPC : ModNPC
     {

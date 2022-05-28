@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperGunProj : ModProjectile
     {
@@ -28,6 +24,9 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             Projectile.velocity.Y += 0.2f;
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit) => target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += 700;
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += 700;
+        }
     }
 }

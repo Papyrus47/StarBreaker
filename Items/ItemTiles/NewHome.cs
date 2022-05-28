@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.ID;
-
-
-namespace StarBreaker.Items.ItemTiles
+﻿namespace StarBreaker.Items.ItemTiles
 {
     public class NewHome : ModItem
     {
@@ -28,7 +21,11 @@ namespace StarBreaker.Items.ItemTiles
             Item.height = 12;
             Item.value = 0;
         }
-        public override void AddRecipes() => CreateRecipe().AddIngredient(ItemID.Wood,399).AddTile(TileID.WorkBenches).Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe().AddIngredient(ItemID.Wood, 399).AddTile(TileID.WorkBenches).Register();
+        }
+
         public override bool? UseItem(Player player)
         {
             try
@@ -42,9 +39,9 @@ namespace StarBreaker.Items.ItemTiles
                         Tile tile = Main.tile[x + j, y + i];
                         if (i == -3 || i == 3 || j == 5 || j == -5)//生成边框
                         {
-                            if((i == -3 || i == 3) && j == 3 && tile.HasTile)//如果两面有房子,生成平台
+                            if ((i == -3 || i == 3) && j == 3 && tile.HasTile)//如果两面有房子,生成平台
                             {
-                                for(int k = 0;k<2;k++)
+                                for (int k = 0; k < 2; k++)
                                 {
                                     Tile tile1 = Main.tile[x + j - k, y + i];
                                     tile1.ClearTile();
@@ -52,7 +49,10 @@ namespace StarBreaker.Items.ItemTiles
                                     WorldGen.PlaceWall(x + j - k, y + i, WallID.Wood);
                                 }
                             }
-                            else WorldGen.PlaceTile(x + j, y + i, TileID.WoodBlock);
+                            else
+                            {
+                                WorldGen.PlaceTile(x + j, y + i, TileID.WoodBlock);
+                            }
                         }
                         else
                         {
@@ -78,7 +78,7 @@ namespace StarBreaker.Items.ItemTiles
                     }
                 }
             }
-            catch 
+            catch
             {
                 PopupText.NewText(new()
                 {

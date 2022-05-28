@@ -1,12 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Utilities;
-using Terraria.GameContent;
-using StarBreaker.Projs.Bosses.StarBreakerEX;
+﻿using StarBreaker.Projs.Bosses.StarBreakerEX;
 
 namespace StarBreaker.NPCs.StarBreakerEXGunNPC
 {
@@ -33,7 +25,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
                         NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize() * 8;
                         if (StarBreakerEX_NPC.ai[3] == 1)
                         {
-                            NPC.Center = Vector2.Lerp(NPC.Center, StarBreakerEX_NPC.Center + new Vector2(0, -200),0.1f);
+                            NPC.Center = Vector2.Lerp(NPC.Center, StarBreakerEX_NPC.Center + new Vector2(0, -200), 0.1f);
                             if (StarBreakerEX_NPC.ai[2] == 4)//对应的状态
                             {
                                 if (StarBreakerEX_NPC.ai[0] % 30 == 0)
@@ -86,7 +78,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
                 Projectile projectile = Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RealSafeNormalize() * 10
                     , ModContent.ProjectileType<StarRocket_Hostile>(), 40, 2.3f, Main.myPlayer)];
                 Timer1++;
-                if(Timer1 > 3)
+                if (Timer1 > 3)
                 {
                     Timer1 = 0;
                     projectile.scale = 2f;

@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs;
 
 namespace StarBreaker.Items.Weapon
 {

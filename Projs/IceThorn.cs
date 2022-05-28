@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ModLoader;
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     internal class IceThorn : ModProjectile
     {
@@ -23,8 +19,14 @@ namespace StarBreaker.Projs
             Projectile.velocity *= 1.00000001f;
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             Projectile.ai[0] = Projectile.alpha;
-            if (Projectile.alpha > 0) Projectile.alpha -= 2;
-            else Projectile.alpha = 0;
+            if (Projectile.alpha > 0)
+            {
+                Projectile.alpha -= 2;
+            }
+            else
+            {
+                Projectile.alpha = 0;
+            }
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {

@@ -1,10 +1,5 @@
-﻿using StarBreaker.Projs;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.XuanYu;
 using Terraria.Utilities;
-using StarBreaker.Projs.XuanYu;
 
 namespace StarBreaker.Items.Weapon.XuanYu
 {
@@ -39,7 +34,11 @@ namespace StarBreaker.Items.Weapon.XuanYu
             Item.noUseGraphic = true;
             Item.useTurn = true;
         }
-        public override bool? PrefixChance(int pre, UnifiedRandom rand) => false;
+        public override bool? PrefixChance(int pre, UnifiedRandom rand)
+        {
+            return false;
+        }
+
         public override void UpdateInventory(Player player)
         {
             Item.prefix = -1;

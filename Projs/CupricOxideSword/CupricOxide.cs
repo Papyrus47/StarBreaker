@@ -1,16 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
-using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.CupricOxideSword
+﻿namespace StarBreaker.Projs.CupricOxideSword
 {
     public class CupricOxide : ModProjectile
     {
@@ -30,7 +18,7 @@ namespace StarBreaker.Projs.CupricOxideSword
         }
         public override void AI()
         {
-            if(Projectile.ai[0]==0f)
+            if (Projectile.ai[0] == 0f)
             {
                 Projectile.frame = Main.rand.Next(6);
                 Projectile.ai[0]++;

@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class CopperHammerGas : ModProjectile
     {
@@ -40,7 +35,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                 Projectile.velocity.X = Projectile.ai[1];
                 for (int i = -1; i <= 1; i++)
                 {
-                    if (i == 0) continue;
+                    if (i == 0)
+                    {
+                        continue;
+                    }
+
                     Tile tileX = Main.tile[(int)Projectile.Center.X / 16 + i, (int)Projectile.Center.Y / 16];
                     if (tileX != null && tileX.HasTile)
                     {

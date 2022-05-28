@@ -1,11 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Projs.UltimateCopperShortsword;
+﻿using StarBreaker.Projs.UltimateCopperShortsword;
 using System.IO;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
 {
@@ -101,7 +95,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                         else
                         {
                             NPC.velocity = (WingVib - NPC.position) * 0.2f;
-                            if (NPC.velocity.Length() > 30f) NPC.velocity = NPC.velocity.SafeNormalize(default) * 30;
+                            if (NPC.velocity.Length() > 30f)
+                            {
+                                NPC.velocity = NPC.velocity.SafeNormalize(default) * 30;
+                            }
+
                             Timer1--;
                         }
                         break;
@@ -221,8 +219,16 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                 }
                             case 1://靠近玩家
                                 {
-                                    if (NPC.velocity.Y < 0) NPC.velocity.Y = 0;
-                                    if (NPC.velocity.Y < 20) NPC.velocity.Y++;
+                                    if (NPC.velocity.Y < 0)
+                                    {
+                                        NPC.velocity.Y = 0;
+                                    }
+
+                                    if (NPC.velocity.Y < 20)
+                                    {
+                                        NPC.velocity.Y++;
+                                    }
+
                                     NPC.velocity.X = ToTarget.X * 0.02f;
                                     Timer1++;
                                     if (Timer1 > 50 || NPC.Distance(Target.Center) < 20)
@@ -374,7 +380,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Color color = new Color(0.4f, 0.5f, 0f, 0);
-            if (Timer3 == 2 || Timer3 == 5) color = new Color(0.3f, 0.8f, 0.1f, 0.2f);
+            if (Timer3 == 2 || Timer3 == 5)
+            {
+                color = new Color(0.3f, 0.8f, 0.1f, 0.2f);
+            }
+
             StarBreakerWay.NPCDrawTail(NPC, drawColor, color);
             return base.PreDraw(spriteBatch, screenPos, drawColor);
         }
@@ -389,7 +399,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
             {
                 NPC.life += damage;
                 CombatText.NewText(NPC.Hitbox, Color.Green, damage);
-                if (NPC.life > NPC.lifeMax) NPC.life = NPC.lifeMax;
+                if (NPC.life > NPC.lifeMax)
+                {
+                    NPC.life = NPC.lifeMax;
+                }
+
                 damage = 0;
             }
         }

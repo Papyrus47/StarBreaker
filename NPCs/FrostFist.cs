@@ -1,11 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.GameContent.ItemDropRules;
+﻿using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs
 {
@@ -59,7 +53,7 @@ namespace StarBreaker.NPCs
             #endregion
         };
         private Player Target => Main.player[NPC.target];
-        public override string BossHeadTexture => this.Texture;
+        public override string BossHeadTexture => Texture;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("霜拳");
@@ -101,7 +95,11 @@ namespace StarBreaker.NPCs
             if (Target.dead)
             {
                 NPC.velocity.Y++;
-                if (NPC.velocity.Y > 30) NPC.active = false;
+                if (NPC.velocity.Y > 30)
+                {
+                    NPC.active = false;
+                }
+
                 return;
             }
             switch (State)
@@ -270,7 +268,11 @@ namespace StarBreaker.NPCs
                                             State++;
                                         }
                                     }
-                                    else Timer1--;
+                                    else
+                                    {
+                                        Timer1--;
+                                    }
+
                                     if (Main.rand.NextBool(20))
                                     {
                                         Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.IceGolem);
@@ -359,7 +361,11 @@ namespace StarBreaker.NPCs
                                             Timer3++;
                                         }
                                     }
-                                    else Timer1--;
+                                    else
+                                    {
+                                        Timer1--;
+                                    }
+
                                     if (Main.netMode != 1)
                                     {
                                         int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.Zero), ModContent.ProjectileType<Projs.OuLa>(),
@@ -487,7 +493,11 @@ namespace StarBreaker.NPCs
                                                 State++;
                                             }
                                         }
-                                        else Timer1--;
+                                        else
+                                        {
+                                            Timer1--;
+                                        }
+
                                         if (Main.rand.NextBool(20))
                                         {
                                             Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.IceGolem);
@@ -615,7 +625,11 @@ namespace StarBreaker.NPCs
                                             State++;
                                         }
                                     }
-                                    else Timer1--;
+                                    else
+                                    {
+                                        Timer1--;
+                                    }
+
                                     break;
                                 }
                         }
@@ -658,7 +672,11 @@ namespace StarBreaker.NPCs
                                             Timer3++;
                                         }
                                     }
-                                    else Timer1--;
+                                    else
+                                    {
+                                        Timer1--;
+                                    }
+
                                     break;
                                 }
                         }
@@ -670,8 +688,14 @@ namespace StarBreaker.NPCs
                         break;
                     }
             }
-            if (NPC.spriteDirection == -1) NPC.rotation += MathHelper.Pi;
-            else NPC.rotation += MathHelper.PiOver2 + MathHelper.Pi;
+            if (NPC.spriteDirection == -1)
+            {
+                NPC.rotation += MathHelper.Pi;
+            }
+            else
+            {
+                NPC.rotation += MathHelper.PiOver2 + MathHelper.Pi;
+            }
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {

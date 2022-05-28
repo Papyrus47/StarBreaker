@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items.DamageClasses;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ModLoader;
+﻿using StarBreaker.Items.DamageClasses;
 
 namespace StarBreaker.Projs.Type
 {
@@ -59,7 +54,11 @@ namespace StarBreaker.Projs.Type
             }
 
         }
-        public override bool ShouldUpdatePosition() => ShouldUpdatePositionByProjVel;
+        public override bool ShouldUpdatePosition()
+        {
+            return ShouldUpdatePositionByProjVel;
+        }
+
         public override void Kill(int timeLeft)
         {
             if (Projectile.friendly && !Projectile.hostile && Proj_Kill != null)
@@ -77,7 +76,11 @@ namespace StarBreaker.Projs.Type
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            if (Projectile.friendly && !Projectile.hostile && Proj_OnTileCollide != null) return Proj_OnTileCollide(Projectile, oldVelocity);
+            if (Projectile.friendly && !Projectile.hostile && Proj_OnTileCollide != null)
+            {
+                return Proj_OnTileCollide(Projectile, oldVelocity);
+            }
+
             return base.OnTileCollide(oldVelocity);
         }
         public override bool PreDraw(ref Color lightColor)

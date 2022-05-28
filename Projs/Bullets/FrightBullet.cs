@@ -1,5 +1,4 @@
 ﻿using StarBreaker.Projs.Type;
-using Terraria;
 
 namespace StarBreaker.Projs.Bullets
 {
@@ -16,7 +15,10 @@ namespace StarBreaker.Projs.Bullets
         public override void StateAI()
         {
             Projectile.extraUpdates = 3;
-            if (Projectile.timeLeft % 10 == 0) Projectile.damage++;
+            if (Projectile.timeLeft % 10 == 0)
+            {
+                Projectile.damage++;
+            }
         }
     }
 }

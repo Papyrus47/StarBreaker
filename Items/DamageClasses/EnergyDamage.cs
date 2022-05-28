@@ -1,7 +1,4 @@
-﻿using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.DamageClasses
+﻿namespace StarBreaker.Items.DamageClasses
 {
     public class EnergyDamage : DamageClass
     {
@@ -10,7 +7,11 @@ namespace StarBreaker.Items.DamageClasses
             ClassName.SetDefault("Energy Damage");
             ClassName.AddTranslation((int)GameCulture.CultureName.Chinese, "能量伤害");
         }
-        public override bool GetEffectInheritance(DamageClass damageClass) => false;
+        public override bool GetEffectInheritance(DamageClass damageClass)
+        {
+            return false;
+        }
+
         public override StatInheritanceData GetModifierInheritance(DamageClass damageClass)
         {
             if (damageClass == Generic)

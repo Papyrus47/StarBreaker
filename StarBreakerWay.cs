@@ -1,13 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items;
+﻿using StarBreaker.Items;
 using StarBreaker.Projs.Type;
-using System;
-using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.Creative;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker
 {
@@ -95,23 +88,27 @@ namespace StarBreaker
                 }
             }
         }
-        public static void PickAmmo_EnergyBulletItem(Player player,out int ShootItemID, out int shootDamage)
+        public static void PickAmmo_EnergyBulletItem(Player player, out int ShootItemID, out int shootDamage)
         {
-            if(player.HasAmmo(player.HeldItem,true))
+            if (player.HasAmmo(player.HeldItem, true))
             {
-                for(int i = 0;i<player.inventory.Length;i++)//遍历 背包
+                for (int i = 0; i < player.inventory.Length; i++)//遍历 背包
                 {
                     Item item = player.inventory[i];
-                    if(item.active && item.ammo == ModContent.ItemType<Items.Bullet.NebulaBulletItem>() && item.consumable && item.ModItem is EnergyBulletItem)
+                    if (item.active && item.ammo == ModContent.ItemType<Items.Bullet.NebulaBulletItem>() && item.consumable && item.ModItem is EnergyBulletItem)
                     {
                         item.stack--;
-                        if (item.stack <= 0) item.TurnToAir();
+                        if (item.stack <= 0)
+                        {
+                            item.TurnToAir();
+                        }
+
                         ShootItemID = item.type;
                         shootDamage = item.damage;
                         return;
                     }
                 }
-            }            
+            }
             ShootItemID = -1;
             shootDamage = 0;
         }
@@ -133,7 +130,7 @@ namespace StarBreaker
         {
             if (Main.projectile[projWhoAmI].ModProjectile is EnergyProj BulletProj && bulletItem != null)
             {
-                DelHook(bulletItem,BulletProj,projWhoAmI);
+                DelHook(bulletItem, BulletProj, projWhoAmI);
             }
         }
         public static void Del_Hooks_ToProj(int useBulletID, int projWhoAmI)
@@ -143,7 +140,7 @@ namespace StarBreaker
                 DelHook(bulletItem, BulletProj, projWhoAmI);
             }
         }
-        private static void AddHook(EnergyBulletItem bulletItem,EnergyProj BulletProj,int projWhoAmI)
+        private static void AddHook(EnergyBulletItem bulletItem, EnergyProj BulletProj, int projWhoAmI)
         {
             BulletProj.Proj_AI += bulletItem.ProjAI;
             BulletProj.Proj_Colliding += bulletItem.Colliding;
@@ -169,19 +166,34 @@ namespace StarBreaker
     }
     public static class StarBreakerWay_ByExtension
     {
-        public static void NPC_AddOnHitDamage(this NPC npc,int damage,bool ByDefense = false)
+        public static void NPC_AddOnHitDamage(this NPC npc, int damage, bool ByDefense = false)
         {
             int LastDamage = damage;
-            if (ByDefense) LastDamage -= npc.defense;
+            if (ByDefense)
+            {
+                LastDamage -= npc.defense;
+            }
+
             npc.life -= Math.Abs(LastDamage);
             npc.checkDead();
-            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, damage);
+            if (Main.netMode == NetmodeID.Server)
+            {
+                NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, damage);
+            }
         }
-        public static void SacrificeCountNeededByItemId(this Item item, int num) => CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[item.type] = num;
+        public static void SacrificeCountNeededByItemId(this Item item, int num)
+        {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[item.type] = num;
+        }
+
         public static Vector2 RealSafeNormalize(this Vector2 vector2)
         {
             Vector2 vector = Vector2.Normalize(vector2);
-            if (vector.HasNaNs()) vector = Vector2.Zero;
+            if (vector.HasNaNs())
+            {
+                vector = Vector2.Zero;
+            }
+
             return vector;
         }
         public static Vector2 AbsVector2(this Vector2 vector2)
@@ -190,23 +202,26 @@ namespace StarBreaker
             float y = Math.Abs(vector2.Y);
             return new Vector2(x, y);
         }
-        public static NPC FindTargetNPC(this Player player,float maxDis = 800)
+        public static NPC FindTargetNPC(this Player player, float maxDis = 800)
         {
-            foreach(NPC npc in Main.npc)
+            foreach (NPC npc in Main.npc)
             {
                 float dis = Vector2.Distance(player.Center, npc.Center);
-                if(npc.CanBeChasedBy() && npc.active && !npc.friendly && maxDis > dis)
+                if (npc.CanBeChasedBy() && npc.active && !npc.friendly && maxDis > dis)
                 {
                     maxDis = dis;
                     player.MinionAttackTargetNPC = npc.whoAmI;
                 }
             }
-            if(player.HasMinionAttackTargetNPC)
+            if (player.HasMinionAttackTargetNPC)
             {
                 return Main.npc[player.MinionAttackTargetNPC];
             }
             return null;
         }
-        public static Vector2 NormalVector(this Vector2 vector) => new Vector2(-vector.Y, vector.X);
+        public static Vector2 NormalVector(this Vector2 vector)
+        {
+            return new Vector2(-vector.Y, vector.X);
+        }
     }
 }

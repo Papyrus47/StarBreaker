@@ -1,7 +1,4 @@
-﻿using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.DamageClasses
+﻿namespace StarBreaker.Items.DamageClasses
 {
     public class FourDamage : DamageClass
     {
@@ -14,6 +11,9 @@ namespace StarBreaker.Items.DamageClasses
         {
             return new StatInheritanceData(10, 10, 0, 0, 0);
         }
-        public override bool GetEffectInheritance(DamageClass damageClass) => true;
+        public override bool GetEffectInheritance(DamageClass damageClass)
+        {
+            return true;
+        }
     }
 }

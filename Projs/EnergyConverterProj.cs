@@ -1,7 +1,4 @@
 ﻿using StarBreaker.Items.Bullet;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Projs
 {

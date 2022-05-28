@@ -1,13 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperKnifeProj : ModProjectile
     {
-        NPC target = null;
+        private NPC target = null;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("铜投刀");
@@ -115,7 +110,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
         {
             if (Projectile.ai[0] == 0)
             {
-                if (Projectile.damage > 20) Projectile.damage -= 5;
+                if (Projectile.damage > 20)
+                {
+                    Projectile.damage -= 5;
+                }
+
                 if (!target.immortal)
                 {
                     for (int i = 0; i < 5; i++)

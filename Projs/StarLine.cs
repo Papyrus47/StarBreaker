@@ -1,12 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
-    class StarLine : ModProjectile
+    internal class StarLine : ModProjectile
     {
         public override string Texture => "StarBreaker/Projs/Type/EnergyProj";
         public override void SetStaticDefaults()

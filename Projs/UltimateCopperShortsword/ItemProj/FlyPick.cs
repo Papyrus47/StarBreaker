@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class FlyPick : ModProjectile
     {

@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-
-namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class IronBreakGun : BaseEnergyRanged
     {
@@ -30,18 +23,29 @@ namespace StarBreaker.Items.Weapon.EnergyWeapon
             Item.autoReuse = true;
             Item.rare = ItemRarityID.Pink;
         }
-        public override void AddRecipes() => CreateRecipe().AddIngredient(ItemID.IronBar, 50).AddIngredient(ItemID.IllegalGunParts).AddTile(TileID.MythrilAnvil).Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe().AddIngredient(ItemID.IronBar, 50).AddIngredient(ItemID.IllegalGunParts).AddTile(TileID.MythrilAnvil).Register();
+        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             List<EnergyBulletItem> bulletItems = new();
             foreach (Item item in player.inventory)
             {
-                if (bulletItems.Count >= 2) break;
+                if (bulletItems.Count >= 2)
+                {
+                    break;
+                }
+
                 if (item.ammo == Item.useAmmo && item.shoot != type && item.ModItem is EnergyBulletItem bullet)
                 {
                     item.stack--;
-                    if (item.stack <= 0) item.TurnToAir();
+                    if (item.stack <= 0)
+                    {
+                        item.TurnToAir();
+                    }
+
                     bulletItems.Add(bullet);
                 }
             }

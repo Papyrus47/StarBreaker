@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperSickleProj : ModProjectile
     {
@@ -28,7 +24,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
         {
             Player player = Main.player[Projectile.owner];
             Projectile.rotation += 0.3f;
-            if (Projectile.rotation > 6.28f) Projectile.rotation = 0;
+            if (Projectile.rotation > 6.28f)
+            {
+                Projectile.rotation = 0;
+            }
+
             if (player.dead)
             {
                 Projectile.Kill();

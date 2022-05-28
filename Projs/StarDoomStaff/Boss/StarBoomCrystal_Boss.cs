@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.StarDoomStaff.Boss
+﻿namespace StarBreaker.Projs.StarDoomStaff.Boss
 {
     public class StarBoomCrystal_Boss : ModProjectile
     {

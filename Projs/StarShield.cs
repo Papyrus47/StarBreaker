@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class StarShield : ModProjectile
     {
@@ -43,15 +36,23 @@ namespace StarBreaker.Projs
                 {
                     foreach (Projectile target in Main.projectile)
                     {
-                        if ((target.friendly || !target.hostile)&& target.active && !target.minion &&
+                        if ((target.friendly || !target.hostile) && target.active && !target.minion &&
                             target.type != Projectile.type && target.type != ModContent.ProjectileType<StarShieldPlayer>())
                         {
                             if (target.Colliding(target.Hitbox, Projectile.Hitbox))
                             {
-                                if(target.Distance(Projectile.Center) < 100) target.Kill();
+                                if (target.Distance(Projectile.Center) < 100)
+                                {
+                                    target.Kill();
+                                }
+
                                 Projectile.timeLeft -= (target.damage - (int)(npc.defense * (Main.expertMode ? 0.75f : 0.5f))) * 3;
                                 npc.life += target.damage / 5;
-                                if (npc.life > npc.lifeMax) npc.life = npc.lifeMax;
+                                if (npc.life > npc.lifeMax)
+                                {
+                                    npc.life = npc.lifeMax;
+                                }
+
                                 break;
                             }
                         }

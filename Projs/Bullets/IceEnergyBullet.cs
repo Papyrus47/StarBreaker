@@ -1,7 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using StarBreaker.Projs.Type;
-using Microsoft.Xna.Framework;
+﻿using StarBreaker.Projs.Type;
 
 namespace StarBreaker.Projs.Bullets
 {
@@ -17,7 +14,10 @@ namespace StarBreaker.Projs.Bullets
         }
         public override void StateAI()
         {
-            if(Projectile.velocity.Length() < 30f) Projectile.velocity += Projectile.velocity.RealSafeNormalize();
+            if (Projectile.velocity.Length() < 30f)
+            {
+                Projectile.velocity += Projectile.velocity.RealSafeNormalize();
+            }
         }
     }
 }

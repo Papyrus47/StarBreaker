@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Weapon.HradMode.Waste
+﻿namespace StarBreaker.Items.Weapon.HradMode.Waste
 {
     public class StarsPierce : ModItem
     {
@@ -38,7 +31,7 @@ namespace StarBreaker.Items.Weapon.HradMode.Waste
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if(player.altFunctionUse == 2)
+            if (player.altFunctionUse == 2)
             {
                 Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage / 2, knockback, player.whoAmI, 0, 0);
                 projectile.extraUpdates = 1;
@@ -47,6 +40,9 @@ namespace StarBreaker.Items.Weapon.HradMode.Waste
             }
             return base.Shoot(player, source, position, velocity, type, damage, knockback);
         }
-        public override bool AltFunctionUse(Player player) => true;
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
     }
 }

@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using StarBreaker.Items.Type;
-using Terraria.Audio;
+﻿using StarBreaker.Items.Type;
 
 namespace StarBreaker.Items.Weapon.Drums
 {

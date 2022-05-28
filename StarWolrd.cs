@@ -1,5 +1,4 @@
 ﻿using Terraria.Graphics.Effects;
-using Terraria.ModLoader;
 
 namespace StarBreaker
 {

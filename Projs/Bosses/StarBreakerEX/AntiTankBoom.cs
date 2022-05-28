@@ -1,11 +1,4 @@
-﻿using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Audio;
-using Microsoft.Xna.Framework;
-
-namespace StarBreaker.Projs.Bosses.StarBreakerEX
+﻿namespace StarBreaker.Projs.Bosses.StarBreakerEX
 {
     public class AntiTankBoom : ModProjectile
     {
@@ -28,7 +21,7 @@ namespace StarBreaker.Projs.Bosses.StarBreakerEX
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
-            if(Projectile.ai[1] == 1)
+            if (Projectile.ai[1] == 1)
             {
                 Player player = Main.player[(int)Projectile.ai[0]];
                 Projectile.Center = player.Center - Projectile.velocity;
@@ -41,15 +34,15 @@ namespace StarBreaker.Projs.Bosses.StarBreakerEX
         }
         public override void Kill(int timeLeft)
         {
-            for(int i = 0;i<15;i++)
+            for (int i = 0; i < 15; i++)
             {
                 Dust.NewDust(Projectile.Center, 3, 3, DustID.Smoke);
             }
-            if(Projectile.ai[1] == 1)
+            if (Projectile.ai[1] == 1)
             {
                 Player player = Main.player[(int)Projectile.ai[0]];
                 player.statLife -= Projectile.damage * 2;
-                if(player.statLife <= 0)
+                if (player.statLife <= 0)
                 {
                     player.KillMe(PlayerDeathReason.ByCustomReason(player.name + "被反坦克炮炸死"), 10, player.direction);
                 }

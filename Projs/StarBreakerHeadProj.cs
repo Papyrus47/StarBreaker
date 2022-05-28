@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria.Audio;
 
 namespace StarBreaker.Projs
 {
@@ -88,9 +83,7 @@ namespace StarBreaker.Projs
             {
                 if ((starPlayer.Bullet1 is not null || starPlayer.Bullet2 is not null) && (!starPlayer.Bullet1.IsAir || !starPlayer.Bullet2.IsAir))
                 {
-                    int shootID, shootDamage;
-                    Items.EnergyBulletItem bulletItem;
-                    StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out shootID, out shootDamage, out bulletItem);
+                    StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out int shootID, out int shootDamage, out Items.EnergyBulletItem bulletItem);
                     SoundEngine.PlaySound(SoundID.Item109, Projectile.Center);
                     for (float i = -5; i <= 5; i++)
                     {
@@ -102,10 +95,17 @@ namespace StarBreaker.Projs
                         StarBreakerWay.Add_Hooks_ToProj(bulletItem, proj);
                     }
                 }
-                if (State < 20) State++;
+                if (State < 20)
+                {
+                    State++;
+                }
+
                 Timer = 0;
                 Projectile.damage += (int)State;
-                if (Projectile.damage > player.inventory[player.selectedItem].damage * State) Projectile.damage = (int)(player.inventory[player.selectedItem].damage * State);
+                if (Projectile.damage > player.inventory[player.selectedItem].damage * State)
+                {
+                    Projectile.damage = (int)(player.inventory[player.selectedItem].damage * State);
+                }
             }
             #endregion
         }
@@ -123,7 +123,11 @@ namespace StarBreaker.Projs
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.type == NPCID.TargetDummy) return;
+            if (target.type == NPCID.TargetDummy)
+            {
+                return;
+            }
+
             Main.player[Projectile.owner].GetModPlayer<StarPlayer>().SummonStarShieldTime -= target.active ? 1 : 60;
             target.velocity += (Projectile.rotation - (Projectile.spriteDirection == -1 ? 0f : MathHelper.Pi)).ToRotationVector2() * -1.5f;
             if (crit)

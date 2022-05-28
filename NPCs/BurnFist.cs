@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.NPCs
+﻿namespace StarBreaker.NPCs
 {
     [AutoloadBossHead]
     internal class BurnFist : ModNPC
@@ -31,7 +24,7 @@ namespace StarBreaker.NPCs
             set => NPC.ai[3] = value;
         }
         private Player Target => Main.player[NPC.target];
-        public override string BossHeadTexture => this.Texture;
+        public override string BossHeadTexture => Texture;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("炎拳");
@@ -73,7 +66,11 @@ namespace StarBreaker.NPCs
             if (Target.dead)
             {
                 NPC.velocity.Y++;
-                if (NPC.velocity.Y > 30) NPC.active = false;
+                if (NPC.velocity.Y > 30)
+                {
+                    NPC.active = false;
+                }
+
                 return;
             }
             switch (State)
@@ -157,7 +154,11 @@ namespace StarBreaker.NPCs
                                             State++;
                                         }
                                     }
-                                    else Timer1--;
+                                    else
+                                    {
+                                        Timer1--;
+                                    }
+
                                     if (Main.rand.NextBool(20))
                                     {
                                         Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.FireworkFountain_Red);
@@ -237,7 +238,10 @@ namespace StarBreaker.NPCs
                                     center = Target.position + new Vector2(0, 16 * i);
                                     Timer2 = center.X;
                                     Timer3 = center.Y;
-                                    if (tile.HasTile) break;
+                                    if (tile.HasTile)
+                                    {
+                                        break;
+                                    }
                                 }
                                 for (float r = 0; r <= MathHelper.TwoPi; r += MathHelper.Pi / 100)
                                 {
@@ -451,7 +455,11 @@ namespace StarBreaker.NPCs
                                                 FrostFist.ai[3]++;//霜拳切换ai
                                             }
                                         }
-                                        else Timer1--;
+                                        else
+                                        {
+                                            Timer1--;
+                                        }
+
                                         if (Main.rand.NextBool(20))
                                         {
                                             Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.FireworkFountain_Red);
@@ -467,7 +475,11 @@ namespace StarBreaker.NPCs
                             case 1://炎拳欧拉
                                 {
                                     float speed = toTarget.Length() > 500 ? 500 : toTarget.Length();
-                                    if (Timer1 % 60 < 1) NPC.velocity = toTarget.SafeNormalize(toTarget) * speed / 50;
+                                    if (Timer1 % 60 < 1)
+                                    {
+                                        NPC.velocity = toTarget.SafeNormalize(toTarget) * speed / 50;
+                                    }
+
                                     Timer1++;
                                     Vector2 ves = NPC.velocity.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
                                     if (Main.netMode != 1)
@@ -504,8 +516,14 @@ namespace StarBreaker.NPCs
                         break;
                     }
             }
-            if (NPC.spriteDirection == -1) NPC.rotation += MathHelper.Pi;
-            else NPC.rotation += MathHelper.PiOver2 + MathHelper.Pi;
+            if (NPC.spriteDirection == -1)
+            {
+                NPC.rotation += MathHelper.Pi;
+            }
+            else
+            {
+                NPC.rotation += MathHelper.PiOver2 + MathHelper.Pi;
+            }
         }
         public override bool CheckActive()
         {

@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria.Audio;
 
 namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
@@ -37,9 +30,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             Projectile.ai[0]++;
 
-            float timeToFlyOut, rangeMultiplier;
-            int segments;
-            Projectile.GetWhipSettings(Projectile, out timeToFlyOut, out segments, out rangeMultiplier);
+            Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int segments, out float rangeMultiplier);
 
             Projectile.Center = Main.GetPlayerArmPosition(Projectile) + Projectile.velocity * (Projectile.ai[0] - 1);//修改弹幕位置
 
@@ -74,10 +65,22 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.immortal) return;
-            if (Projectile.ai[1] == 0) Projectile.ai[1] = Projectile.damage;
+            if (target.immortal)
+            {
+                return;
+            }
+
+            if (Projectile.ai[1] == 0)
+            {
+                Projectile.ai[1] = Projectile.damage;
+            }
+
             Projectile.damage += (int)(Projectile.damage * 0.1f);
-            if (Projectile.damage > Projectile.ai[1] * 10) Projectile.damage = (int)Projectile.ai[1] * 10;
+            if (Projectile.damage > Projectile.ai[1] * 10)
+            {
+                Projectile.damage = (int)Projectile.ai[1] * 10;
+            }
+
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
             base.OnHitNPC(target, damage, knockback, crit);
         }
@@ -98,7 +101,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                 Vector2 vector2 = list[i + 1] - list[i];
                 float rot = vector2.ToRotation() - MathHelper.PiOver2;
                 color = Lighting.GetColor(list[i].ToTileCoordinates(), color);
-                if (list.Count > 0) color = Color.Lerp(Color.Orange, color, i / list.Count);
+                if (list.Count > 0)
+                {
+                    color = Color.Lerp(Color.Orange, color, i / list.Count);
+                }
+
                 Vector2 scale = new Vector2(1f, (vector2.Length() + 2f) / rectangle.Height);
                 Main.spriteBatch.Draw(texture2D, pos - Main.screenPosition, new Rectangle?(rectangle), color, rot, origin, scale, SpriteEffects.None, 0);
                 pos += vector2;

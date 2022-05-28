@@ -1,16 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.UltimateCopperShortsword;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.UltimateCopperShortsword;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.BossB
 {
     [AutoloadBossHead]
     public class UltimateCopperSpear : FSMNPC
     {
-        List<Vector2> targetOldPos = new List<Vector2>();
+        private List<Vector2> targetOldPos = new List<Vector2>();
         public override string BossHeadTexture => Texture;
         public override void SetStaticDefaults()
         {

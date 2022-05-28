@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-
-namespace StarBreaker.Projs.StarDoomStaff
+﻿namespace StarBreaker.Projs.StarDoomStaff
 {
     public class StarControlCrystal : StarCrystal
     {
@@ -21,7 +18,11 @@ namespace StarBreaker.Projs.StarDoomStaff
                 if (Projectile.ai[0] == -1 && Projectile.OwnerMinionAttackTargetNPC != null)
                 {
                     NPC npc = Projectile.OwnerMinionAttackTargetNPC;
-                    if (npc.friendly) return;
+                    if (npc.friendly)
+                    {
+                        return;
+                    }
+
                     if (Vector2.Distance(Projectile.position, npc.position) < 300)
                     {
                         Projectile.timeLeft = 600;

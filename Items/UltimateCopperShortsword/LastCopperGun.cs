@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.UltimateCopperShortsword;
-using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -32,7 +26,11 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.shootSpeed = 10f;
             Item.UseSound = SoundID.Item101;
         }
-        public override bool AltFunctionUse(Player player) => true;
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+
         public override bool CanUseItem(Player player)
         {
             if (player.altFunctionUse == 2)
@@ -49,16 +47,20 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         }
         public override bool CanConsumeAmmo(Player player)
         {
-            if (player.altFunctionUse == 2) return false;
+            if (player.altFunctionUse == 2)
+            {
+                return false;
+            }
+
             return base.CanConsumeAmmo(player);
         }
         public override Vector2? HoldoutOffset()
         {
-            return new Vector2(-20,-2);
+            return new Vector2(-20, -2);
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if(player.altFunctionUse == 2)
+            if (player.altFunctionUse == 2)
             {
                 type = ModContent.ProjectileType<LastCopperGunProj>();
             }

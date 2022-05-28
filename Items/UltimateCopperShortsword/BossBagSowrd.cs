@@ -1,7 +1,4 @@
 ﻿using StarBreaker.NPCs.UltimateCopperShortsword.Bosses;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {

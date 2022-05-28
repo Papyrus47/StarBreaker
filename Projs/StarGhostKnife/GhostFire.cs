@@ -1,14 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Utilities;
-using Terraria.GameContent;
-using Terraria.DataStructures;
-using Terraria.Audio;
-
-namespace StarBreaker.Projs.StarGhostKnife
+﻿namespace StarBreaker.Projs.StarGhostKnife
 {
     public class GhostFire : ModProjectile
     {

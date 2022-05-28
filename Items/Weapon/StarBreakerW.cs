@@ -1,13 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.DamageClasses;
+﻿using StarBreaker.Items.DamageClasses;
 using StarBreaker.Projs;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Localization;
 
 namespace StarBreaker.Items.Weapon
 {
@@ -111,8 +104,15 @@ namespace StarBreaker.Items.Weapon
                 ModContent.ProjectileType<StarBreakerHeadProj>(), damage, knockback, player.whoAmI);
             return false;
         }
-        public override bool AltFunctionUse(Player player) => true;
-        public override bool CanUseItem(Player player) => true;
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+
+        public override bool CanUseItem(Player player)
+        {
+            return true;
+        }
 
         public override void PostUpdate()
         {
@@ -137,7 +137,11 @@ namespace StarBreaker.Items.Weapon
         public override void UpdateInventory(Player player)
         {
             StarPlayer starPlayer = player.GetModPlayer<StarPlayer>();
-            if (StarBreakerSystem.downedStarBreakerEX && Item.damage < 30) Item.damage = 30;
+            if (StarBreakerSystem.downedStarBreakerEX && Item.damage < 30)
+            {
+                Item.damage = 30;
+            }
+
             _hasMe = true;
             if (starPlayer.SummonStarShieldTime == 1)
             {
@@ -183,7 +187,7 @@ namespace StarBreaker.Items.Weapon
                     new(Mod, "StarBreaker2", "可以召唤\"星辰击碎者\"所用的四把特殊武器(右键)"),
                     new(Mod, "StarBreaker3", "上升伤害至30"),
                 };
-                for(int i =0;i<starBreaker.Length;i++)
+                for (int i = 0; i < starBreaker.Length; i++)
                 {
                     starBreaker[i].OverrideColor = Color.MediumPurple;
                 }

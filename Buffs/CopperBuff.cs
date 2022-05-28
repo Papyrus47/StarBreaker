@@ -1,7 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Buffs
+﻿namespace StarBreaker.Buffs
 {
     public class CopperBuff : ModBuff
     {

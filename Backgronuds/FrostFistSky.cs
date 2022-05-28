@@ -1,9 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.NPCs;
-using Terraria;
+﻿using StarBreaker.NPCs;
 using Terraria.Graphics.Effects;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Backgronuds
 {
@@ -94,7 +90,10 @@ namespace StarBreaker.Backgronuds
         public override void Activate(Vector2 position, params object[] args)
         {
             isActive = true;
-            if (intensity >= 1) intensity = 1;
+            if (intensity >= 1)
+            {
+                intensity = 1;
+            }
         }
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {

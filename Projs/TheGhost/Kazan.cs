@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Type;
+﻿using StarBreaker.Projs.Type;
 
 namespace StarBreaker.Projs.TheGhost
 {
-    class Kazan : Ghost
+    internal class Kazan : Ghost
     {
         public override void SetStaticDefaults()
         {

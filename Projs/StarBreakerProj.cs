@@ -1,10 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.IO;
-using Terraria;
+﻿using System.IO;
 using Terraria.Audio;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Projs
 {
@@ -108,7 +103,10 @@ namespace StarBreaker.Projs
                     {
                         Projectile.Center = player.Center + new Vector2(0, -200);
                         Projectile.velocity = player.velocity;
-                        if (Projectile.velocity == Vector2.Zero) Projectile.velocity.X = 1;
+                        if (Projectile.velocity == Vector2.Zero)
+                        {
+                            Projectile.velocity.X = 1;
+                        }
                     }
                 }
                 else

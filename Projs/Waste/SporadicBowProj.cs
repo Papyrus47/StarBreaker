@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.Waste
+﻿namespace StarBreaker.Projs.Waste
 {
     public class SporadicBowProj : ModProjectile
     {
@@ -60,7 +54,10 @@ namespace StarBreaker.Projs.Waste
             {
                 Projectile.Kill();
             }
-            else Timer++;
+            else
+            {
+                Timer++;
+            }
             #endregion
         }
         public override void Kill(int timeLeft)
@@ -82,7 +79,10 @@ namespace StarBreaker.Projs.Waste
                         Main.projectile[proj].extraUpdates = 5;
                         Main.projectile[proj].friendly = true;
                         Main.projectile[proj].hostile = false;
-                        if (i == 1) Main.projectile[proj].velocity = Main.projectile[proj].velocity.RotatedByRandom(0.1);
+                        if (i == 1)
+                        {
+                            Main.projectile[proj].velocity = Main.projectile[proj].velocity.RotatedByRandom(0.1);
+                        }
 
                         if (Timer > 180)
                         {

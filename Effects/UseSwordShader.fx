@@ -22,9 +22,9 @@ float4 PixelShaderFunction(PSInput input) : COLOR0//使用挥动剑类武器的s
 {
     float3 coord = input.Texcoord; //获取纹理坐标
     float4 color = tex2D(uImage0, float2(coord.x,coord.y));//获取对应在贴图上的颜色
-    if (all(color))//返回透明
+    if (color.r < 0.1 && color.g < 0.1 && color.b < 0.1)//获取黑色,返回透明
     {
-        return float4(1, 1, 1, 1);
+        return float4(0,0,0,0);
     }
     color.rbg = input.Color.rbg;//取颜色为传入color的rbg
     color.a = coord.z * input.Color.a;//透明度

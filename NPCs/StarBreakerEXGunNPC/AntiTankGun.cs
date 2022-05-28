@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Utilities;
-using Terraria.GameContent;
-using StarBreaker.Projs.Bosses.StarBreakerEX;
+﻿using StarBreaker.Projs.Bosses.StarBreakerEX;
 
 namespace StarBreaker.NPCs.StarBreakerEXGunNPC
 {
@@ -22,7 +15,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
         }
         public override void GunAI()
         {
-            switch(StarBreakerEX_NPC.ai[3])
+            switch (StarBreakerEX_NPC.ai[3])
             {
                 case 1:
                 case 2:
@@ -32,7 +25,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
                         NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize() * 8;
                         if (StarBreakerEX_NPC.ai[3] == 1)
                         {
-                            NPC.Center = Vector2.Lerp(NPC.Center,StarBreakerEX_NPC.Center + new Vector2(200, 0),0.1f);
+                            NPC.Center = Vector2.Lerp(NPC.Center, StarBreakerEX_NPC.Center + new Vector2(200, 0), 0.1f);
                             if (StarBreakerEX_NPC.ai[2] == 2)//对应的状态
                             {
                                 if (StarBreakerEX_NPC.ai[0] % 20 == 0)
@@ -61,7 +54,7 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
                         NPC.spriteDirection = NPC.direction = NPC.velocity.X < 0 ? 1 : -1;//npc朝向
                         NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize();
                         NPC.Center = Target.Center + new Vector2(300);
-                        if(StarBreakerEX_NPC.ai[2] == 2 && StarBreakerEX_NPC.ai[0] % 20 == 0)
+                        if (StarBreakerEX_NPC.ai[2] == 2 && StarBreakerEX_NPC.ai[0] % 20 == 0)
                         {
                             Shoot();
                         }

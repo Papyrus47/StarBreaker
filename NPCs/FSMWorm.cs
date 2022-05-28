@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.IO;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using System.IO;
 
 namespace EnW.NPCs.TheBoss//填入你Mod的命名空间
 {
@@ -144,7 +140,10 @@ namespace EnW.NPCs.TheBoss//填入你Mod的命名空间
                         NPC.life = 0;
                         NPC.HitEffect(0, 10.0);
                         NPC.active = false;
-                        if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, NPC.whoAmI, -1);
+                        if (Main.netMode == NetmodeID.Server)
+                        {
+                            NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, NPC.whoAmI, -1);
+                        }
                         //发送npc死亡讯息
                     }
                 }

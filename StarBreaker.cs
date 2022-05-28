@@ -1,13 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Projs.Waste;
+﻿using StarBreaker.Projs.Waste;
 using StarBreaker.StarUI;
-using System;
-using System.Collections.Generic;
-using Terraria;
 using Terraria.Graphics.Effects;
-using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
 using static On.Terraria.Graphics.Effects.FilterManager;
 
@@ -24,7 +17,7 @@ namespace StarBreaker
         public static Effect OffsetShader;//偏移用的shader
         public static Effect UseSwordShader;//剑类挥动
 
-        RenderTarget2D render;
+        private RenderTarget2D render;
 
         #region UI变量
         #region 星击子弹UI
@@ -114,7 +107,11 @@ namespace StarBreaker
         private void Main_UpdateAudio_DecideOnNewMusic(On.Terraria.Main.orig_UpdateAudio_DecideOnNewMusic orig, Main self)
         {
             orig(self);
-            if (Main.gameMenu) return;
+            if (Main.gameMenu)
+            {
+                return;
+            }
+
             if (Main.LocalPlayer.TryGetModPlayer(out StarPlayer starPlayer))
             {
                 if (starPlayer.EGO)
@@ -149,7 +146,7 @@ namespace StarBreaker
                 {
                     const int MaxTitle = 6;
                     int i = Main.rand.Next(MaxTitle);
-                    switch(i++)
+                    switch (i++)
                     {
                         case 1:
                             {
@@ -182,7 +179,7 @@ namespace StarBreaker
                                     "Star Owenr:Emmm...I'm control title just now? Welcome to the A-245a-0-1 Time Line,Terraria(?)");
                                 break;
                             }
-                    }    
+                    }
                 }
             }
             catch { }
@@ -213,9 +210,13 @@ namespace StarBreaker
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic -= Main_UpdateAudio_DecideOnNewMusic;
             Terraria.Main.OnResolutionChanged -= Main_OnResolutionChanged;
         }
-        private void FilterManager_EndCapture(orig_EndCapture orig,FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
+        private void FilterManager_EndCapture(orig_EndCapture orig, FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
         {
-            if (render == null) return;
+            if (render == null)
+            {
+                return;
+            }
+
             GraphicsDevice gd = Main.instance.GraphicsDevice;
             SpriteBatch sb = Main.spriteBatch;
 
@@ -240,7 +241,10 @@ namespace StarBreaker
                     // 把所有的点都生成出来，按照顺序
                     for (int i = 1; i < Projectile.oldPos.Length; ++i)
                     {
-                        if (Projectile.oldPos[i] == Vector2.Zero) break;
+                        if (Projectile.oldPos[i] == Vector2.Zero)
+                        {
+                            break;
+                        }
 
                         int width = 5 * (i < 10 ? i : 10);
                         var normalDir = Projectile.oldPos[i - 1] - Projectile.oldPos[i];
@@ -268,7 +272,7 @@ namespace StarBreaker
                         }
                         gd.SetRenderTarget(render);//在自己的画
                         gd.Clear(Color.Transparent);//透明清除紫色
-                        sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, 
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap,
                             DepthStencilState.Default, RasterizerState.CullNone);//顶点绘制
                         Main.graphics.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_1").Value;
                         Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, triangleList.ToArray(), 0, triangleList.Count / 3);

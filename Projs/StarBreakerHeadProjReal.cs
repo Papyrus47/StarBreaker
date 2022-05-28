@@ -1,15 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items;
-using System;
+﻿using StarBreaker.Items;
 using System.IO;
-using Terraria;
 using Terraria.Audio;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Projs
 {
-    class StarBreakerHeadProjReal : ModProjectile
+    internal class StarBreakerHeadProjReal : ModProjectile
     {
         private float State
         {
@@ -121,9 +116,7 @@ namespace StarBreaker.Projs
                         {
                             if ((starPlayer.Bullet1 is not null || starPlayer.Bullet2 is not null) && (!starPlayer.Bullet1.IsAir || !starPlayer.Bullet2.IsAir))
                             {
-                                int shootID, shootDamage;
-                                Items.EnergyBulletItem bulletItem;
-                                StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out shootID, out shootDamage, out bulletItem);
+                                StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out int shootID, out int shootDamage, out EnergyBulletItem bulletItem);
                                 for (float i = -5; i <= 5; i++)
                                 {
                                     Vector2 vec = (i.ToRotationVector2() * MathHelper.Pi / 18) + Projectile.velocity.SafeNormalize(Vector2.Zero);
@@ -153,9 +146,7 @@ namespace StarBreaker.Projs
                         {
                             if ((starPlayer.Bullet1 is not null || starPlayer.Bullet2 is not null) && (!starPlayer.Bullet1.IsAir || !starPlayer.Bullet2.IsAir))
                             {
-                                int shootID, shootDamage;
-                                EnergyBulletItem bulletItem;
-                                StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out shootID, out shootDamage, out bulletItem);
+                                StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out int shootID, out int shootDamage, out EnergyBulletItem bulletItem);
                                 if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     for (float i = -5; i <= 5; i++)
@@ -217,7 +208,11 @@ namespace StarBreaker.Projs
                 case 3://拼刺刀！
                     {
                         Timer++;
-                        if (Timer2 == 0) Timer2 = Projectile.damage;
+                        if (Timer2 == 0)
+                        {
+                            Timer2 = Projectile.damage;
+                        }
+
                         Projectile.damage = 300 + starPlayer.StarCharge;
                         if (Timer > 200)
                         {
@@ -240,7 +235,11 @@ namespace StarBreaker.Projs
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.type == NPCID.TargetDummy) return;
+            if (target.type == NPCID.TargetDummy)
+            {
+                return;
+            }
+
             Main.player[Projectile.owner].GetModPlayer<StarPlayer>().SummonStarShieldTime -= target.active ? 1 : 60;
             if (crit)
             {

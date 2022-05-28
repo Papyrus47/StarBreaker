@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Type;
-using Terraria;
-using Terraria.Localization;
+﻿using StarBreaker.Projs.Type;
 
 namespace StarBreaker.Projs.EnergyDamage_Proj.Summon
 {
@@ -27,7 +24,10 @@ namespace StarBreaker.Projs.EnergyDamage_Proj.Summon
         public override void StateAI()
         {
             Player player = Main.player[Projectile.owner];
-            if (player.dead) Projectile.Kill();
+            if (player.dead)
+            {
+                Projectile.Kill();
+            }
             else
             {
                 Projectile.timeLeft = 2;
@@ -60,7 +60,11 @@ namespace StarBreaker.Projs.EnergyDamage_Proj.Summon
                     Vector2 pos = Projectile.OwnerMinionAttackTargetNPC.Center;
                     Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver4;
                     Projectile.spriteDirection = Projectile.direction;
-                    if (Projectile.spriteDirection == -1) Projectile.rotation += MathHelper.PiOver2;
+                    if (Projectile.spriteDirection == -1)
+                    {
+                        Projectile.rotation += MathHelper.PiOver2;
+                    }
+
                     Projectile.velocity = (pos - Projectile.Center).SafeNormalize(default) * 20;
                 }
             }

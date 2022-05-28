@@ -1,14 +1,5 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Terraria.GameContent;
-using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using Terraria.Audio;
-using Terraria.Utilities;
-using Microsoft.Xna.Framework.Graphics;
+﻿using StarBreaker.Projs.CupricOxideSword;
 using Terraria.GameContent.Bestiary;
-using StarBreaker.Projs.CupricOxideSword;
 
 namespace StarBreaker.NPCs.CupricOxideSword
 {
@@ -20,7 +11,7 @@ namespace StarBreaker.NPCs.CupricOxideSword
         {
             get
             {
-                if(Main.masterMode || Main.expertMode)
+                if (Main.masterMode || Main.expertMode)
                 {
                     return NPC.damage / 2;
                 }
@@ -31,7 +22,7 @@ namespace StarBreaker.NPCs.CupricOxideSword
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cupric Oxide Sword");
-            DisplayName.AddTranslation(7,"氧化铜短剑");
+            DisplayName.AddTranslation(7, "氧化铜短剑");
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, new()
             {
                 Rotation = -MathHelper.PiOver4
@@ -58,7 +49,11 @@ namespace StarBreaker.NPCs.CupricOxideSword
                 Music = MusicLoader.GetMusicSlot(Mod, "Music/Argalia");
             }
         }
-        public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;
+        public override void BossHeadRotation(ref float rotation)
+        {
+            rotation = NPC.rotation;
+        }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
@@ -72,30 +67,30 @@ namespace StarBreaker.NPCs.CupricOxideSword
             {
                 NPC.TargetClosest();
             }
-            if(Target.dead)
+            if (Target.dead)
             {
                 NPC.velocity.Y++;
-                if(NPC.timeLeft == 0)//我就怕什么不脱战
+                if (NPC.timeLeft == 0)//我就怕什么不脱战
                 {
                     NPC.active = false;
                 }
                 return;
             }
             NPC.timeLeft = 300;
-            switch(State)
+            switch (State)
             {
                 case 0://氧化铜短剑开幕
                     {
                         NPC.rotation = -MathHelper.PiOver4;
                         NPC.dontTakeDamage = true;
                         Timer1++;
-                        if(Timer1 % 50 == 0)
+                        if (Timer1 % 50 == 0)
                         {
                             string Text;
-                            switch((int)Timer1 / 50)
+                            switch ((int)Timer1 / 50)
                             {
-                                case 1:Text = "看来我拥有了自我意识啊"; break;
-                                    
+                                case 1: Text = "看来我拥有了自我意识啊"; break;
+
                                 case 2: Text = "那么准备好了?"; break;
                                 case 3: Text = "这会是我最后的复仇"; break;
                                 default:
@@ -122,7 +117,7 @@ namespace StarBreaker.NPCs.CupricOxideSword
                         }
                         else//这才是冲刺部分
                         {
-                            if(Timer1 % 5==0)
+                            if (Timer1 % 5 == 0)
                             {
                                 _ = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity / 5, ModContent.ProjectileType<CupricOxide>(),
                                     Damage, 1.3f, Main.myPlayer);
@@ -141,6 +136,9 @@ namespace StarBreaker.NPCs.CupricOxideSword
         {
             base.ModifyNPCLoot(npcLoot);
         }
-        public override bool CheckActive() => !Target.active;
+        public override bool CheckActive()
+        {
+            return !Target.active;
+        }
     }
 }

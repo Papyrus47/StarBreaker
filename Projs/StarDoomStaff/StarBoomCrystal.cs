@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-
-namespace StarBreaker.Projs.StarDoomStaff
+﻿namespace StarBreaker.Projs.StarDoomStaff
 {
     public class StarBoomCrystal : StarCrystal
     {

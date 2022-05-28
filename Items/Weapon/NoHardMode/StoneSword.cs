@@ -1,9 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Weapon.NoHardMode
+﻿namespace StarBreaker.Items.Weapon.NoHardMode
 {
     public class StoneSword : ModItem
     {
@@ -24,6 +19,9 @@ namespace StarBreaker.Items.Weapon.NoHardMode
             Item.useStyle = ItemUseStyleID.Swing;
             Item.value = 230;
         }
-        public override void AddRecipes() => CreateRecipe().AddIngredient(ItemID.StoneBlock, 30).AddTile(TileID.WorkBenches).Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe().AddIngredient(ItemID.StoneBlock, 30).AddTile(TileID.WorkBenches).Register();
+        }
     }
 }

@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Weapon.NoHardMode.Waste
+﻿namespace StarBreaker.Items.Weapon.NoHardMode.Waste
 {
     public class SporadicBow : ModItem
     {

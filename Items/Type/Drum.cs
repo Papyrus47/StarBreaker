@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-
-namespace StarBreaker.Items.Type
+﻿namespace StarBreaker.Items.Type
 {
     public abstract class Drum : ModItem
     {

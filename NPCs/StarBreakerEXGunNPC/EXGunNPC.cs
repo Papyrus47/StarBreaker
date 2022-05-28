@@ -1,12 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Utilities;
-using Terraria.GameContent;
-
-namespace StarBreaker.NPCs.StarBreakerEXGunNPC
+﻿namespace StarBreaker.NPCs.StarBreakerEXGunNPC
 {
     public abstract class EXGunNPC : FSMNPC
     {
@@ -32,10 +24,14 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
             if (Target.dead || !Target.active || !StarBreakerEX_NPC.active || StarBreakerEX_NPC.life < StarBreakerEX_NPC.lifeMax * 0.5f || StarBreakerEX_NPC.type != ModContent.NPCType<StarBreakerEX>())
             {
                 NPC.velocity.Y -= 0.1f;
-                if (NPC.velocity.Y < -20) NPC.active = false;//到达一定的下坠速度就自杀
+                if (NPC.velocity.Y < -20)
+                {
+                    NPC.active = false;//到达一定的下坠速度就自杀
+                }
+
                 return;
             }
-            if(StarBreakerEX_NPC.ai[3] == 0)
+            if (StarBreakerEX_NPC.ai[3] == 0)
             {
                 NPC.rotation = NPC.velocity.ToRotation();
                 NPC.velocity = (StarBreakerEX_NPC.Center - NPC.Center).RealSafeNormalize() * 2;
@@ -47,7 +43,11 @@ namespace StarBreaker.NPCs.StarBreakerEXGunNPC
             Utils.DrawLine(spriteBatch, StarBreakerEX_NPC.Center, NPC.Center, Color.Purple * 0.2f, Color.Purple, 2f);//星击绘制控制的线
             return true;
         }
-        public override bool CheckActive() => !Target.active;
+        public override bool CheckActive()
+        {
+            return !Target.active;
+        }
+
         public abstract void GunAI();
     }
 }

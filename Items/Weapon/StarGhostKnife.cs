@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.StarGhostKnife;
-using System;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.StarGhostKnife;
 using Terraria.ModLoader.IO;
 
 namespace StarBreaker.Items.Weapon
@@ -13,8 +6,16 @@ namespace StarBreaker.Items.Weapon
     public class StarGhostKnife : ModItem
     {
         private int _MyOwner = -1;
-        private static StarGhostKnifeAtk GetGhostAttack(Player player) => (StarGhostKnifeAtk)player.GetModPlayer<StarPlayer>().GhostSwordAttack;
-        private static void SetGhostAttack(Player player, int attack) => player.GetModPlayer<StarPlayer>().GhostSwordAttack = attack;
+        private static StarGhostKnifeAtk GetGhostAttack(Player player)
+        {
+            return (StarGhostKnifeAtk)player.GetModPlayer<StarPlayer>().GhostSwordAttack;
+        }
+
+        private static void SetGhostAttack(Player player, int attack)
+        {
+            player.GetModPlayer<StarPlayer>().GhostSwordAttack = attack;
+        }
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("星辰鬼刀");
@@ -32,7 +33,7 @@ namespace StarBreaker.Items.Weapon
         {
             Item.width = 20;
             Item.height = 20;
-            Item.useStyle = ItemUseStyleID.Swing; 
+            Item.useStyle = ItemUseStyleID.Swing;
             Item.shoot = ModContent.ProjectileType<GhostFireHit>();
             Item.shootSpeed = 9f;
             Item.damage = 210;
@@ -66,14 +67,14 @@ namespace StarBreaker.Items.Weapon
                 if (_MyOwner >= 0)
                 {
                     Player player = Main.player[_MyOwner];
-                    for(int i =0;i<58;i++)
+                    for (int i = 0; i < 58; i++)
                     {
-                        if(player.inventory[i].stack == 0 || !player.inventory[i].active)
+                        if (player.inventory[i].stack == 0 || !player.inventory[i].active)
                         {
                             player.inventory[i] = Item.Clone();
                             break;
                         }
-                        else if(i == 57 && player.inventory[i].active)
+                        else if (i == 57 && player.inventory[i].active)
                         {
                             player.inventory[i] = Item.Clone();
                         }
@@ -152,7 +153,7 @@ namespace StarBreaker.Items.Weapon
                 {
                     line.OverrideColor = new Color?(new Color((int)Math.Sqrt(Main.time), 1, (int)Math.Sqrt(Main.time)));
                 }
-                if(line.Mod == "Terraria" && line.Name == "Tooltip3")
+                if (line.Mod == "Terraria" && line.Name == "Tooltip3")
                 {
                     line.OverrideColor = Color.Red;
                 }

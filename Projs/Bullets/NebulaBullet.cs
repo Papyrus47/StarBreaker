@@ -1,9 +1,8 @@
 ﻿using StarBreaker.Projs.Type;
-using Terraria;
 
 namespace StarBreaker.Projs.Bullets
 {
-    class NebulaBullet : EnergyProj
+    internal class NebulaBullet : EnergyProj
     {
         public override void SetStaticDefaults()
         {

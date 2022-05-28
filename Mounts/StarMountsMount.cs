@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Mounts
+﻿namespace StarBreaker.Mounts
 {
     public class StarMountsMount : ModMount
     {

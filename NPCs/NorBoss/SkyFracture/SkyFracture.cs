@@ -1,12 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items.Weapon.HradMode;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria.GameContent.Bestiary;
 
 namespace StarBreaker.NPCs.NorBoss.SkyFracture
 {
@@ -36,7 +28,11 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
                 SceneEffectPriority = SceneEffectPriority.BossMedium;//曲子优先度
             }
         }
-        public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;//boss头像旋转
+        public override void BossHeadRotation(ref float rotation)
+        {
+            rotation = NPC.rotation;//boss头像旋转
+        }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)//这一个是图鉴信息
         {
             bestiaryEntry.Info.AddRange( //添加信息
@@ -64,16 +60,16 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
                 return;
             }
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver4;
-            switch(State)
+            switch (State)
             {
                 case 0://正常发射弹幕
                     {
                         NPC.velocity = (NPC.velocity * 8 + (Target.Center - NPC.Center).RealSafeNormalize() * 5) / 9;
                         Timer1++;
-                        if(Timer1 > 4)
+                        if (Timer1 > 4)
                         {
                             Timer1 = 0;
-                            if(Timer2 > 15)
+                            if (Timer2 > 15)
                             {
                                 Timer2 = 0;
                                 State++;
@@ -81,7 +77,7 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
                             }
 
                             Vector2 center = NPC.Center - (NPC.velocity.RotatedByRandom(0.2) * 50);
-                            ShootProj(center,(Target.Center - center).RealSafeNormalize() * 20);
+                            ShootProj(center, (Target.Center - center).RealSafeNormalize() * 20);
                             Timer2++;
                         }
                         break;
@@ -90,9 +86,9 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
                     {
                         NPC.velocity = (NPC.velocity * 3 + (Target.Center - NPC.Center).RealSafeNormalize()) / 4;
                         Timer1++;
-                        if(Timer1 % 6 == 0)
+                        if (Timer1 % 6 == 0)
                         {
-                            if(Timer1 == 6)
+                            if (Timer1 == 6)
                             {
                                 Timer2 = Target.Center.X;
                                 Timer3 = Target.Center.Y;
@@ -104,7 +100,7 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
                                 ShootProj(center, (pos - center).RealSafeNormalize() * 20);
                             }
                         }
-                        if(Timer1 > 90)
+                        if (Timer1 > 90)
                         {
                             Timer1 = Timer2 = Timer3 = 0;
                             State++;
@@ -115,7 +111,7 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
                     {
                         NPC.velocity = (NPC.velocity * 8 + (Target.Center - NPC.Center) * 0.07f) / 9;
                         Timer1++;
-                        if(Timer1 > 120)
+                        if (Timer1 > 120)
                         {
                             Timer1 = 0;
                             State++;
@@ -133,7 +129,7 @@ namespace StarBreaker.NPCs.NorBoss.SkyFracture
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, vel,ProjectileID.SkyFracture, Damage, 1.4f, Main.myPlayer,Main.rand.Next(9));
+                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, vel, ProjectileID.SkyFracture, Damage, 1.4f, Main.myPlayer, Main.rand.Next(9));
                 Main.projectile[proj].friendly = false;//修改友善与敌对
                 Main.projectile[proj].hostile = true;
                 Main.projectile[proj].scale = 1.2f;

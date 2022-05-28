@@ -1,12 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Bullets;
-using System;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.IceGun
+﻿namespace StarBreaker.Projs.IceGun
 {
     public class IcePick : ModProjectile
     {
@@ -36,7 +28,7 @@ namespace StarBreaker.Projs.IceGun
                 {
                     Vector2 vel = Main.rand.NextVector2Unit();
                     Projectile projectile = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center + (vel * 100), vel * 1.5f, ModContent.ProjectileType<BigIcePick>(),
-                        Projectile.damage, Projectile.knockBack, Projectile.owner,Main.rand.NextFloat(1f,2f));
+                        Projectile.damage, Projectile.knockBack, Projectile.owner, Main.rand.NextFloat(1f, 2f));
                     projectile.Opacity = 0;
                     projectile.scale = 0;
                 }

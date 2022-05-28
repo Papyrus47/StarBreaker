@@ -1,11 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Bullets;
+﻿using StarBreaker.Projs.Bullets;
 using StarBreaker.Projs.IceGun;
-using System;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Projs.EnergyDamage_Proj
 {
@@ -25,8 +19,16 @@ namespace StarBreaker.Projs.EnergyDamage_Proj
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
         }
-        public override bool? CanDamage() => false;//避免造成伤害
-        public override bool ShouldUpdatePosition() => false;//避免更新位置
+        public override bool? CanDamage()
+        {
+            return false;//避免造成伤害
+        }
+
+        public override bool ShouldUpdatePosition()
+        {
+            return false;//避免更新位置
+        }
+
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -41,7 +43,7 @@ namespace StarBreaker.Projs.EnergyDamage_Proj
             {
                 Projectile.velocity = (Projectile.Center - Main.MouseWorld).RealSafeNormalize() * 10f;
                 Projectile.direction = Projectile.spriteDirection = (Projectile.velocity.X > 0f) ? 1 : -1;
-                Projectile.position = player.Top + new Vector2(0,-100);
+                Projectile.position = player.Top + new Vector2(0, -100);
                 Projectile.rotation = Projectile.velocity.ToRotation();
                 if (Projectile.spriteDirection == -1)
                 {
@@ -72,7 +74,10 @@ namespace StarBreaker.Projs.EnergyDamage_Proj
                     StarBreakerWay.Add_Hooks_ToProj(shootID, proj);
 
                 }
-                if (Projectile.ai[1] <= 0) Projectile.Kill();
+                if (Projectile.ai[1] <= 0)
+                {
+                    Projectile.Kill();
+                }
             }
             else if (!player.channel)
             {

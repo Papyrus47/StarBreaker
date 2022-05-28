@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperChainSawProj : ModProjectile
     {
@@ -33,7 +27,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                     Projectile.ai[0] = 0;
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(null, Projectile.Center,Projectile.velocity.RealSafeNormalize() * 10, ModContent.ProjectileType<CopperSawHead>(),
+                        Projectile.NewProjectile(null, Projectile.Center, Projectile.velocity.RealSafeNormalize() * 10, ModContent.ProjectileType<CopperSawHead>(),
                             Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                 }

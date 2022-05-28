@@ -1,18 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.UltimateCopperShortsword;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameInput;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.GameContent;
+﻿using StarBreaker.Items.UltimateCopperShortsword;
 using StarBreaker.Items.Weapon;
-using Terraria.Utilities;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.Localization;
-using StarBreaker.Projs.StarGhostKnife;
 using StarBreaker.Projs;
+using StarBreaker.Projs.StarGhostKnife;
+using Terraria.GameInput;
+using Terraria.ModLoader.IO;
 
 namespace StarBreaker
 {
@@ -25,17 +16,17 @@ namespace StarBreaker
         public int GhostSwordAttack;
         public readonly Dictionary<StarGhostKnifeAtk, string> GhostSwordName = new()
         {
-            { StarGhostKnifeAtk.Kalla,"冥炎之卡洛" } ,
-            { StarGhostKnifeAtk.GhostFireHit,"鬼炎斩(阎冥斩)"},
+            { StarGhostKnifeAtk.Kalla, "冥炎之卡洛" },
+            { StarGhostKnifeAtk.GhostFireHit, "鬼炎斩(阎冥斩)" },
             { StarGhostKnifeAtk.StoneShower, "死亡墓碑" },
             { StarGhostKnifeAtk.KeiGa, "残影之凯嘉" },
-            { StarGhostKnifeAtk.LunarSlash,"满月斩" },
+            { StarGhostKnifeAtk.LunarSlash, "满月斩" },
             { StarGhostKnifeAtk.Puchumeng, "侵蚀之普戾蒙" },
-            { StarGhostKnifeAtk.SaYa,"冰霜之萨亚"},
-            { StarGhostKnifeAtk.GhostSlash,"鬼影闪"},
+            { StarGhostKnifeAtk.SaYa, "冰霜之萨亚" },
+            { StarGhostKnifeAtk.GhostSlash, "鬼影闪" },
             { StarGhostKnifeAtk.Rhasa, "瘟疫之罗刹" },
-            { StarGhostKnifeAtk.Kazan,"刀魂卡赞"},
-            { StarGhostKnifeAtk.Buraxiu,"第七鬼神 怖拉修"}
+            { StarGhostKnifeAtk.Kazan, "刀魂卡赞" },
+            { StarGhostKnifeAtk.Buraxiu, "第七鬼神 怖拉修" }
         };
         public Item Bullet1;
         public Item Bullet2;
@@ -72,7 +63,7 @@ namespace StarBreaker
         }
         public override bool CanSellItem(NPC vendor, Item[] shopInventory, Item item)
         {
-            if(item.type == ModContent.ItemType<StarGhostKnife>())
+            if (item.type == ModContent.ItemType<StarGhostKnife>())
             {
                 PopupText.NewText(new AdvancedPopupRequest()
                 {
@@ -87,7 +78,7 @@ namespace StarBreaker
         }
         public override void PostSellItem(NPC vendor, Item[] shopInventory, Item item)
         {
-            if(item.type == ModContent.ItemType<StarBreakerW>())//玩家售卖物品
+            if (item.type == ModContent.ItemType<StarBreakerW>())//玩家售卖物品
             {
                 PopupText.NewText(new AdvancedPopupRequest()
                 {
@@ -117,7 +108,11 @@ namespace StarBreaker
             SwordSum = false;
             DrumDraw = false;
             FrostFistModScr = -1;
-            if (SummonStarShieldTime > 0) SummonStarShieldTime--;
+            if (SummonStarShieldTime > 0)
+            {
+                SummonStarShieldTime--;
+            }
+
             if (PlayerVectorZero > 0)
             {
                 PlayerVectorZero--;
@@ -159,7 +154,7 @@ namespace StarBreaker
             if (DrumDraw)
             {
                 Vector2 pos = Player.Center + new Vector2(30 * Player.direction, 0) - Main.screenPosition;
-                if(Player.direction == 1)
+                if (Player.direction == 1)
                 {
                     pos.Y -= 10;
                     pos.X -= 20;
@@ -174,7 +169,7 @@ namespace StarBreaker
                     null,
                     Color.White);
             }
-            if(Player.HeldItem.type == ModContent.ItemType<StarGhostKnife>())//如果玩家手持星辰鬼刀
+            if (Player.HeldItem.type == ModContent.ItemType<StarGhostKnife>())//如果玩家手持星辰鬼刀
             {
                 Utils.DrawBorderString(Main.spriteBatch, GhostSwordName[(StarGhostKnifeAtk)GhostSwordAttack], Player.Center - new Vector2(90, 80) - Main.screenPosition, Color.Purple);
             }
@@ -193,7 +188,11 @@ namespace StarBreaker
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
             PlayerEmotion--;
-            if (EGO) PlayerEmotion -= 20;
+            if (EGO)
+            {
+                PlayerEmotion -= 20;
+            }
+
             if (Player.ownedProjectileCounts[ModContent.ProjectileType<StarSpiralBladeProj>()] > 0)
             {
                 Player.MinionAttackTargetNPC = npc.whoAmI;
@@ -204,7 +203,10 @@ namespace StarBreaker
             if (Main.rand.NextBool(3))
             {
                 PlayerEmotion--;
-                if (EGO) PlayerEmotion -= 20;
+                if (EGO)
+                {
+                    PlayerEmotion -= 20;
+                }
             }
             if (Player.ownedProjectileCounts[ModContent.ProjectileType<StarSpiralBladeProj>()] > 0 && proj.GetGlobalProjectile<StarBreakerGlobalProj>().ProjOwner_NPC > -1)
             {
@@ -222,7 +224,10 @@ namespace StarBreaker
                 Player.noFallDmg = true;
                 Player.fallStart += 10;
                 Player.maxFallSpeed += 10;
-                if (Player.HeldItem.type == ModContent.ItemType<LastShortSowrd>()) Player.maxRunSpeed += 10;
+                if (Player.HeldItem.type == ModContent.ItemType<LastShortSowrd>())
+                {
+                    Player.maxRunSpeed += 10;
+                }
             }
 
             else if (PlayerVectorZero > 0 && !EGO)
@@ -265,8 +270,14 @@ namespace StarBreaker
             if (StarBreaker.ToggleGhostSwordAttack.JustPressed)
             {
                 GhostSwordAttack++;
-                if (GhostSwordAttack > (int)StarGhostKnifeAtk.Buraxiu) GhostSwordAttack = 0;//如果不处于任何一种攻击状态
-                else if (GhostSwordAttack < 0) GhostSwordAttack = 0;
+                if (GhostSwordAttack > (int)StarGhostKnifeAtk.Buraxiu)
+                {
+                    GhostSwordAttack = 0;//如果不处于任何一种攻击状态
+                }
+                else if (GhostSwordAttack < 0)
+                {
+                    GhostSwordAttack = 0;
+                }
             }
         }
         public override void PreUpdate()
@@ -297,7 +308,7 @@ namespace StarBreaker
             {
                 Main.screenPosition = Main.npc[FrostFistModScr].position - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
             }
-            if(Player.heldProj >= 0 && Main.projectile[Player.heldProj].type == ModContent.ProjectileType<GhostFireHit>() && Main.projectile[Player.heldProj].frame % 6 == 0)
+            if (Player.heldProj >= 0 && Main.projectile[Player.heldProj].type == ModContent.ProjectileType<GhostFireHit>() && Main.projectile[Player.heldProj].frame % 6 == 0)
             {
                 Main.screenPosition += Main.rand.NextVector2Unit() * 8;
             }

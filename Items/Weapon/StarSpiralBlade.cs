@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.DamageClasses;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Items.DamageClasses;
 
 namespace StarBreaker.Items.Weapon
 {
@@ -32,6 +27,9 @@ namespace StarBreaker.Items.Weapon
             Item.shootSpeed = 30;
             Item.noUseGraphic = true;
         }
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] == 0;
+        public override bool CanUseItem(Player player)
+        {
+            return player.ownedProjectileCounts[Item.shoot] == 0;
+        }
     }
 }

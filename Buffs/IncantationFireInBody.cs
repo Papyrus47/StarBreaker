@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Buffs
+﻿namespace StarBreaker.Buffs
 {
     public class IncantationFireInBody : ModBuff
     {

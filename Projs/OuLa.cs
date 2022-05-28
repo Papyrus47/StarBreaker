@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     internal class OuLa : ModProjectile
     {
@@ -23,7 +18,11 @@ namespace StarBreaker.Projs
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            if (Projectile.alpha > 0) Projectile.alpha = 0;
+            if (Projectile.alpha > 0)
+            {
+                Projectile.alpha = 0;
+            }
+
             if (Projectile.velocity.Length() < 20)
             {
                 Projectile.velocity *= Main.rand.NextFloat(1, 2);

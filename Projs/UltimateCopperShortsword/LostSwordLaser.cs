@@ -1,12 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword
 {
-    class LostSwordLaser : ModProjectile
+    internal class LostSwordLaser : ModProjectile
     {
         public override string Texture => "StarBreaker/Projs/UltimateCopperShortsword/LostSword";
         public override void SetStaticDefaults()

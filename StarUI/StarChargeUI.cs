@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
+﻿using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace StarBreaker.StarUI
@@ -32,8 +28,8 @@ namespace StarBreaker.StarUI
     }
     public class StarChargeUIState : UIState
     {
-        StarChargeUIElement starCharge;
-        UIPanel panel;
+        private StarChargeUIElement starCharge;
+        private UIPanel panel;
         public override void OnInitialize()
         {
             panel = new();

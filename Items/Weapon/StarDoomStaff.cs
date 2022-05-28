@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.StarDoomStaff;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.StarDoomStaff;
 
 namespace StarBreaker.Items.Weapon
 {
@@ -24,7 +17,7 @@ namespace StarBreaker.Items.Weapon
                 "控制水晶:控制敌人\n" +
                 "穿刺水晶:扎入npc体内,每扎入一根提升5点伤害\n" +
                 "护卫水晶:保护玩家\n" +
-                "使用时概率出现\"消除射线\"\n" +                
+                "使用时概率出现\"消除射线\"\n" +
                 "这是最强的召唤师法杖,其因为吸收极大量的星辰之力,而变的无限疯狂\n" +
                 "这把法杖现在在你的手上,但是它仍然没有完全听命于你,因为它实际可以给一个地区带来终末,但是它没有这么做");
             Item.staff[Type] = true;
@@ -51,7 +44,7 @@ namespace StarBreaker.Items.Weapon
             if (player.ownedProjectileCounts[ModContent.ProjectileType<StarDoomStaffProj>()] == 0)
             {
                 Main.projectile[Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, Vector2.Zero,
-                    ModContent.ProjectileType<StarDoomStaffProj>(),Item.damage,Item.knockBack, player.whoAmI)].originalDamage = Item.damage;
+                    ModContent.ProjectileType<StarDoomStaffProj>(), Item.damage, Item.knockBack, player.whoAmI)].originalDamage = Item.damage;
             }
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)

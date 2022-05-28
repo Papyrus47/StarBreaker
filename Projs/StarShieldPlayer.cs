@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items.Weapon;
-using System;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ModLoader;
+﻿using StarBreaker.Items.Weapon;
 
 namespace StarBreaker.Projs
 {
@@ -54,19 +48,37 @@ namespace StarBreaker.Projs
                                     int ProjTime = Projectile.timeLeft - 30000;
                                     Projectile.timeLeft = 30000;
                                     player.statLife += ProjTime;
-                                    if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
+                                    if (player.statLife > player.statLifeMax2)
+                                    {
+                                        player.statLife = player.statLifeMax2;
+                                    }
                                 }
 
                                 int da = target.damage - (int)(player.statDefense * (Main.masterMode ? 1 : Main.expertMode ? 0.75f : 0.5f));
-                                if (Main.masterMode) da *= 6;
-                                else if (Main.expertMode) da *= 4;
+                                if (Main.masterMode)
+                                {
+                                    da *= 6;
+                                }
+                                else if (Main.expertMode)
+                                {
+                                    da *= 4;
+                                }
+
                                 da *= 3;
                                 da = Math.Abs(da);
                                 Projectile.timeLeft -= da;
                                 CombatText.NewText(Projectile.Hitbox, Color.MediumVioletRed, da);
                                 player.statLife += da;
-                                if (player.statLife > player.statLifeMax2) player.statLife = player.statLifeMax2;
-                                if (target.Distance(Projectile.Center) < 100) target.Kill();
+                                if (player.statLife > player.statLifeMax2)
+                                {
+                                    player.statLife = player.statLifeMax2;
+                                }
+
+                                if (target.Distance(Projectile.Center) < 100)
+                                {
+                                    target.Kill();
+                                }
+
                                 if (player.HeldItem.type != ModContent.ItemType<StarBreakerW>())
                                 {
                                     Projectile.Kill();

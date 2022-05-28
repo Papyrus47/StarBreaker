@@ -1,6 +1,4 @@
 ﻿using StarBreaker.Projs.Type;
-using Terraria;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Projs.Bullets
 {

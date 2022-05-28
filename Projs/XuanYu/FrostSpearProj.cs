@@ -1,13 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.GameContent;
-using System.Collections.Generic;
-using System;
-
-namespace StarBreaker.Projs.XuanYu
+﻿namespace StarBreaker.Projs.XuanYu
 {
     public class FrostSpearProj : ModProjectile
     {
@@ -32,24 +23,24 @@ namespace StarBreaker.Projs.XuanYu
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];//获取玩家
-            if(!player.active || player.dead)
+            if (!player.active || player.dead)
             {
                 Projectile.Kill();
                 return;
             }
             player.itemTime = player.itemAnimation = 2;
             player.heldProj = Projectile.whoAmI;
-            switch(Projectile.ai[0])
+            switch (Projectile.ai[0])
             {
                 case 0://旋转
                     {
                         Projectile.localNPCHitCooldown = 5;
                         Projectile.rotation += 0.35f;
-                        if(Projectile.timeLeft % 5 == 0)
+                        if (Projectile.timeLeft % 5 == 0)
                         {
                             Projectile.velocity *= 0.9f;
                         }
-                        if(Projectile.velocity.Length() < 5f || (Main.myPlayer == player.whoAmI && Main.mouseLeft && Projectile.timeLeft < 290))
+                        if (Projectile.velocity.Length() < 5f || (Main.myPlayer == player.whoAmI && Main.mouseLeft && Projectile.timeLeft < 290))
                         {
                             Projectile.ai[0]++;
                         }
@@ -61,7 +52,7 @@ namespace StarBreaker.Projs.XuanYu
                         Projectile.rotation += 0.35f;
                         Projectile.velocity = (Projectile.velocity * 6 + (player.Center - Projectile.Center).RealSafeNormalize() * (20 + Projectile.ai[1] * 0.1f)) / 7;
                         Projectile.ai[1]++;
-                        if(Projectile.Center.Distance(player.Center) < 33f || Projectile.ai[1] > 120)
+                        if (Projectile.Center.Distance(player.Center) < 33f || Projectile.ai[1] > 120)
                         {
                             Projectile.ai[1] = 0;
                             Projectile.ai[0]++;
@@ -79,7 +70,7 @@ namespace StarBreaker.Projs.XuanYu
                             {
                                 Projectile.damage *= 15;
                             }
-                            else if(Projectile.ai[1] == 1)
+                            else if (Projectile.ai[1] == 1)
                             {
                                 Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 60f;
                                 for (int i = 0; i < Projectile.localNPCImmunity.Length; i++)
@@ -93,7 +84,11 @@ namespace StarBreaker.Projs.XuanYu
                             }
                             else
                             {
-                                if(Projectile.ai[1] % 5 == 0)Projectile.velocity *= 0.9f;
+                                if (Projectile.ai[1] % 5 == 0)
+                                {
+                                    Projectile.velocity *= 0.9f;
+                                }
+
                                 if (Projectile.velocity.Length() < 30)
                                 {
                                     player.velocity *= 0.8f;
@@ -101,7 +96,7 @@ namespace StarBreaker.Projs.XuanYu
                                     return;
                                 }
                             }
-                            if(Main.myPlayer == player.whoAmI && Main.mouseLeft && Projectile.ai[1] > 20)
+                            if (Main.myPlayer == player.whoAmI && Main.mouseLeft && Projectile.ai[1] > 20)
                             {
                                 if (Projectile.localAI[0] <= 4)
                                 {
@@ -141,7 +136,7 @@ namespace StarBreaker.Projs.XuanYu
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            if(Projectile.ai[0] == 0)
+            if (Projectile.ai[0] == 0)
             {
                 Projectile.ai[0]++;
             }
@@ -150,10 +145,10 @@ namespace StarBreaker.Projs.XuanYu
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float r = 0;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(),targetHitbox.Size(),
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(),
                 Projectile.Center + (Projectile.rotation - MathHelper.PiOver4).ToRotationVector2() * 33f,
                 Projectile.Center + (Projectile.rotation - MathHelper.PiOver4).ToRotationVector2() * -33f,
-                8,ref r);
+                8, ref r);
         }
         public override void PostDraw(Color lightColor)
         {
@@ -163,7 +158,11 @@ namespace StarBreaker.Projs.XuanYu
                 Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_1").Value;
                 for (int i = 1; i < Projectile.oldPos.Length; ++i)//取顶点
                 {
-                    if (Projectile.oldPos[i] == Vector2.Zero) break;
+                    if (Projectile.oldPos[i] == Vector2.Zero)
+                    {
+                        break;
+                    }
+
                     Color color = Color.Blue;
                     color.A = 0;
                     Vector2 norDis = (Projectile.oldPos[i - 1] - Projectile.oldPos[i]).RealSafeNormalize().NormalVector();
@@ -172,8 +171,15 @@ namespace StarBreaker.Projs.XuanYu
                     float width;
                     color = Color.Lerp(color, Color.Transparent, factor);
                     float w = MathHelper.Lerp(1f, 0.05f, factor);
-                    if (i < 10) width = i * 5;
-                    else width = 50;
+                    if (i < 10)
+                    {
+                        width = i * 5;
+                    }
+                    else
+                    {
+                        width = 50;
+                    }
+
                     Vector2 Size = Projectile.Size * 0.5f;
                     customs.Add(new(pos + norDis * width + Size, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
                     customs.Add(new(pos + norDis * -width + Size, color, new Vector3((float)Math.Sqrt(factor), 1, w)));//放置顶点
@@ -184,7 +190,7 @@ namespace StarBreaker.Projs.XuanYu
                     var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0)) * Main.GameViewMatrix.ZoomMatrix;
 
                     List<CustomVertexInfo> customs2 = new();
-                    for (int i = 0;i< customs.Count - 2;i+=2)//绘制三角形顶点连接
+                    for (int i = 0; i < customs.Count - 2; i += 2)//绘制三角形顶点连接
                     {
                         customs2.Add(customs[i]);//这是四边形形成的第一个三角形
                         customs2.Add(customs[i + 2]);

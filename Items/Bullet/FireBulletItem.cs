@@ -1,9 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Bullets;
-using Terraria;
+﻿using StarBreaker.Projs.Bullets;
 using Terraria.GameContent.Creative;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Items.Bullet
 {
@@ -32,16 +28,27 @@ namespace StarBreaker.Items.Bullet
             CreateRecipe(2).AddIngredient(ItemID.LivingFireBlock).AddTile(TileID.MythrilAnvil).Register();
         }
 
-        public override bool ProjPreDraw(Projectile projectile, ref Color lightColor) => projectile.ai[0] == 0;
+        public override bool ProjPreDraw(Projectile projectile, ref Color lightColor)
+        {
+            return projectile.ai[0] == 0;
+        }
+
         public override void ProjAI(Projectile projectile)
         {
             float gry = 1.55f;
-            if (Main.rand.NextBool(5)) Dust.NewDust(projectile.position, 1, 1, DustID.Torch);
+            if (Main.rand.NextBool(5))
+            {
+                Dust.NewDust(projectile.position, 1, 1, DustID.Torch);
+            }
+
             projectile.velocity.Y += gry;
         }
         public override void ProjOnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {
-            if (projectile.minion) target.AddBuff(BuffID.OnFire3, 200,true);
+            if (projectile.minion)
+            {
+                target.AddBuff(BuffID.OnFire3, 200, true);
+            }
         }
         public override bool OnTileCollide(Projectile Projectile, Vector2 oldVelocity)
         {

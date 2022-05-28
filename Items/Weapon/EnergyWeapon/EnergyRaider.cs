@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-
-namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class EnergyRaider : BaseEnergyRanged
     {

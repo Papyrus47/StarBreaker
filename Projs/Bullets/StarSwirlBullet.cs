@@ -1,10 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Type;
-using Terraria;
+﻿using StarBreaker.Projs.Type;
 
 namespace StarBreaker.Projs.Bullets
 {
-    class StarSwirlBullet : EnergyProj
+    internal class StarSwirlBullet : EnergyProj
     {
         public override void SetStaticDefaults()
         {

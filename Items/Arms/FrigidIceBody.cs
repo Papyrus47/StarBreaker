@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Arms
+﻿namespace StarBreaker.Items.Arms
 {
     [AutoloadEquip(EquipType.Body)]
     public class FrigidIceBody : ModItem

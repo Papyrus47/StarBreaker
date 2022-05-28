@@ -1,7 +1,4 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {

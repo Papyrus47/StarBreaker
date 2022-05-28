@@ -1,9 +1,6 @@
 ﻿using StarBreaker.Buffs;
 using StarBreaker.Projs.Bullets;
-using Terraria;
 using Terraria.GameContent.Creative;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Items.Bullet
 {

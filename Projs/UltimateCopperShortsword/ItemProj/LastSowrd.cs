@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.IO;
-using Terraria;
-using Terraria.ModLoader;
+﻿using System.IO;
 
 namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
@@ -94,7 +91,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                                     }
                                     Projectile.velocity = (npc.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * 15;
                                 }
-                                else Timer1--;
+                                else
+                                {
+                                    Timer1--;
+                                }
+
                                 break;
                             }
                         case 1://发射剑气
@@ -120,7 +121,11 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                                     }
                                     Timer2++;
                                 }
-                                else Timer1--;
+                                else
+                                {
+                                    Timer1--;
+                                }
+
                                 if (Timer2 > 5)
                                 {
                                     Timer2 = 0;

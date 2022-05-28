@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     internal class SniperGloves : ModProjectile
     {
@@ -23,13 +18,21 @@ namespace StarBreaker.Projs
         }
         public override void AI()
         {
-            if (target.dead || target == null) Projectile.Kill();
+            if (target.dead || target == null)
+            {
+                Projectile.Kill();
+            }
+
             Projectile.velocity = (Projectile.velocity * 10 + (target.Center - Projectile.Center).SafeNormalize(Vector2.One) * 5) / 11;
             Projectile.rotation = 0;
         }
         public override void Kill(int timeLeft)
         {
-            if (target == null) return;
+            if (target == null)
+            {
+                return;
+            }
+
             for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.PiOver2)
             {
                 Vector2 center = Projectile.position + (i.ToRotationVector2() * 500);

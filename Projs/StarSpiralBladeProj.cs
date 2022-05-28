@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.Weapon;
-using System;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Items.Weapon;
 
 namespace StarBreaker.Projs
 {
@@ -50,7 +45,7 @@ namespace StarBreaker.Projs
             {
                 Projectile.timeLeft = 5;
             }
-            else if(player.ownedProjectileCounts[Type] > 1)
+            else if (player.ownedProjectileCounts[Type] > 1)
             {
                 Projectile.Kill();
             }
@@ -72,7 +67,11 @@ namespace StarBreaker.Projs
                         player.MinionAttackTargetNPC = -1;
                         return;
                     }
-                    if(Projectile.timeLeft < 150) Projectile.timeLeft = 200;
+                    if (Projectile.timeLeft < 150)
+                    {
+                        Projectile.timeLeft = 200;
+                    }
+
                     Projectile.velocity = (Projectile.velocity * 9f + (Projectile.OwnerMinionAttackTargetNPC.Center - Projectile.Center) * 0.3f) / 10f;
                 }
                 else
@@ -92,24 +91,42 @@ namespace StarBreaker.Projs
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.immortal) return;
+            if (target.immortal)
+            {
+                return;
+            }
+
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
             target.GetGlobalNPC<NPCs.StarGlobalNPC>().StarSpiralBladeProj = Projectile.whoAmI;
             if (Projectile.localAI[1] == 0)
             {
                 int dama = (int)((damage * 5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
-                if (dama <= 0) dama = 1;
+                if (dama <= 0)
+                {
+                    dama = 1;
+                }
+
                 Main.player[Projectile.owner].addDPS((int)target.StrikeNPC(dama, knockback, 10));
-                if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
+                }
             }
             else
             {
                 for (int i = 0; i < 3; i++)
                 {
                     int dama = (int)((damage * 2.5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
-                    if (dama <= 0) dama = 1;
+                    if (dama <= 0)
+                    {
+                        dama = 1;
+                    }
+
                     Main.player[Projectile.owner].addDPS((int)target.StrikeNPC(dama, knockback, 10));
-                    if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
+                    if (Main.netMode == NetmodeID.Server)
+                    {
+                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
+                    }
                 }
                 target.HitEffect(0, 10);
                 target.checkDead();

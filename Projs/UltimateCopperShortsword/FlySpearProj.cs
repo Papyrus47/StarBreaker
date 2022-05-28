@@ -1,13 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword
 {
     public class FlySpearProj : ModProjectile
     {
-        NPC target = null;
+        private NPC target = null;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("铜矛");
@@ -79,7 +74,10 @@ namespace StarBreaker.Projs.UltimateCopperShortsword
                 Projectile.ai[1] = 1;
                 this.target = target;
                 target.AddBuff(BuffID.Poisoned, 60, true);
-                if (Projectile.timeLeft > 30) Projectile.timeLeft = 30;
+                if (Projectile.timeLeft > 30)
+                {
+                    Projectile.timeLeft = 30;
+                }
             }
             Projectile.damage = 30;
         }

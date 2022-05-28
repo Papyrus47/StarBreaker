@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword
 {
     public class CopperSawHead : ModProjectile
     {
@@ -27,18 +23,18 @@ namespace StarBreaker.Projs.UltimateCopperShortsword
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            if(Projectile.timeLeft % 5 == 0 && Projectile.velocity.Length() > 0.2f)
+            if (Projectile.timeLeft % 5 == 0 && Projectile.velocity.Length() > 0.2f)
             {
                 Projectile.velocity *= 0.8f;//减速
             }
-            else if(Projectile.velocity.Length() < 0.2f)
+            else if (Projectile.velocity.Length() < 0.2f)
             {
                 Projectile.velocity *= 2f;
             }//避免速度太慢
             int posX = (int)(Projectile.Center.X) / 16;
             int posY = (int)(Projectile.Center.Y) / 16;
             Tile tile = Main.tile[posX, posY];
-            if(tile.HasTile && Main.tileAxe[tile.TileType])
+            if (tile.HasTile && Main.tileAxe[tile.TileType])
             {
                 new Player().PickTile((int)(Projectile.Center.X / 16), (int)(Projectile.Center.Y / 16), 110);
             }

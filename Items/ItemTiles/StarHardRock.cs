@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.GameContent.Creative;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
+﻿using Terraria.GameContent.Creative;
 
 namespace StarBreaker.Items.ItemTiles
 {

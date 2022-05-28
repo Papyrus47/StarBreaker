@@ -1,13 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items.UltimateCopperShortsword;
+﻿using StarBreaker.Items.UltimateCopperShortsword;
 using StarBreaker.NPCs.UltimateCopperShortsword.BossB;
 using StarBreaker.Projs.UltimateCopperShortsword;
-using Terraria;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
 {
@@ -400,7 +394,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                             NPC.velocity = ToTarget.SafeNormalize(default) * 20;
                                             NPC.netUpdate = true;
                                         }
-                                        else Timer1--;
+                                        else
+                                        {
+                                            Timer1--;
+                                        }
+
                                         break;
                                     }
                                 default:
@@ -469,7 +467,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                             NPC.velocity = ToTarget.SafeNormalize(default) * 20;
                                             NPC.netUpdate = true;
                                         }
-                                        else Timer1--;
+                                        else
+                                        {
+                                            Timer1--;
+                                        }
+
                                         break;
                                     }
                                 default:
@@ -754,8 +756,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                                     NPC n = Main.npc[NPC_WhoAmi];
                                     n.realLife = NPC.whoAmI;
                                     n.life = n.lifeMax = 30000;
-                                    if (Main.netMode == 2) NetMessage.SendData(MessageID.SyncNPC, -1, -1, null,
+                                    if (Main.netMode == 2)
+                                    {
+                                        NetMessage.SendData(MessageID.SyncNPC, -1, -1, null,
                                           NPC_WhoAmi);
+                                    }
                                 }
                             }
                             break;
@@ -862,7 +867,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Color color = new Color(0.4f, 0.5f, 0f, 0);
-            if (Timer3 == 2 || Timer3 == 5) color = new Color(0.3f, 0.8f, 0.1f, 0.2f);
+            if (Timer3 == 2 || Timer3 == 5)
+            {
+                color = new Color(0.3f, 0.8f, 0.1f, 0.2f);
+            }
+
             StarBreakerWay.NPCDrawTail(NPC, drawColor, color);
             return base.PreDraw(spriteBatch, screenPos, drawColor);
         }

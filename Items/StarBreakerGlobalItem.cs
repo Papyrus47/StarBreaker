@@ -1,6 +1,4 @@
-﻿using Terraria.ModLoader;
-
-namespace StarBreaker.Items
+﻿namespace StarBreaker.Items
 {
     public class StarBreakerGlobalItem : GlobalItem
     {

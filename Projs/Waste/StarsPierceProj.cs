@@ -1,14 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria.Localization;
-using System;
-using System.Collections.Generic;
-using Terraria.ID;
-
-namespace StarBreaker.Projs.Waste
+﻿namespace StarBreaker.Projs.Waste
 {
     public class StarsPierceProj : ModProjectile
     {
@@ -38,17 +28,17 @@ namespace StarBreaker.Projs.Waste
             player.heldProj = Projectile.whoAmI;
             player.itemTime = player.itemAnimation = 2;
             Projectile.timeLeft = 2;
-            switch(Projectile.ai[0])
+            switch (Projectile.ai[0])
             {
                 case 0://蓄力
                     {
-                        if(Main.myPlayer == player.whoAmI)//判断主人
+                        if (Main.myPlayer == player.whoAmI)//判断主人
                         {
                             Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 5;//轻微蓄力
                         }
                         if (!player.channel)
                         {
-                            if(Projectile.ai[1] >= 3600)//蓄力超过10秒
+                            if (Projectile.ai[1] >= 3600)//蓄力超过10秒
                             {
                                 Projectile.Kill();
                             }
@@ -75,9 +65,9 @@ namespace StarBreaker.Projs.Waste
                             if (Projectile.ai[1] == 0)
                             {
                                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.RealSafeNormalize() * 20, ModContent.ProjectileType<StarsPierceProj_Pierce>(),
-                                    Projectile.damage, Projectile.knockBack,player.whoAmI);
+                                    Projectile.damage, Projectile.knockBack, player.whoAmI);
                             }
-                            else if(Projectile.ai[1] > 90)
+                            else if (Projectile.ai[1] > 90)
                             {
                                 Projectile.Kill();
                                 return;
@@ -89,7 +79,11 @@ namespace StarBreaker.Projs.Waste
             }
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver4;
         }
-        public override bool ShouldUpdatePosition() => false;
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float r = 0;
@@ -102,7 +96,7 @@ namespace StarBreaker.Projs.Waste
             Vector2 origin = new(11, 40);
             float scale = 1f + (Projectile.velocity.Length() / 100f);
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor,
-                Projectile.rotation, origin, scale,SpriteEffects.None,0);
+                Projectile.rotation, origin, scale, SpriteEffects.None, 0);
             return false;
         }
     }

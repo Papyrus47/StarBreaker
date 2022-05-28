@@ -1,7 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Prefix
+﻿namespace StarBreaker.Items.Prefix
 {
     public class EnergyEnhancement : ModPrefix
     {

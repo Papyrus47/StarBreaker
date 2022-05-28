@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword
 {
     public class PatinaArrow : ModProjectile
     {
@@ -29,7 +25,10 @@ namespace StarBreaker.Projs.UltimateCopperShortsword
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             if (Projectile.timeLeft < 100)
             {
-                if (Projectile.velocity.Y * Projectile.velocity.Y < 400) Projectile.velocity.Y++;
+                if (Projectile.velocity.Y * Projectile.velocity.Y < 400)
+                {
+                    Projectile.velocity.Y++;
+                }
             }
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

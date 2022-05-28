@@ -1,12 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Weapon.HradMode
+﻿namespace StarBreaker.Items.Weapon.HradMode
 {
     public class OnyxBlasterGun : ModItem
     {
@@ -44,7 +36,7 @@ namespace StarBreaker.Items.Weapon.HradMode
         }
         public override bool CanConsumeAmmo(Player player)
         {
-            if(player.heldProj < 0)
+            if (player.heldProj < 0)
             {
                 return false;
             }
@@ -88,7 +80,11 @@ namespace StarBreaker.Items.Weapon.HradMode
             Projectile.timeLeft = 2;
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction = (Projectile.velocity.X > 0).ToDirectionInt();
-            if (Projectile.spriteDirection == -1) Projectile.rotation += MathHelper.Pi;
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+
             player.ChangeDir(Projectile.direction);
             if (Main.myPlayer == player.whoAmI)
             {
@@ -158,8 +154,12 @@ namespace StarBreaker.Items.Weapon.HradMode
                         {
                             for (int i = 0; i < Projectile.ai[1] + 1; i++)
                             {
-                                if (i > 10) break;
-                                Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity.RotatedByRandom(0.2) * Main.rand.NextFloat(15,20),
+                                if (i > 10)
+                                {
+                                    break;
+                                }
+
+                                Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity.RotatedByRandom(0.2) * Main.rand.NextFloat(15, 20),
                                     ammoID, Projectile.damage + damage, Projectile.knockBack, player.whoAmI);
                             }
                             Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity * 20,

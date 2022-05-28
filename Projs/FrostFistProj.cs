@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class FrostFistProj : ModProjectile
     {
@@ -68,14 +62,21 @@ namespace StarBreaker.Projs
                                 {
                                     Tile tile = Main.tile[(int)(Projectile.position.X / 16), (int)((Projectile.position.Y / 16) + i)];
                                     center = Projectile.position + new Vector2(0, 16 * i);
-                                    if (tile.HasTile) break;
+                                    if (tile.HasTile)
+                                    {
+                                        break;
+                                    }
                                 }
                                 foreach (Player player1 in Main.player)
                                 {
                                     if (player1.active && Vector2.Distance(center, player1.position) < 200)
                                     {
                                         int heal = (int)(player1.statLifeMax2 * 0.2f);
-                                        if (heal + player1.statLife > player1.statLifeMax2) heal = player1.statLifeMax2 - player1.statLife;
+                                        if (heal + player1.statLife > player1.statLifeMax2)
+                                        {
+                                            heal = player1.statLifeMax2 - player1.statLife;
+                                        }
+
                                         player1.statLife += heal;
                                         player1.HealEffect(heal);
                                     }
@@ -85,7 +86,11 @@ namespace StarBreaker.Projs
                                     if (npc.active && npc.friendly && Vector2.Distance(center, npc.position) < 200)
                                     {
                                         int heal = (int)(npc.lifeMax * 0.2f);
-                                        if (heal + npc.life > npc.lifeMax) heal = npc.lifeMax - npc.life;
+                                        if (heal + npc.life > npc.lifeMax)
+                                        {
+                                            heal = npc.lifeMax - npc.life;
+                                        }
+
                                         npc.life += heal;
                                         CombatText.NewText(npc.Hitbox, CombatText.HealLife, heal);
                                     }
@@ -128,7 +133,10 @@ namespace StarBreaker.Projs
                     }
                 case 2://瞬拳
                     {
-                        if (Projectile.velocity.Length() > 8) Projectile.velocity *= 0.7f;
+                        if (Projectile.velocity.Length() > 8)
+                        {
+                            Projectile.velocity *= 0.7f;
+                        }
                         else if (player.whoAmI == Main.myPlayer)
                         {
                             Projectile.velocity = (Main.MouseWorld - Projectile.position).SafeNormalize(default) * 5;

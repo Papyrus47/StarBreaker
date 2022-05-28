@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class StarBreakerGlobalProj : GlobalProjectile
     {
@@ -16,9 +10,9 @@ namespace StarBreaker.Projs
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
             ProjOwner_NPC = -1;
-            if(source is EntitySource_Parent entity)
+            if (source is EntitySource_Parent entity)
             {
-                if(entity.Entity is NPC npc)
+                if (entity.Entity is NPC npc)
                 {
                     ProjOwner_NPC = npc.whoAmI;
                 }
@@ -59,13 +53,19 @@ namespace StarBreaker.Projs
                             projectile.timeLeft = 2;
                             player.hornet = true;
                         }
-                        if (player.dead) player.hornet = false;
+                        if (player.dead)
+                        {
+                            player.hornet = false;
+                        }
                         #region 帧图
                         if (projectile.frameCounter > 1)
                         {
                             projectile.frame++;
                             projectile.frameCounter = 0;
-                            if (projectile.frame > 2) projectile.frame = 0;
+                            if (projectile.frame > 2)
+                            {
+                                projectile.frame = 0;
+                            }
                         }
                         projectile.frameCounter++;
                         #endregion
@@ -109,7 +109,11 @@ namespace StarBreaker.Projs
                         #region 飞行
                         else
                         {
-                            if (projectile.ai[1] > 0) projectile.ai[1]--;
+                            if (projectile.ai[1] > 0)
+                            {
+                                projectile.ai[1]--;
+                            }
+
                             NPC npc = projectile.OwnerMinionAttackTargetNPC;
                             projectile.velocity = (projectile.velocity * 20 + (npc.position - projectile.position).SafeNormalize(default) * 8f) / 21;
                             if (projectile.position.Y > npc.position.Y - (50 + slotsPos))
@@ -129,7 +133,10 @@ namespace StarBreaker.Projs
                             projectile.timeLeft = 2;
                             player.impMinion = true;
                         }
-                        if (player.dead) player.impMinion = false;
+                        if (player.dead)
+                        {
+                            player.impMinion = false;
+                        }
                         #region 帧图
                         if (projectile.frameCounter >= 16)
                         {
@@ -165,7 +172,11 @@ namespace StarBreaker.Projs
                             {
                                 projectile.position = player.position;
                             }//传送
-                            else if (velLength > 500f) velSpeed = 10f;//改变速度
+                            else if (velLength > 500f)
+                            {
+                                velSpeed = 10f;//改变速度
+                            }
+
                             if (velLength > 200f && velSpeed < 9f)
                             {
                                 velSpeed = 9f;//加速
@@ -232,13 +243,17 @@ namespace StarBreaker.Projs
                         return false;
                     }
             }
-            if(ProjectileForLastBow)
+            if (ProjectileForLastBow)
             {
-                if(projectile.tileCollide) projectile.penetrate = 5;//如果是非穿墙箭使它穿透5次
+                if (projectile.tileCollide)
+                {
+                    projectile.penetrate = 5;//如果是非穿墙箭使它穿透5次
+                }
+
                 projectile.usesLocalNPCImmunity = true;
                 projectile.localNPCHitCooldown = 0;
                 projectile.tileCollide = false;
-                if(projectile.velocity.Length() > 2f && projectile.timeLeft % 5 == 0)
+                if (projectile.velocity.Length() > 2f && projectile.timeLeft % 5 == 0)
                 {
                     projectile.damage++;
                     projectile.velocity *= 0.9f;
@@ -266,7 +281,11 @@ namespace StarBreaker.Projs
             if (projectile.OwnerMinionAttackTargetNPC != null && projectile.OwnerMinionAttackTargetNPC.GetGlobalNPC<NPCs.StarGlobalNPC>().DrumHitDamage > 0)
             {
                 int addDa = damage / 5;
-                if(addDa > 20)addDa = 20;
+                if (addDa > 20)
+                {
+                    addDa = 20;
+                }
+
                 damage += addDa;
             }
         }
@@ -281,15 +300,23 @@ namespace StarBreaker.Projs
                         {
                             Player player = Main.player[projectile.owner];
                             int heal = damage / 2;
-                            if (heal < 1) heal = 1;
-                            if (player.statLife + heal > player.statLifeMax2) heal = player.statLifeMax2 - player.statLife;
+                            if (heal < 1)
+                            {
+                                heal = 1;
+                            }
+
+                            if (player.statLife + heal > player.statLifeMax2)
+                            {
+                                heal = player.statLifeMax2 - player.statLife;
+                            }
+
                             player.statLife += heal;
                             player.HealEffect(heal);
                         }
                         break;
                     }
             }
-            if(Bloody > 0)
+            if (Bloody > 0)
             {
                 target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += Bloody;
             }

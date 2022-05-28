@@ -1,12 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Projs.UltimateCopperShortsword;
-using System;
+﻿using StarBreaker.Projs.UltimateCopperShortsword;
 using System.IO;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
 {
@@ -202,7 +195,10 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                     }
                 case 3://血欲
                     {
-                        if (NPC.alpha < 255 && Timer3 == 0) NPC.alpha += 5;
+                        if (NPC.alpha < 255 && Timer3 == 0)
+                        {
+                            NPC.alpha += 5;
+                        }
                         else
                         {
                             switch (Timer3)
@@ -290,8 +286,15 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                         }
                         else
                         {
-                            if (NPC.velocity.Length() > 5 || NPC.velocity.Length() < 1) NPC.velocity = ToTarget.SafeNormalize(default) * 2;
-                            else NPC.velocity = NPC.velocity.RotatedBy(MathHelper.ToRadians(2.1f));
+                            if (NPC.velocity.Length() > 5 || NPC.velocity.Length() < 1)
+                            {
+                                NPC.velocity = ToTarget.SafeNormalize(default) * 2;
+                            }
+                            else
+                            {
+                                NPC.velocity = NPC.velocity.RotatedBy(MathHelper.ToRadians(2.1f));
+                            }
+
                             NPC.dontTakeDamage = true;
                             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver4;
                             Timer1++;
@@ -348,7 +351,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
         }
         public override bool CheckActive()
         {
-            if (Target.dead) return true;
+            if (Target.dead)
+            {
+                return true;
+            }
+
             return false;
         }
         public override bool CheckDead()

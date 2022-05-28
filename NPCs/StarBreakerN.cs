@@ -1,14 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
+﻿using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs
 {
@@ -76,9 +69,15 @@ namespace StarBreaker.NPCs
         {
             StarBreakerSystem.downedStarBreakerNom = true;
         }
-        public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;
+        public override void BossHeadRotation(ref float rotation)
+        {
+            rotation = NPC.rotation;
+        }
 
-        public override void BossHeadSpriteEffects(ref SpriteEffects spriteEffects) => spriteEffects = NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+        public override void BossHeadSpriteEffects(ref SpriteEffects spriteEffects)
+        {
+            spriteEffects = NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+        }
 
         public override void AI()
         {
@@ -105,7 +104,11 @@ namespace StarBreaker.NPCs
                 {
                     SkyManager.Instance.Deactivate("StarBreaker:StarSky");
                 }
-                if (NPC.velocity.Y > 20) NPC.active = false;//到达一定的下坠速度就自杀
+                if (NPC.velocity.Y > 20)
+                {
+                    NPC.active = false;//到达一定的下坠速度就自杀
+                }
+
                 return;
             }
             int damage = 50 / (Main.expertMode || Main.masterMode ? 2 : 1);
@@ -145,12 +148,12 @@ namespace StarBreaker.NPCs
                     {
                         NPC.velocity = toTarget * 0.015f;
                         Timer1++;
-                        if(Timer1 > 30 - (toTarget.Length() * 0.01f))//根据距离微调发射时间
+                        if (Timer1 > 30 - (toTarget.Length() * 0.01f))//根据距离微调发射时间
                         {
-                            if(Timer2 < 10)
+                            if (Timer2 < 10)
                             {
                                 Timer1 = 0;
-                                if(Timer2 == 0)//这是说话
+                                if (Timer2 == 0)//这是说话
                                 {
                                     PopupText.NewText(new()
                                     {
@@ -160,13 +163,13 @@ namespace StarBreaker.NPCs
                                         Velocity = Vector2.UnitY * -5
                                     }, NPC.Center);
                                 }
-                                if(Main.netMode != NetmodeID.MultiplayerClient)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     int type = RandBullets();
-                                    for (float i = -5;i<=5;i++)
+                                    for (float i = -5; i <= 5; i++)
                                     {
                                         Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + NPC.velocity.RealSafeNormalize();
-                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel * 10,type, damage, 1.2f, Main.myPlayer);
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel * 10, type, damage, 1.2f, Main.myPlayer);
                                     }
                                     SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                                 }
@@ -177,7 +180,7 @@ namespace StarBreaker.NPCs
                                 State++;
                                 if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(),NPC.Center,Vector2.Zero,ModContent.ProjectileType<Projs.StarShield>(),0,0,Main.myPlayer,NPC.whoAmI);//生成护盾
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projs.StarShield>(), 0, 0, Main.myPlayer, NPC.whoAmI);//生成护盾
                                 }
                                 break;
                             }
@@ -189,7 +192,7 @@ namespace StarBreaker.NPCs
                     {
                         Timer1++;
                         NPC.velocity *= 0.9f;
-                        if(Timer1 == 30)//说一句话
+                        if (Timer1 == 30)//说一句话
                         {
                             PopupText.NewText(new()
                             {
@@ -199,7 +202,7 @@ namespace StarBreaker.NPCs
                                 Velocity = Vector2.UnitY * -5
                             }, NPC.Center);
                         }
-                        else if(Timer1 >= 60)
+                        else if (Timer1 >= 60)
                         {
                             if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
@@ -224,10 +227,10 @@ namespace StarBreaker.NPCs
                 case 5://高速冲刺,靠近后散弹
                     {
                         Timer1++;
-                        if(Timer1 < 60)
+                        if (Timer1 < 60)
                         {
                             NPC.velocity *= 0.9f;
-                            if(Timer1 == 5)
+                            if (Timer1 == 5)
                             {
                                 PopupText.NewText(new()
                                 {
@@ -238,20 +241,23 @@ namespace StarBreaker.NPCs
                                 }, NPC.Center);
                             }
                         }
-                        else if(Timer1 == 60)
+                        else if (Timer1 == 60)
                         {
                             NPC.velocity = toTarget.RealSafeNormalize() * 30;
                         }
-                        else if(Timer1 > 90 && State == 3)
+                        else if (Timer1 > 90 && State == 3)
                         {
                             if (Timer1 > 120 || NPC.velocity.Length() < 2f)
                             {
                                 State++;
                                 Timer1 = 0;
                             }
-                            else if(Timer1 % 3 == 0)NPC.velocity *= 0.9f;
+                            else if (Timer1 % 3 == 0)
+                            {
+                                NPC.velocity *= 0.9f;
+                            }
                         }
-                        else if(State == 5 && (Timer1 > 400 || Vector2.Distance(Target.Center,NPC.Center) < 300 || Vector2.Distance(Target.Center, NPC.Center) > 1200))
+                        else if (State == 5 && (Timer1 > 400 || Vector2.Distance(Target.Center, NPC.Center) < 300 || Vector2.Distance(Target.Center, NPC.Center) > 1200))
                         {
                             State++;
                             Timer1 = 0;
@@ -269,7 +275,7 @@ namespace StarBreaker.NPCs
                     {
                         NPC.velocity = toTarget * 0.015f;
                         Timer1++;
-                        if(Timer1 == 30)
+                        if (Timer1 == 30)
                         {
                             PopupText.NewText(new()
                             {
@@ -283,23 +289,23 @@ namespace StarBreaker.NPCs
                                 Timer2 = RandBullets();
                                 for (int i = 0; i < 10; i++)
                                 {
-                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center,NPC.velocity.RealSafeNormalize() * 5f,(int)Timer2, damage, 1.2f, Main.myPlayer);
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RealSafeNormalize() * 5f, (int)Timer2, damage, 1.2f, Main.myPlayer);
                                 }
                             }
                         }
-                        else if(Timer1 == 90)
+                        else if (Timer1 == 90)
                         {
                             int count = 0;
-                            foreach(Projectile projectile in Main.projectile)//遍历一次弹幕,让他们散射
+                            foreach (Projectile projectile in Main.projectile)//遍历一次弹幕,让他们散射
                             {
-                                if(projectile.active && projectile.type == (int)Timer2 && !projectile.friendly && count < 10)
+                                if (projectile.active && projectile.type == (int)Timer2 && !projectile.friendly && count < 10)
                                 {
                                     projectile.velocity = projectile.velocity.RotatedBy(MathHelper.Pi / 5 * count) * 3;
                                     count++;
                                 }
                             }
                         }
-                        else if(Timer1 == 120)
+                        else if (Timer1 == 120)
                         {
                             Timer1 = 0;
                             State++;

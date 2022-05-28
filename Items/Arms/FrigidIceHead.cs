@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Arms
+﻿namespace StarBreaker.Items.Arms
 {
     [AutoloadEquip(EquipType.Head)]
     public class FrigidIceHead : ModItem
@@ -25,7 +21,11 @@ namespace StarBreaker.Items.Arms
         {
             player.maxRunSpeed += 2;
         }
-        public override bool IsArmorSet(Item head, Item body, Item legs) => head.type == Type && body.type == ModContent.ItemType<FrigidIceBody>() && legs.type == ModContent.ItemType<FrigidIceLegs>();
+        public override bool IsArmorSet(Item head, Item body, Item legs)
+        {
+            return head.type == Type && body.type == ModContent.ItemType<FrigidIceBody>() && legs.type == ModContent.ItemType<FrigidIceLegs>();
+        }
+
         public override void UpdateArmorSet(Player player)
         {
             player.GetDamage(DamageClass.Melee) += 0.3f;

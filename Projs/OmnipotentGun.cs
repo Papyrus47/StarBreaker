@@ -1,13 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Items.Bullet;
-using System;
+﻿using StarBreaker.Items.Bullet;
 using System.IO;
-using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.Projs
 {
@@ -30,8 +23,14 @@ namespace StarBreaker.Projs
             get => (int)Projectile.ai[1];
             set
             {
-                if (value >= 0 && value < 200) Projectile.ai[1] = value;
-                else Projectile.ai[1] = 0;
+                if (value >= 0 && value < 200)
+                {
+                    Projectile.ai[1] = value;
+                }
+                else
+                {
+                    Projectile.ai[1] = 0;
+                }
             }
         }
         public int[] States = new int[5];
@@ -185,7 +184,11 @@ namespace StarBreaker.Projs
                                 States[0]++;
                                 ShootBullet(player);
                             }
-                            else State = 0;
+                            else
+                            {
+                                State = 0;
+                            }
+
                             break;
                         }
                     case 2://瞄准鼠标
@@ -278,7 +281,11 @@ namespace StarBreaker.Projs
                     }
                 }
                 #endregion
-                if (item.consumable && gun.CanConsumeAmmo(player)) item.stack--;
+                if (item.consumable && gun.CanConsumeAmmo(player))
+                {
+                    item.stack--;
+                }
+
                 if (item.stack <= 0)
                 {
                     item.active = false;

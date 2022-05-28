@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class IceMaker : ModProjectile
     {
@@ -36,14 +31,17 @@ namespace StarBreaker.Projs
         public override bool PreDraw(ref Color lightColor)
         {
             Main.spriteBatch.End();//通过end结束上面的绘制
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.Additive,SamplerState.PointWrap,
-                DepthStencilState.None,RasterizerState.CullNone,null);//开始自己的绘制,让它一次性绘制激光
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointWrap,
+                DepthStencilState.None, RasterizerState.CullNone, null);//开始自己的绘制,让它一次性绘制激光
             Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Type].Value;
-            Main.spriteBatch.Draw(texture,Projectile.Center - Main.screenPosition, new Rectangle(0,0,texture.Width * 2,120), Color.White);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, texture.Width * 2, 120), Color.White);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin();
             return false;
         }
-        public override bool? CanDamage() => false;
+        public override bool? CanDamage()
+        {
+            return false;
+        }
     }
 }

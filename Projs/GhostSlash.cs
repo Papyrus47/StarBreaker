@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class GhostSlash : ModProjectile
     {
@@ -39,7 +33,11 @@ namespace StarBreaker.Projs
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (Projectile.ai[0] < 75) return false;
+            if (Projectile.ai[0] < 75)
+            {
+                return false;
+            }
+
             float r = 0;
             bool b1 = Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(),
                 new Vector2(StartingPoint.X, StartingPoint.Y + 50), new Vector2(EndPoint.X, EndPoint.Y - 50), 10, ref r);

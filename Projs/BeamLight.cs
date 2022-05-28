@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class BeamLight : ModProjectile
     {
@@ -44,7 +37,11 @@ namespace StarBreaker.Projs
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.type == ModContent.NPCType<NPCs.StarGhostKnife>()) return;
+            if (target.type == ModContent.NPCType<NPCs.StarGhostKnife>())
+            {
+                return;
+            }
+
             if (Projectile.ai[1] == 1)
             {
                 target.life = 0;

@@ -1,9 +1,4 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Items.Weapon
+﻿namespace StarBreaker.Items.Weapon
 {
     public class EnergyConverter : ModItem
     {

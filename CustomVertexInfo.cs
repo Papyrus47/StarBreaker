@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace StarBreaker
+﻿namespace StarBreaker
 {
     public struct CustomVertexInfo : IVertexType
     {
@@ -26,9 +23,9 @@ namespace StarBreaker
 
         public CustomVertexInfo(Vector2 position, Color color, Vector3 texCoord)
         {
-            this.Position = position;
-            this.Color = color;
-            this.TexCoord = texCoord;
+            Position = position;
+            Color = color;
+            TexCoord = texCoord;
         }
 
         public VertexDeclaration VertexDeclaration => _vertexDeclaration;

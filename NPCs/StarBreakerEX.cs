@@ -1,14 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using StarBreaker.Projs;
 using System.IO;
-using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.ModLoader;
-using StarBreaker.Projs;
 
 namespace StarBreaker.NPCs
 {
@@ -92,13 +85,21 @@ namespace StarBreaker.NPCs
                 {
                     SkyManager.Instance.Deactivate("StarBreaker:StarSky");
                 }
-                if (NPC.velocity.Y > 20) NPC.active = false;//到达一定的下坠速度就自杀
+                if (NPC.velocity.Y > 20)
+                {
+                    NPC.active = false;//到达一定的下坠速度就自杀
+                }
+
                 return;
             }
             Vector2 toTarget = Target.Center - NPC.Center;//到玩家的单位向量
             NPC.spriteDirection = NPC.direction = NPC.velocity.X < 0 ? 1 : -1;//npc朝向
             int damage = NPC.damage;
-            if (Main.expertMode || Main.masterMode) damage /= 2;
+            if (Main.expertMode || Main.masterMode)
+            {
+                damage /= 2;
+            }
+
             switch (State)
             {
                 case 0://开幕
@@ -135,17 +136,17 @@ namespace StarBreaker.NPCs
                     }
                 case 1://星击随机使用一把武器,对玩家攻击
                     {
-                        if(Timer3 == 0)
+                        if (Timer3 == 0)
                         {
                             Timer3 = Main.rand.Next(1, 5);
-                            switch(Timer3)
+                            switch (Timer3)
                             {
-                                case 1:FightSayText("M-137格林机枪,用你的速度撕裂他!"); break;
-                                case 2:FightSayText("反坦克炮,炸烂他的身体!");break;
-                                case 3:FightSayText("你能躲过我的聚焦喷火器?");break;
-                                case 4:FightSayText("FM-92刺弹炮,刺入爆炸!");break;
+                                case 1: FightSayText("M-137格林机枪,用你的速度撕裂他!"); break;
+                                case 2: FightSayText("反坦克炮,炸烂他的身体!"); break;
+                                case 3: FightSayText("你能躲过我的聚焦喷火器?"); break;
+                                case 4: FightSayText("FM-92刺弹炮,刺入爆炸!"); break;
                             }
-                            if(Main.netMode != NetmodeID.MultiplayerClient)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 _ = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<StarShield>(),
                                     0, 0, Main.myPlayer, NPC.whoAmI);
@@ -156,7 +157,7 @@ namespace StarBreaker.NPCs
                             NPC.velocity = (Target.Center - NPC.Center).RealSafeNormalize() * 10;
                             NPC.Center -= NPC.velocity;
                             Timer1++;
-                            if(Timer1 > 300)
+                            if (Timer1 > 300)
                             {
                                 Timer1 = 0;
                                 Timer3 = 0;
@@ -207,11 +208,11 @@ namespace StarBreaker.NPCs
                         {
                             FightSayText("同步行动,瞄准他!");
                         }
-                        else if(Timer1 == 20)
+                        else if (Timer1 == 20)
                         {
                             FightSayText("开火!");
                         }
-                        else if(Timer1 > 20 && Timer1 % 30 == 0)
+                        else if (Timer1 > 20 && Timer1 % 30 == 0)
                         {
                             if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
@@ -224,7 +225,7 @@ namespace StarBreaker.NPCs
                                 SoundEngine.PlaySound(SoundID.Item109, NPC.Center);
                             }
                             Timer2++;
-                            if(Timer2 > 10)
+                            if (Timer2 > 10)
                             {
                                 Timer1 = Timer2 = Timer3 = 0;
                                 State++;
@@ -239,7 +240,7 @@ namespace StarBreaker.NPCs
                         Timer1 += 0.5f;
                         if (Timer2 < 800)
                         {
-                            if(Timer3 == 0)
+                            if (Timer3 == 0)
                             {
                                 FightSayText("我们休息一下,只要你不动,我就无敌在这里,等到时间够长为止,或者你走的够多为止");
                                 NPC.dontTakeDamage = true;
@@ -249,7 +250,7 @@ namespace StarBreaker.NPCs
                         else
                         {
                             Timer1 += 0.5f;
-                            if(Timer3 == 1)
+                            if (Timer3 == 1)
                             {
                                 FightSayText("休息够了?来让我看看!");
                                 Timer3++;
@@ -266,22 +267,26 @@ namespace StarBreaker.NPCs
                 case 5://难得的冲刺
                     {
                         Timer1--;
-                        if(Timer1<=0)
+                        if (Timer1 <= 0)
                         {
-                            if(Timer2 == 0)
+                            if (Timer2 == 0)
                             {
                                 FightSayText("我来和你贴贴了~");
                             }
-                            else NPC.velocity = toTarget.RealSafeNormalize() * 30;
+                            else
+                            {
+                                NPC.velocity = toTarget.RealSafeNormalize() * 30;
+                            }
+
                             Timer2++;
                             Timer1 = 40;
-                            if(Timer2 > 5)
+                            if (Timer2 > 5)
                             {
                                 Timer1 = Timer2 = 0;
                                 State++;
                             }
                         }
-                        else if(Timer1 < 20)
+                        else if (Timer1 < 20)
                         {
                             NPC.velocity *= 0.85f;
                         }

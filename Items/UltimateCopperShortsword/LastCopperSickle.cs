@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -36,7 +32,10 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         public override bool CanShoot(Player player)
         {
             if (player.ownedProjectileCounts[Item.shoot] >= 3)
+            {
                 return false;
+            }
+
             return base.CanShoot(player);
         }
     }

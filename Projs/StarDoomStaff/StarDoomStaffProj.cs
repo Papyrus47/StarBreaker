@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.ID;
-
-namespace StarBreaker.Projs.StarDoomStaff
+﻿namespace StarBreaker.Projs.StarDoomStaff
 {
     public class StarDoomStaffProj : ModProjectile
     {
@@ -24,7 +18,11 @@ namespace StarBreaker.Projs.StarDoomStaff
             Projectile.aiStyle = -1;
             Projectile.tileCollide = false;
         }
-        public override bool? CanDamage() => false;
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -33,14 +31,18 @@ namespace StarBreaker.Projs.StarDoomStaff
                 Projectile.Kill();
                 return;
             }
-            if(player.channel)//召唤水晶
+            if (player.channel)//召唤水晶
             {
                 player.itemTime = player.itemAnimation = 2;
                 int mana = player.GetManaCost(player.HeldItem);
                 player.statMana -= mana;
                 player.CheckMana(mana);
-                if (player.statMana <= 0) player.statMana = 0;
-                if(player.statMana >= mana)
+                if (player.statMana <= 0)
+                {
+                    player.statMana = 0;
+                }
+
+                if (player.statMana >= mana)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient && Main.myPlayer == player.whoAmI)
                     {
@@ -53,7 +55,7 @@ namespace StarBreaker.Projs.StarDoomStaff
                         Vector2 vel = (Main.MouseWorld - center).RealSafeNormalize();
                         Main.projectile[Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, vel * 20,
                             type, Projectile.damage, Projectile.knockBack, player.whoAmI)].originalDamage = Projectile.damage;
-                        for(int i = 0;i<20;i++)
+                        for (int i = 0; i < 20; i++)
                         {
                             Dust dust = Dust.NewDustDirect(center + (vel.RotatedBy(MathHelper.Pi / 10 * i) * 50), 3, 3, DustID.PurpleTorch);
                             dust.velocity = (center - dust.position).RealSafeNormalize() * 3;
@@ -64,7 +66,7 @@ namespace StarBreaker.Projs.StarDoomStaff
                     foreach (NPC npc in Main.npc)
                     {
                         float dis = Vector2.Distance(Projectile.Center, npc.Center);
-                        if (npc.active && npc.CanBeChasedBy() && !npc.friendly && dis < max && Collision.CanHit(npc.Center,1,1,player.Center,1,1))
+                        if (npc.active && npc.CanBeChasedBy() && !npc.friendly && dis < max && Collision.CanHit(npc.Center, 1, 1, player.Center, 1, 1))
                         {
                             max = dis;
                             player.MinionAttackTargetNPC = npc.whoAmI;
@@ -80,6 +82,9 @@ namespace StarBreaker.Projs.StarDoomStaff
             Projectile.spriteDirection = Projectile.direction = player.direction;
             Projectile.rotation = -0.25f * Projectile.spriteDirection;
         }
-        public override bool ShouldUpdatePosition() => false;
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
     }
 }

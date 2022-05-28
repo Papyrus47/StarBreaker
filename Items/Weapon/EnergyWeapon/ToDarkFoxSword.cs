@@ -1,8 +1,4 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-
-namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class ToDarkFoxSword : BaseEnergySummon
     {

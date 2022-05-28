@@ -1,14 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria.Localization;
-using System;
-using System.Collections.Generic;
-using Terraria.ID;
-
-namespace StarBreaker.Projs.Waste
+﻿namespace StarBreaker.Projs.Waste
 {
     public class StarsPierceProj_Pierce : ModProjectile
     {
@@ -41,6 +31,9 @@ namespace StarBreaker.Projs.Waste
 
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
-        public override bool PreDraw(ref Color lightColor) => false;//返回false不绘制
+        public override bool PreDraw(ref Color lightColor)
+        {
+            return false;//返回false不绘制
+        }
     }
 }

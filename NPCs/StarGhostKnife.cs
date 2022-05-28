@@ -1,11 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StarBreaker.Projs;
-using System;
-using Terraria;
+﻿using StarBreaker.Projs;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace StarBreaker.NPCs
 {

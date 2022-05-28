@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Items.Bullet;
-using Terraria;
-using Terraria.ModLoader;
+﻿using StarBreaker.Items.Bullet;
 
 namespace StarBreaker.Items
 {

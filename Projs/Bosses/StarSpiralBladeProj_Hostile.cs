@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-
-namespace StarBreaker.Projs.Bosses
+﻿namespace StarBreaker.Projs.Bosses
 {
     public class StarSpiralBladeProj_Hostile : ModProjectile
     {

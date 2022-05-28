@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.Type;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
+﻿using StarBreaker.Projs.Type;
 
 namespace StarBreaker.Projs.Process.HardMode.Summon
 {

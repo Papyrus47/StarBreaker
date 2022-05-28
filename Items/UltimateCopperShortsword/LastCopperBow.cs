@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StarBreaker.Projs.UltimateCopperShortsword;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using StarBreaker.Projs.UltimateCopperShortsword;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -33,9 +28,9 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            for (int i = 1; i <= 5;i++)
+            for (int i = 1; i <= 5; i++)
             {
-                if(type == Item.shoot)
+                if (type == Item.shoot)
                 {
                     damage += (int)(damage * 0.5f);
                 }

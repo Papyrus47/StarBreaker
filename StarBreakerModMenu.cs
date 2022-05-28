@@ -1,6 +1,4 @@
-﻿using Terraria.ModLoader;
-
-namespace StarBreaker
+﻿namespace StarBreaker
 {
     public class StarBreakerModMenu : ModMenu
     {
