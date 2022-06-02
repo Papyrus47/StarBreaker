@@ -47,7 +47,10 @@ namespace StarBreaker.Projs.StarGhostKnife
                     player.velocity.X = Projectile.velocity.X > 0 ? 6 : -6;
                     if (Projectile.frame < 16)
                     {
-                        SoundEngine.PlaySound(SoundID.Item1.SoundId, (int)player.Center.X, (int)player.Center.Y, 1, 4.5f, -0.5f);
+                        var sound = SoundEngine.PlaySound(SoundID.Item1,player.Center);
+                        SoundEngine.TryGetActiveSound(sound, out var activeSound);
+                        activeSound.Volume = 4.5f;
+                        activeSound.Sound.Pitch = -0.5f;
                     }
                 }
                 if (player.dead)

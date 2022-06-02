@@ -1,5 +1,6 @@
 ﻿using StarBreaker.Projs;
 using Terraria.Graphics.Effects;
+using Filters = Terraria.Graphics.Effects.Filters;
 
 namespace StarBreaker.NPCs
 {

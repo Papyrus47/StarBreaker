@@ -36,6 +36,10 @@
                         break;
                     }
             }
+            if(StarBreakerSystem.SpecialBattle != null)
+            {
+                projectile.tileCollide = false;
+            }
         }
         public override bool PreAI(Projectile projectile)
         {

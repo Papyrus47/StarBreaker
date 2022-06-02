@@ -45,14 +45,14 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             }
             return player.ownedProjectileCounts[ModContent.ProjectileType<LastCopperGunProj>()] == 0;
         }
-        public override bool CanConsumeAmmo(Player player)
+        public override bool CanConsumeAmmo(Item weapon, Player player)
         {
             if (player.altFunctionUse == 2)
             {
                 return false;
             }
 
-            return base.CanConsumeAmmo(player);
+            return true;
         }
         public override Vector2? HoldoutOffset()
         {

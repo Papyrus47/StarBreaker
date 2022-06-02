@@ -21,7 +21,7 @@ namespace StarBreaker.Items.Bullet
             Item.rare = ItemRarityID.Pink;
             Item.shoot = ModContent.ProjectileType<MightBullet>();
         }
-        public override bool CanBeConsumedAsAmmo(Player player)
+        public override bool CanBeConsumedAsAmmo(Item weapon, Player player)
         {
             return Main.rand.Next(10) >= 3;
         }

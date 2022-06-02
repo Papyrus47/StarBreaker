@@ -63,14 +63,10 @@
         public override void Kill(int timeLeft)
         {
             Player player = Main.player[Projectile.owner];
-            if (player.HasAmmo(player.HeldItem, true))
+            if (player.HasAmmo(player.HeldItem))
             {
                 int damage = player.GetWeaponDamage(player.HeldItem);
-                int ID = AmmoID.Arrow;
-                float speed = 10;
-                float kn = 1.2f;
-                bool canShoot = true;
-                player.PickAmmo(player.HeldItem, ref ID, ref speed, ref canShoot, ref damage, ref kn, out ID);
+                player.PickAmmo(player.HeldItem,out int ID,out float speed, out damage,out float kn, out ID);
                 for (int i = 0; i < 2; i++)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)

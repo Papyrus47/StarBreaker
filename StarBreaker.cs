@@ -1,14 +1,17 @@
-﻿using StarBreaker.Projs.Waste;
+﻿using StarBreaker.Items.Weapon.DoomFight;
+using StarBreaker.NPCs;
+using StarBreaker.Projs.Waste;
 using StarBreaker.StarUI;
 using Terraria.Graphics.Effects;
 using Terraria.UI;
 using static On.Terraria.Graphics.Effects.FilterManager;
+using Filters = Terraria.Graphics.Effects.Filters;
 
 namespace StarBreaker
 {
     public class StarBreaker : Mod
     {
-        public static StarBreaker Instantiate;
+        public static StarBreaker Instantiate;//这一个就是静态字段,在哪里都能调用,但是要加一个类名前缀
         public static ModKeybind ToggleGhostSwordAttack;
         public static Effect FrostFistHealMagic;
         public static Effect LightStar;
@@ -75,13 +78,6 @@ namespace StarBreaker
             MusicLoader.AddMusic(this, "Music/Argalia");
             MusicLoader.AddMusic(this, "Music/UnderfootEnterenceBoss");
             #endregion
-            #region 声音加载
-            for (int i = 1; i <= 5; i++)
-            {
-                SoundLoader.AddSound(this, "Sounds/Kazoo/kazoo" + i.ToString());
-            }
-            SoundLoader.AddSound(this, "Sounds/Drum/Drum1");
-            #endregion
             #region UI加载
             if (!Main.dedServ)//不在服务器上
             {
@@ -98,8 +94,68 @@ namespace StarBreaker
                 chargeUser.SetState(chargeUIState);
             }
             #endregion
+            #region 特殊战背景
+            On.Terraria.Main.DrawTiles += Main_DrawTiles;
+            On.Terraria.Player.WaterCollision += Player_WaterCollision;
+            On.Terraria.Main.DrawWaters += Main_DrawWaters;
+            On.Terraria.Player.DryCollision += Player_DryCollision;
+            On.Terraria.Player.HoneyCollision += Player_HoneyCollision;
+            #endregion
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic += Main_UpdateAudio_DecideOnNewMusic;//可以修改原版曲子
         }
+
+        private void Player_HoneyCollision(On.Terraria.Player.orig_HoneyCollision orig, Player self, bool fallThrough, bool ignorePlats)
+        {
+            if (StarBreakerSystem.SpecialBattle == null || !StarBreakerSystem.SpecialBattle.active)
+            {
+                orig.Invoke(self, fallThrough, ignorePlats);
+            }
+            else
+            {
+                self.position += self.velocity;
+            }
+        }
+
+        private void Player_DryCollision(On.Terraria.Player.orig_DryCollision orig, Player self, bool fallThrough, bool ignorePlats)
+        {
+            if (StarBreakerSystem.SpecialBattle == null || !StarBreakerSystem.SpecialBattle.active)
+            {
+                orig.Invoke(self, fallThrough, ignorePlats);
+            }
+            else
+            {
+                self.position += self.velocity;
+            }
+        }
+
+        private void Main_DrawWaters(On.Terraria.Main.orig_DrawWaters orig, Main self, bool isBackground)
+        {
+            if (StarBreakerSystem.SpecialBattle == null || !StarBreakerSystem.SpecialBattle.active)
+            {
+                orig.Invoke(self, isBackground);
+            }
+        }
+        private void Player_WaterCollision(On.Terraria.Player.orig_WaterCollision orig, Player self, bool fallThrough, bool ignorePlats)
+        {
+            if (StarBreakerSystem.SpecialBattle == null || !StarBreakerSystem.SpecialBattle.active)
+            {
+                orig.Invoke(self, fallThrough, ignorePlats);
+            }
+            else
+            {
+                self.position += self.velocity;
+            }
+        }
+
+        private void Main_DrawTiles(On.Terraria.Main.orig_DrawTiles orig, Main self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets, int waterStyleOverride)
+        {
+            orig.Invoke(self, solidLayer, forRenderTargets, intoRenderTargets, waterStyleOverride);
+            if (StarBreakerSystem.SpecialBattle != null && StarBreakerSystem.SpecialBattle.active)
+            {
+                StarBreakerSystem.SpecialBattle.Draw(Main.spriteBatch);
+            }
+        }
+
         public override void AddRecipeGroups()
         {
             base.AddRecipeGroups();
@@ -205,11 +261,18 @@ namespace StarBreaker
             LightStar = null;
             ToggleGhostSwordAttack = null;
             EliminateRaysShader = null;
+
             EndCapture -= FilterManager_EndCapture;
             On.Terraria.Main.LoadWorlds -= Main_LoadWorlds;
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic -= Main_UpdateAudio_DecideOnNewMusic;
             Terraria.Main.OnResolutionChanged -= Main_OnResolutionChanged;
+            On.Terraria.Main.DrawTiles -= Main_DrawTiles;
+            On.Terraria.Player.WaterCollision -= Player_WaterCollision;
+            On.Terraria.Main.DrawWaters -= Main_DrawWaters; 
+            On.Terraria.Player.DryCollision -= Player_DryCollision;
+            On.Terraria.Player.HoneyCollision -= Player_HoneyCollision;
         }
+
         private void FilterManager_EndCapture(orig_EndCapture orig, FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
         {
             if (render == null)
@@ -231,9 +294,9 @@ namespace StarBreaker
             //sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, Main.DefaultSamplerState,
             //    DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-            #region 繁星刺破 绘制
             foreach (Projectile Projectile in Main.projectile)
             {
+                #region 繁星刺破 绘制
                 if (Projectile.active && Projectile.type == ModContent.ProjectileType<StarsPierceProj_Pierce>())
                 {
                     List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
@@ -314,8 +377,43 @@ namespace StarBreaker
                         sb.End();
                     }
                 }
+                #endregion
+                #region 凌空之剑 特效绘制
+                if (Projectile.active && Projectile.type == ModContent.ProjectileType<VolleySwordProj>() && Projectile.ai[0] < 3)
+                {
+                    gd.SetRenderTarget(render);
+                    gd.Clear(Color.Transparent);
+                    try
+                    {
+                        VolleySwordProj.DrawVectrx(Projectile, (Projectile.ModProjectile as VolleySwordProj).oldVels);
+
+                        gd.SetRenderTarget(Main.screenTargetSwap);
+                        gd.Clear(Color.Transparent);
+                        sb.End();
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+
+                        OffsetShader.CurrentTechnique.Passes[0].Apply();
+                        OffsetShader.Parameters["tex0"].SetValue(render);//render可以当成贴图使用或者绘制
+                                                                         //(前提是当前gd.SetRenderTarget的不是这个render,否则会报错)
+                                                                         //因为这个render保存的是刚刚顶点绘制的图像,所以tex0会是顶点绘制绘制到的区域
+                        OffsetShader.Parameters["offset"].SetValue(new Vector2(0.02f, 0.01f));//偏移度
+                        OffsetShader.Parameters["invAlpha"].SetValue(0);//反色
+                        sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);//这个Draw是空间切割对应的
+                                                                              //Draw目前的世界图像,也就是screenTarget内容
+                        sb.End();
+                        sb.Begin();
+                        sb.Draw(render, Vector2.Zero, Color.White);//这里把自己的画 画上去
+
+                        gd.SetRenderTarget(Main.screenTarget);//设置为screenTarget
+                        gd.Clear(Color.Transparent);//透明清除图片
+                        sb.Draw(Main.screenTargetSwap, Vector2.Zero, Color.White);//绘制修改的画
+                        sb.Draw(render, Vector2.Zero, Color.White);
+                        sb.End();
+                    }
+                    catch { }
+                }
+                #endregion
             }
-            #endregion
             //sb.End();
             //sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             //gd.Textures[1] = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB").Value;

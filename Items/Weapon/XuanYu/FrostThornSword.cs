@@ -29,6 +29,7 @@ namespace StarBreaker.Items.Weapon.XuanYu
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.UseSound = SoundID.Item1;
             Item.useTurn = true;
+            Item.autoReuse = true;
             Item.noUseGraphic = true;
         }
         public override bool? PrefixChance(int pre, UnifiedRandom rand)

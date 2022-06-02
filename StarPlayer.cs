@@ -13,6 +13,7 @@ namespace StarBreaker
         public bool InIdeaDriven;
         public int FrostFistModScr = -1;
         public int SummonStarShieldTime;
+        public bool CanFall;
         public int GhostSwordAttack;
         public readonly Dictionary<StarGhostKnifeAtk, string> GhostSwordName = new()
         {
@@ -262,7 +263,11 @@ namespace StarBreaker
             if (PlayerVectorZero > 0 && !EGO)
             {
                 Player.velocity = Vector2.Zero;
-                //Player.direction = Math.Sign(Main.screenPosition.X - Player.Center.X);
+            }
+            if(!CanFall)
+            {
+                Player.velocity.Y = 0;
+                CanFall = true;
             }
         }
         public override void ProcessTriggers(TriggersSet triggersSet)

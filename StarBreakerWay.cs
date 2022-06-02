@@ -90,7 +90,7 @@ namespace StarBreaker
         }
         public static void PickAmmo_EnergyBulletItem(Player player, out int ShootItemID, out int shootDamage)
         {
-            if (player.HasAmmo(player.HeldItem, true))
+            if (player.HasAmmo(player.HeldItem))
             {
                 for (int i = 0; i < player.inventory.Length; i++)//遍历 背包
                 {

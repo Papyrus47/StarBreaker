@@ -34,7 +34,7 @@
         {
             type = Item.shoot;
         }
-        public override bool CanConsumeAmmo(Player player)
+        public override bool CanConsumeAmmo(Item weapon, Player player)
         {
             if (player.heldProj < 0)
             {
@@ -96,75 +96,69 @@
             Projectile.ai[0]++;
             if (Projectile.ai[0] > 30)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient && player.HasAmmo(player.HeldItem, true))
+                if (Main.netMode != NetmodeID.MultiplayerClient && player.HasAmmo(player.HeldItem))
                 {
-                    int damage = 0, ammoID = AmmoID.Bullet;
-                    float speed = 0, kn = 0f;
-                    bool canUse = true;
-                    player.PickAmmo(player.HeldItem, ref ammoID, ref speed, ref canUse, ref damage, ref kn, out ammoID);
-                    if (canUse)
+                    player.PickAmmo(player.HeldItem, out int ammoID, out float speed, out int damage, out float kn, out ammoID);
+                    if (Projectile.ai[1] > 8)
                     {
-                        if (Projectile.ai[1] > 8)
+                        for (int i = 0; i < 8; i++)
                         {
-                            for (int i = 0; i < 8; i++)
-                            {
-                                Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity * 15,
-                                    661, Projectile.damage, Projectile.knockBack, player.whoAmI);
-                            }
-                            if (Main.myPlayer == player.whoAmI)
-                            {
-                                Vector2 center = Main.MouseWorld;
-                                float maxDis = 800;
-                                NPC n = null;
-                                foreach (NPC npc in Main.npc)
-                                {
-                                    float dis = Vector2.Distance(npc.Center, center);
-                                    if (!npc.townNPC && npc.CanBeChasedBy() && npc.active && dis < maxDis)
-                                    {
-                                        n = npc;
-                                        maxDis = dis;
-                                    }
-                                }
-                                if (n != null)
-                                {
-                                    center = n.Center;
-                                }
-                                for (int i = -3; i <= 3; i++)
-                                {
-                                    Vector2 Realcenter = center;
-                                    Realcenter += new Vector2(i * 60, -600);
-                                    int proj = Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Realcenter, (Main.MouseWorld - Realcenter).RealSafeNormalize() * 30,
-                                                                            661, Projectile.damage, Projectile.knockBack, player.whoAmI);
-                                    Main.projectile[proj].tileCollide = false;
-                                    Main.projectile[proj].extraUpdates = 5;
-                                    Main.projectile[proj].timeLeft = 300;
-
-                                    Realcenter = Projectile.Center;
-                                    Realcenter -= Projectile.velocity.RotatedBy(i * 0.2) * 200;
-                                    proj = Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Realcenter, (Main.MouseWorld - Realcenter).RealSafeNormalize() * 30,
-                                                                            661, Projectile.damage, Projectile.knockBack, player.whoAmI);
-                                    Main.projectile[proj].tileCollide = false;
-                                    Main.projectile[proj].extraUpdates = 1;
-                                    Main.projectile[proj].timeLeft = 300;
-                                }
-                            }
-                            Projectile.ai[1] = 0;
-                        }
-                        else
-                        {
-                            for (int i = 0; i < Projectile.ai[1] + 1; i++)
-                            {
-                                if (i > 10)
-                                {
-                                    break;
-                                }
-
-                                Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity.RotatedByRandom(0.2) * Main.rand.NextFloat(15, 20),
-                                    ammoID, Projectile.damage + damage, Projectile.knockBack, player.whoAmI);
-                            }
-                            Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity * 20,
+                            Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity * 15,
                                 661, Projectile.damage, Projectile.knockBack, player.whoAmI);
                         }
+                        if (Main.myPlayer == player.whoAmI)
+                        {
+                            Vector2 center = Main.MouseWorld;
+                            float maxDis = 800;
+                            NPC n = null;
+                            foreach (NPC npc in Main.npc)
+                            {
+                                float dis = Vector2.Distance(npc.Center, center);
+                                if (!npc.townNPC && npc.CanBeChasedBy() && npc.active && dis < maxDis)
+                                {
+                                    n = npc;
+                                    maxDis = dis;
+                                }
+                            }
+                            if (n != null)
+                            {
+                                center = n.Center;
+                            }
+                            for (int i = -3; i <= 3; i++)
+                            {
+                                Vector2 Realcenter = center;
+                                Realcenter += new Vector2(i * 60, -600);
+                                int proj = Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Realcenter, (Main.MouseWorld - Realcenter).RealSafeNormalize() * 30,
+                                                                        661, Projectile.damage, Projectile.knockBack, player.whoAmI);
+                                Main.projectile[proj].tileCollide = false;
+                                Main.projectile[proj].extraUpdates = 5;
+                                Main.projectile[proj].timeLeft = 300;
+
+                                Realcenter = Projectile.Center;
+                                Realcenter -= Projectile.velocity.RotatedBy(i * 0.2) * 200;
+                                proj = Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Realcenter, (Main.MouseWorld - Realcenter).RealSafeNormalize() * 30,
+                                                                        661, Projectile.damage, Projectile.knockBack, player.whoAmI);
+                                Main.projectile[proj].tileCollide = false;
+                                Main.projectile[proj].extraUpdates = 1;
+                                Main.projectile[proj].timeLeft = 300;
+                            }
+                        }
+                        Projectile.ai[1] = 0;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Projectile.ai[1] + 1; i++)
+                        {
+                            if (i > 10)
+                            {
+                                break;
+                            }
+
+                            Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity.RotatedByRandom(0.2) * Main.rand.NextFloat(15, 20),
+                                ammoID, Projectile.damage + damage, Projectile.knockBack, player.whoAmI);
+                        }
+                        Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity * 20,
+                            661, Projectile.damage, Projectile.knockBack, player.whoAmI);
                     }
                 }
                 Projectile.ai[1]++;

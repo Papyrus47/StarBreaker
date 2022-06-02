@@ -60,24 +60,7 @@ namespace StarBreaker.NPCs
                 NPC.TargetClosest(true);
             }
             NPC.rotation += NPC.localAI[3];
-            #region 旋转速度改变
-            if (NPC.localAI[2] != 0)
-            {
-                NPC.localAI[3] += 0.1f;
-                if (NPC.localAI[3] > 500)
-                {
-                    NPC.localAI[2]++;
-                }
-            }
-            else
-            {
-                NPC.localAI[3] -= 0.1f;
-                if (NPC.localAI[3] < -500)
-                {
-                    NPC.localAI[2]++;
-                }
-            }
-            #endregion
+            NPC.localAI[3] += 0.1f;
             if (Target.immuneTime > 5)
             {
                 Target.immuneTime = 5;
@@ -97,16 +80,6 @@ namespace StarBreaker.NPCs
             }
             if (State < 7)
             {
-                #region 控制旋转
-                if (NPC.localAI[3] > 20)
-                {
-                    NPC.localAI[2]++;
-                }
-                else if (NPC.localAI[3] < -20)
-                {
-                    NPC.localAI[2] = 0;
-                }
-                #endregion
                 if (NPC.life < NPC.lifeMax * 0.75f)
                 {
                     State = 7;
@@ -115,16 +88,6 @@ namespace StarBreaker.NPCs
             }
             else if (State < 14)
             {
-                #region 控制旋转
-                if (NPC.localAI[3] > 50)
-                {
-                    NPC.localAI[2]++;
-                }
-                else if (NPC.localAI[3] < -50)
-                {
-                    NPC.localAI[2] = 0;
-                }
-                #endregion
                 if (NPC.life < NPC.lifeMax * 0.35f)
                 {
                     State = 14;

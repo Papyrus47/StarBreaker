@@ -12,6 +12,7 @@ namespace StarBreaker.NPCs
         public int StarSpiralBladeProj = -1;//星辰旋刃弹幕
         public int DrumHitDamage = 0;//鼓的标记伤害
         public int XuanYuSlowTime = 0;//宣雨减速
+        public int VolleyAIStop = 0;//暂停ai
         public static int StarBreaker = -1;
         public static int StarGhostKnife = -1;
         public static int StarFrostFist = -1;

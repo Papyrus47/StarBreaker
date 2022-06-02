@@ -4,6 +4,7 @@
     {
         public bool active = false;
         protected Texture2D texture = null;
+        public int DrawX;
         public SpecialBattle(Texture2D texture)
         {
             this.texture = texture;
@@ -13,12 +14,22 @@
         {
             if(texture != null && active)
             {
-                spriteBatch.Draw(texture,new Rectangle(0,0,Main.screenWidth,Main.screenHeight), null, Color.White);
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+
+                spriteBatch.Draw(texture,new Rectangle(0,0,Main.screenWidth,Main.screenHeight),new Rectangle(DrawX, 0,texture.Width,texture.Height), Color.White);
+
+                spriteBatch.End();
+                spriteBatch.Begin();
             }
         }
         public virtual void Update()
         {
-
+            DrawX += 3;
+            if(DrawX > texture.Width)
+            {
+                DrawX = 0;
+            }
         }
     }
 }

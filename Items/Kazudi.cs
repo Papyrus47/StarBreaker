@@ -30,7 +30,7 @@ namespace StarBreaker.Items
                     soundID = 1;
                 }
 
-                SoundEngine.PlaySound(SoundLoader.GetSoundSlot("StarBraker/Sounds/Kazoo/kazoo" + soundID.ToString()), (int)player.Center.X, (int)player.Center.Y, 0, 4, 0.1f);
+                //SoundEngine.PlaySound(SoundPlayer.("StarBraker/Sounds/Kazoo/kazoo" + soundID.ToString()),player.Center);
             }
             catch { }
             return base.UseItem(player);

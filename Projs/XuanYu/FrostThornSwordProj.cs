@@ -29,7 +29,8 @@ namespace StarBreaker.Projs.XuanYu
             {
                 Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 50f;
             }
-            player.itemRotation = Projectile.velocity.ToRotation();
+            player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
+                Projectile.velocity.X * Projectile.direction);
             player.RotateRelativePoint(ref Projectile.velocity.X, ref Projectile.velocity.Y);
             player.itemTime = player.itemAnimation = 2;
             player.heldProj = Projectile.whoAmI;

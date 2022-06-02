@@ -13,7 +13,7 @@ namespace StarBreaker
         public static bool downedStarSpiralBlade;
         public static bool downedStarFist;
         public static bool downedOnyxBlaster;
-        public static SpecialBattle specialBattle = null;
+        public static SpecialBattle SpecialBattle = null;
         public override void SaveWorldData(TagCompound tag)
         {
             if (downedStarBreakerNom)
@@ -58,7 +58,14 @@ namespace StarBreaker
         }
         public override void PostUpdateEverything()
         {
-            specialBattle.Update();
+            if (SpecialBattle != null)
+            {
+                if (SpecialBattle.active)
+                {
+                    SpecialBattle.Update();
+                }
+                else SpecialBattle = null;
+            }
         }
         public override void OnWorldUnload()
         {
@@ -108,10 +115,10 @@ namespace StarBreaker
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));//获得在鼠标下的索引
-            if (mouseTextIndex != -1)//如果找到绘制层
+            int Index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));//获得在鼠标下的索引
+            if (Index != -1)//如果找到绘制层
             {
-                layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
+                layers.Insert(Index, new LegacyGameInterfaceLayer(
                     "StarBreaker:Bullet",//名字
                     delegate
                     {
@@ -120,19 +127,12 @@ namespace StarBreaker
                     },//委托
                     InterfaceScaleType.UI)
                 );//添加UI
-                layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer("StarBreaker:Charge",
+                layers.Insert(Index, new LegacyGameInterfaceLayer("StarBreaker:Charge",
                 delegate
                 {
                     StarBreaker.Instantiate.chargeUser.Draw(Main.spriteBatch, new GameTime());
                     return true;
                 }, InterfaceScaleType.UI));
-
-                layers.Insert(mouseTextIndex - 1, new LegacyGameInterfaceLayer("StarBreaker:Special Battles",
-                    delegate
-                    {
-                        specialBattle.Draw(Main.spriteBatch);
-                        return true;
-                    }, InterfaceScaleType.Game));//特殊战背景
             }
         }
     }

@@ -68,7 +68,8 @@
             customs[4] = new(pos[1], Color.White, new Vector3(1, 0, 1));
 
             var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
-            var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0)) * Main.GameViewMatrix.ZoomMatrix;
+            var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0)) * 
+                Main.GameViewMatrix.ZoomMatrix;
 
             StarBreaker.FrostFistHealMagic.Parameters["uTransform"].SetValue(model * projection);
             StarBreaker.FrostFistHealMagic.Parameters["uTime"].SetValue(0);

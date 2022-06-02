@@ -31,7 +31,7 @@ namespace StarBreaker.Items.Weapon
             Item.shootSpeed = 10f;
             Item.noUseGraphic = true;
         }
-        public override bool CanConsumeAmmo(Player player)
+        public override bool CanConsumeAmmo(Item weapon, Player player)
         {
             return false;
         }

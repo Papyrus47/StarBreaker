@@ -1,4 +1,4 @@
-﻿using Terraria.Audio;
+﻿using Terraria.Audio;//这一个是using,using对应文件夹,才能使用对应文件夹的东西
 
 namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
@@ -44,7 +44,9 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             player.itemTime = player.itemAnimation = player.itemAnimationMax - (int)(Projectile.ai[0] / Projectile.MaxUpdates);
             if (Projectile.ai[0] == (float)((int)timeToFlyOut / 2f))//声音
             {
-                SoundEngine.PlaySound(SoundID.Item153.SoundId, (int)Projectile.position.X, (int)Projectile.position.Y, SoundID.Item153.Style, 1f, Main.rand.NextFloat(-0.8f, -0.2f));
+                SoundEngine.TryGetActiveSound(SoundEngine.PlaySound(SoundID.Item153,Projectile.Center),out var active);
+                active.Sound.Pitch = Main.rand.NextFloat(-0.2f, -0.8f);
+
             }
             #region 粒子与弹幕
             List<Vector2> list = new();//new一个list

@@ -2,6 +2,7 @@
 
 namespace StarBreaker.NPCs.NorBoss.SkyFracture
 {
+    [AutoloadBossHead]
     public class SkyFracture : FSMNPC
     {
         public override string Texture => "Terraria/Images/Item_" + ItemID.SkyFracture;//使用原版贴图

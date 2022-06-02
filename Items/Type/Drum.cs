@@ -10,7 +10,7 @@
             Item.noUseGraphic = true;
             Item.autoReuse = true;
             Item.useTurn = false;
-            Item.UseSound = SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Drum/Drum1");
+            //Item.UseSound = SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Drum/Drum1");
         }
         public override void HoldItem(Player player)
         {

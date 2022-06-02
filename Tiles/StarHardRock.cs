@@ -20,8 +20,7 @@
 
             MinPick = 200;//最低稿力
             ItemDrop = ModContent.ItemType<Items.ItemTiles.StarHardRock>();
-            SoundType = SoundID.Tink;
-            SoundStyle = 1;
+            HitSound = SoundID.Tink;
         }
     }
 }

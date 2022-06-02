@@ -281,7 +281,7 @@ namespace StarBreaker.Projs
                     }
                 }
                 #endregion
-                if (item.consumable && gun.CanConsumeAmmo(player))
+                if (item.consumable && gun.CanConsumeAmmo(item,player))
                 {
                     item.stack--;
                 }
@@ -294,7 +294,7 @@ namespace StarBreaker.Projs
                 else
                 {
                     gun.Shoot(player, null, Projectile.Center + Projectile.rotation.ToRotationVector2() / (Vector2)gun.HoldoutOffset(), Projectile.rotation.ToRotationVector2() * ItemGun.shootSpeed, item.shoot, Projectile.damage, Projectile.knockBack);
-                    SoundEngine.PlaySound(ItemGun.UseSound, Projectile.position);
+                    SoundEngine.PlaySound(ItemGun.UseSound.Value, Projectile.position);
                 }
                 States[0] = 0;
             }
