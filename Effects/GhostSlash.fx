@@ -18,13 +18,11 @@ float2 uImageSize1;
 float4 PixelShaderFunction(float2 coords : TEXCOORD0) : COLOR0
 {
     float4 color = tex2D(uImage0, coords);
-    if(uOpacity < 0.5)//在刚刚使用的时候
+    float4 invColor = color;
+    if (any(tex2D(uImage0, coords)))
     {
-        color.rbga -= float4(0.9, 0.9, 0.9, uOpacity);
-    }
-    else
-    {
-        color = float4(color.a - color.r, color.a - color.b, color.a - color.g, color.a);//让它反色
+        invColor.rgb = 1 - invColor.rgb; //反色
+        return color * (1 - uOpacity) + invColor * uOpacity;
     }
     return color;
 }

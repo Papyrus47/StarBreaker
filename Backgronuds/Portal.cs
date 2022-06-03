@@ -74,7 +74,7 @@ namespace StarBreaker.Backgronuds
                     new Rectangle(0, 0, Main.screenWidth, Main.screenHeight),
                      Color.Black * intensity * 0.4f);
 
-                Texture2D tex = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/Portal").Value;
+                Texture2D tex = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/Portal", ReLogic.Content.AssetRequestMode.AsyncLoad).Value;
                 Main.spriteBatch.Draw(
                     tex,
                     new Vector2(Main.screenWidth / 2, Main.screenHeight / 2),
@@ -89,7 +89,7 @@ namespace StarBreaker.Backgronuds
             }
             if (maxDepth >= 3.4028235E+38f && minDepth < 3.4028235E+38f)
             {
-                Texture2D tex = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB").Value;
+                Texture2D tex = ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB",ReLogic.Content.AssetRequestMode.AsyncLoad).Value;
                 Main.spriteBatch.Draw(tex, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * intensity);
             }
         }

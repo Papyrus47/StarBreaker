@@ -39,7 +39,7 @@ namespace StarBreaker.NPCs
         {
             NPC.aiStyle = -1;
             NPC.boss = true;
-            NPC.lifeMax = (Main.masterMode) ? 12000 : (Main.expertMode) ? 6000 : 3000;
+            NPC.lifeMax = 100000000;
             NPC.knockBackResist = 0f;
             NPC.defense = 18;
             NPC.noGravity = true;

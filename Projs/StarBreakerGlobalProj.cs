@@ -1,8 +1,9 @@
 ﻿namespace StarBreaker.Projs
 {
-    public class StarBreakerGlobalProj : GlobalProjectile
+    public class StarBreakerGlobalProj : GlobalProjectile//这就是一个继承了GlobalProj的类
     {
-        public override bool InstancePerEntity => true;
+        public override bool InstancePerEntity => true;//就这个
+        //这一个东西是允许Global系列创建实例字段
         public bool ProjectileForSporadicBow = false;
         public bool ProjectileForLastBow = false;
         public int Bloody = 0;
@@ -10,7 +11,7 @@
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
             ProjOwner_NPC = -1;
-            if (source is EntitySource_Parent entity)
+            if (source is EntitySource_Parent entity)//就像这样
             {
                 if (entity.Entity is NPC npc)
                 {
@@ -18,7 +19,8 @@
                 }
             }
         }
-        public override void SetDefaults(Projectile projectile)
+        public override void SetDefaults(Projectile projectile)//那么这里的这一个proj,是对所有存活着的弹幕都有效的
+            //大部分时候,Global和Mod系列不会差在哪里
         {
             base.SetDefaults(projectile);
             switch (projectile.type)
@@ -42,6 +44,13 @@
             }
         }
         public override bool PreAI(Projectile projectile)
+            //这里是修改弹幕ai的地方
+            //用了PreAI
+            //知道为什么每个mod要是修改 同一个东西就会出现冲突吗?
+            //因为tml会遍历所有mod的Global系列对应部分
+            //然后调用
+            //也就是说
+            //mod安装优先度越后,mod就会被越后调用(也就是覆盖了前者的ai,但是又没有完全覆盖,因为ai[0]之类的东西)
         {
             switch (projectile.type)
             {
@@ -300,7 +309,7 @@
             {
                 case ProjectileID.VampireFrog:
                     {
-                        if (Main.rand.Next(10) == 0)
+                        if (Main.rand.NextBool(10))//按下Alt + 回车使用小灯泡
                         {
                             Player player = Main.player[projectile.owner];
                             int heal = damage / 2;
