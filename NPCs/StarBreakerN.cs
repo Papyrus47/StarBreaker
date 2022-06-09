@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
+﻿using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.Effects;
 
 namespace StarBreaker.NPCs

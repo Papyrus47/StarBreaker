@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;//这一个是using,using对应文件夹,才能使用对应文件夹的东西
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperWhipProj : ModProjectile
     {
@@ -15,7 +13,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             Projectile.height = Projectile.width = 18;
             Projectile.ownerHitCheck = true;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 0;
+            Projectile.localNPCHitCooldown = -1;
             Projectile.penetrate = -1;
             Projectile.extraUpdates = 1;
             Projectile.tileCollide = false;
@@ -44,7 +42,7 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
             player.itemTime = player.itemAnimation = player.itemAnimationMax - (int)(Projectile.ai[0] / Projectile.MaxUpdates);
             if (Projectile.ai[0] == (float)((int)timeToFlyOut / 2f))//声音
             {
-                SoundEngine.TryGetActiveSound(SoundEngine.PlaySound(SoundID.Item153,Projectile.Center),out var active);
+                SoundEngine.TryGetActiveSound(SoundEngine.PlaySound(SoundID.Item153, Projectile.Center), out var active);
                 active.Sound.Pitch = Main.rand.NextFloat(-0.2f, -0.8f);
 
             }

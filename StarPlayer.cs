@@ -264,7 +264,7 @@ namespace StarBreaker
             {
                 Player.velocity = Vector2.Zero;
             }
-            if(!CanFall)
+            if (!CanFall)
             {
                 Player.velocity.Y = 0;
                 CanFall = true;

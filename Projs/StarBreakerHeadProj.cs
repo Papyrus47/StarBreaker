@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;
-
-namespace StarBreaker.Projs
+﻿namespace StarBreaker.Projs
 {
     public class StarBreakerHeadProj : ModProjectile
     {

@@ -1,5 +1,4 @@
 ﻿using StarBreaker.Projs.CupricOxideSword;
-using Terraria.GameContent.Bestiary;
 
 namespace StarBreaker.NPCs.CupricOxideSword
 {

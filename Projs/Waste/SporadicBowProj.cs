@@ -66,7 +66,7 @@
             if (player.HasAmmo(player.HeldItem))
             {
                 int damage = player.GetWeaponDamage(player.HeldItem);
-                player.PickAmmo(player.HeldItem,out int ID,out float speed, out damage,out float kn, out ID);
+                player.PickAmmo(player.HeldItem, out int ID, out float speed, out damage, out float kn, out ID);
                 for (int i = 0; i < 2; i++)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)

@@ -24,23 +24,33 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.crit = 2;
+            Item.noUseGraphic = true;
         }
         public override bool CanUseItem(Player player)
         {
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<FlyPick>()] > 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<LastCopperPickProj>()] > 0)
             {
                 return false;
             }
             if (player.altFunctionUse == 2)
             {
-                Item.noUseGraphic = true;
-                Projectile.NewProjectile(null, player.Center, (Main.MouseWorld - player.Center).SafeNormalize(default) * 8, ModContent.ProjectileType<FlyPick>(), Item.damage, Item.knockBack, player.whoAmI);
+                Item.useStyle = ItemUseStyleID.Swing;
+                Item.channel = false;
             }
             else
             {
-                Item.noUseGraphic = false;
+                Item.useStyle = ItemUseStyleID.Shoot;
+                Item.channel = true;
             }
             return base.CanUseItem(player);
+        }
+        public override bool? UseItem(Player player)
+        {
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<LastCopperPickProj>()] == 0)
+            {
+                Projectile.NewProjectile(null, player.Center, (Main.MouseWorld - player.Center).SafeNormalize(default) * 8, ModContent.ProjectileType<LastCopperPickProj>(), Item.damage, Item.knockBack, player.whoAmI, player.altFunctionUse == 2 ? 1 : 0);
+            }
+            return base.UseItem(player);
         }
         public override bool AltFunctionUse(Player player)
         {

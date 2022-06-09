@@ -1,5 +1,5 @@
 ﻿using StarBreaker.Items.Weapon.DoomFight;
-using StarBreaker.NPCs;
+using StarBreaker.Projs.Type;
 using StarBreaker.Projs.Waste;
 using StarBreaker.StarUI;
 using Terraria.Graphics.Effects;
@@ -11,7 +11,8 @@ namespace StarBreaker
 {
     public class StarBreaker : Mod
     {
-        public static StarBreaker Instantiate;//这一个就是静态字段,在哪里都能调用,但是要加一个类名前缀
+        private static StarBreaker instantiate;//这一个就是静态字段,在哪里都能调用,但是要加一个类名前缀
+        public static StarBreaker Instantiate { get => instantiate; private set => instantiate = value; }
         public static ModKeybind ToggleGhostSwordAttack;
         public static Effect FrostFistHealMagic;
         public static Effect LightStar;
@@ -30,6 +31,7 @@ namespace StarBreaker
         #region 星击能量条显示UI
         public StarChargeUIState chargeUIState;
         internal UserInterface chargeUser;
+
         #endregion
         #endregion
         public override void Load()
@@ -149,10 +151,13 @@ namespace StarBreaker
 
         private void Main_DrawTiles(On.Terraria.Main.orig_DrawTiles orig, Main self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets, int waterStyleOverride)
         {
-            orig.Invoke(self, solidLayer, forRenderTargets, intoRenderTargets, waterStyleOverride);
             if (StarBreakerSystem.SpecialBattle != null && StarBreakerSystem.SpecialBattle.active)
             {
                 StarBreakerSystem.SpecialBattle.Draw(Main.spriteBatch);
+            }
+            else
+            {
+                orig.Invoke(self, solidLayer, forRenderTargets, intoRenderTargets, waterStyleOverride);
             }
         }
 
@@ -239,7 +244,8 @@ namespace StarBreaker
                 }
             }
             catch { }
-            void Text(string Cn_Name, string Name)
+
+            static void Text(string Cn_Name, string Name)
             {
                 if (Language.ActiveCulture == GameCulture.FromCultureName(GameCulture.CultureName.Chinese))
                 {
@@ -268,7 +274,7 @@ namespace StarBreaker
             Terraria.Main.OnResolutionChanged -= Main_OnResolutionChanged;
             On.Terraria.Main.DrawTiles -= Main_DrawTiles;
             On.Terraria.Player.WaterCollision -= Player_WaterCollision;
-            On.Terraria.Main.DrawWaters -= Main_DrawWaters; 
+            On.Terraria.Main.DrawWaters -= Main_DrawWaters;
             On.Terraria.Player.DryCollision -= Player_DryCollision;
             On.Terraria.Player.HoneyCollision -= Player_HoneyCollision;
         }
@@ -299,7 +305,7 @@ namespace StarBreaker
                 #region 繁星刺破 绘制
                 if (Projectile.active && Projectile.type == ModContent.ProjectileType<StarsPierceProj_Pierce>())
                 {
-                    List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
+                    List<CustomVertexInfo> bars = new();
 
                     // 把所有的点都生成出来，按照顺序
                     for (int i = 1; i < Projectile.oldPos.Length; ++i)
@@ -322,7 +328,7 @@ namespace StarBreaker
                     }
                     if (bars.Count > 2)
                     {
-                        List<CustomVertexInfo> triangleList = new List<CustomVertexInfo>();
+                        List<CustomVertexInfo> triangleList = new();
                         for (int i = 0; i < bars.Count - 2; i += 2)
                         {
                             triangleList.Add(bars[i]);
@@ -378,9 +384,10 @@ namespace StarBreaker
                     }
                 }
                 #endregion
-                #region 凌空之剑 特效绘制
+                #region 凌空之剑挥舞 特效绘制
                 if (Projectile.active && Projectile.type == ModContent.ProjectileType<VolleySwordProj>() && Projectile.ai[0] < 3)
                 {
+
                     gd.SetRenderTarget(render);
                     gd.Clear(Color.Transparent);
                     try
@@ -389,6 +396,10 @@ namespace StarBreaker
 
                         gd.SetRenderTarget(Main.screenTargetSwap);
                         gd.Clear(Color.Transparent);
+                        if (!StarBreakerWay.InBegin())
+                        {
+                            sb.Begin();
+                        }
                         sb.End();
                         sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
@@ -413,6 +424,45 @@ namespace StarBreaker
                     catch { }
                 }
                 #endregion
+                #region 基类挥舞
+                if (Projectile.active && Projectile.ModProjectile is Projs.Type.BaseMeleeItemProj proj)
+                {
+                    if (!proj.CanDraw())
+                    {
+                        continue;
+                    }
+                    gd.SetRenderTarget(render);
+                    gd.Clear(Color.Transparent);
+                    BaseMeleeItemProj.DrawVectrx(Projectile, proj.oldVels, proj.LerpColor, proj.LerpColor2, proj.DrawLength);
+
+                    gd.SetRenderTarget(Main.screenTargetSwap);
+                    gd.Clear(Color.Transparent);
+                    if (!StarBreakerWay.InBegin())
+                    {
+                        sb.Begin();
+                    }
+                    sb.End();
+                    sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+
+                    OffsetShader.CurrentTechnique.Passes[0].Apply();
+                    OffsetShader.Parameters["tex0"].SetValue(render);//render可以当成贴图使用或者绘制
+                                                                     //(前提是当前gd.SetRenderTarget的不是这个render,否则会报错)
+                                                                     //因为这个render保存的是刚刚顶点绘制的图像,所以tex0会是顶点绘制绘制到的区域
+                    OffsetShader.Parameters["offset"].SetValue(new Vector2(0.02f, 0.01f));//偏移度
+                    OffsetShader.Parameters["invAlpha"].SetValue(0);//反色
+                    sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);//这个Draw是空间切割对应的
+                                                                          //Draw目前的世界图像,也就是screenTarget内容
+                    sb.End();
+                    sb.Begin();
+                    sb.Draw(render, Vector2.Zero, Color.White);//这里把自己的画 画上去
+
+                    gd.SetRenderTarget(Main.screenTarget);//设置为screenTarget
+                    gd.Clear(Color.Transparent);//透明清除图片
+                    sb.Draw(Main.screenTargetSwap, Vector2.Zero, Color.White);//绘制修改的画
+                    sb.Draw(render, Vector2.Zero, Color.White);
+                    sb.End();
+                }
+                #endregion
             }
             //sb.End();
             //sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -422,7 +472,10 @@ namespace StarBreaker
             //LightStar.Parameters["n"].SetValue(0.01f);
             //sb.Draw(render, Vector2.Zero, Color.White);
             //sb.End();
-
+            if (StarBreakerWay.InBegin())
+            {
+                sb.End();
+            }
             orig(self, finalTexture, screenTarget1, screenTarget2, clearColor);
         }
         private void Main_OnResolutionChanged(Vector2 obj)

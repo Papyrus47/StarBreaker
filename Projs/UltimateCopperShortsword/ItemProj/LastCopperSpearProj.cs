@@ -24,20 +24,21 @@
             player.heldProj = Projectile.whoAmI;
             Projectile.position = pointOnPlayerHead - new Vector2(Projectile.width / 2, Projectile.height / 2);
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver4 + MathHelper.PiOver2;
-            player.itemRotation = Projectile.rotation;
+            player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
+                Projectile.velocity.X * Projectile.direction);
             Projectile.velocity = Projectile.velocity.SafeNormalize(default) * (Projectile.ai[1] + 1);
             switch (Projectile.ai[0])
             {
                 case 0://前进状态
                     {
-                        Projectile.ai[1] += 2;
+                        Projectile.ai[1] += 2f;
                         if (Main.myPlayer == Projectile.owner)
                         {
                             for (int i = -1; i <= 1; i++)
                             {
                                 Vector2 vel = Projectile.velocity.RotatedBy(i * MathHelper.Pi / 28);
                                 Projectile.NewProjectile(null, Projectile.Center, vel, ModContent.ProjectileType<FlySpearProj>(),
-                                    (int)System.Math.Sqrt(Projectile.damage), Projectile.knockBack, Main.myPlayer);
+                                    (int)Math.Sqrt(Projectile.damage), Projectile.knockBack, Main.myPlayer);
                             }
                         }
                         if (Projectile.ai[1] > 10)

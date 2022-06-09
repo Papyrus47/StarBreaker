@@ -33,9 +33,30 @@ Mods: {
 							T1:Star Spiral Blade ? It seems that my owner let him come out and look for us?
 							T2:Watch out for Endless Whirl and Death Whirl, and he's so fast, he should be able to force his revs up even without my onwer around.
 							T3:Keep an eye on his revs, he's definitely going to improvise with his revs.
-							T4:Star Spiral Blade...I hate to see you kill for me...
+							T4:Star Spiral Blade...Why...
 								}
 						}
 					}
+			FrostFist:{
+					Boss:{
+						T1:Burn fist, do you think master's gone mad now?
+						T2:In case we go back without stopping the madness...
+						T3:Fuck!Who is listening?
+						T4:That man is not simple. He has one of the starweapons in his hands.
+						T5:Star Breaker...
+						T6:Put him to the test. If he can beat us, it means he has the potential to show us our master.
+					}
+				}
+			BurnFist:{
+					Boss:{
+						T1:I don't know.
+						T2:Sister, I think someone was eavesdropping.
+						T3:Look over there. Looks like a guy.
+						T4:The undulating power of the stars? Who is roughly?
+						T5:Sister, what do you suggest
+						T6:Let's do it.
+					}
+				}
+			
 		}
 }

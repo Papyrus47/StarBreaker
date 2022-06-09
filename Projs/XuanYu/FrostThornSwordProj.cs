@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;
-
-namespace StarBreaker.Projs.XuanYu
+﻿namespace StarBreaker.Projs.XuanYu
 {
     public class FrostThornSwordProj : ModProjectile
     {

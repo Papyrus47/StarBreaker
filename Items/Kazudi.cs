@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;
-
-namespace StarBreaker.Items
+﻿namespace StarBreaker.Items
 {
     public class Kazudi : ModItem
     {

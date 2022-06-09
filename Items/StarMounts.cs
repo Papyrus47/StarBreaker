@@ -23,7 +23,7 @@ namespace StarBreaker.Items
             Item.rare = ItemRarityID.Green;
             Item.UseSound = SoundID.Item79; // What sound should play when using the item
             Item.noMelee = true; // this item doesn't do any melee damage
-            Item.mountType = ModContent.MountType<Mounts.StarMountsMount>();
+            //Item.mountType = ModContent.MountType<Mounts.StarMountsMount>();
         }
 
     }

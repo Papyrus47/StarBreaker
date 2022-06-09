@@ -1,8 +1,8 @@
 ﻿using StarBreaker.NPCs;
+using StarBreaker.SpecialBattles;
 using System.IO;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
-using StarBreaker.SpecialBattles;
 
 namespace StarBreaker
 {
@@ -64,7 +64,10 @@ namespace StarBreaker
                 {
                     SpecialBattle.Update();
                 }
-                else SpecialBattle = null;
+                else
+                {
+                    SpecialBattle = null;
+                }
             }
         }
         public override void OnWorldUnload()

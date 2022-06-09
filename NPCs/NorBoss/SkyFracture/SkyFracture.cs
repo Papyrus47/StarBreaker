@@ -1,6 +1,4 @@
-﻿using Terraria.GameContent.Bestiary;
-
-namespace StarBreaker.NPCs.NorBoss.SkyFracture
+﻿namespace StarBreaker.NPCs.NorBoss.SkyFracture
 {
     [AutoloadBossHead]
     public class SkyFracture : FSMNPC

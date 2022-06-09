@@ -24,6 +24,7 @@
             set => NPC.ai[3] = value;
         }
         private Player Target => Main.player[NPC.target];
+        private NPC FrostFist => Main.npc[(int)NPC.localAI[3]];
         public override string BossHeadTexture => Texture;
         public override void SetStaticDefaults()
         {
@@ -35,18 +36,27 @@
         {
             NPC.aiStyle = -1;
             NPC.boss = true;
-            NPC.lifeMax = 45000;
-            NPC.damage = 120;
+            NPC.lifeMax = 60000;
+            NPC.damage = 50;
             NPC.knockBackResist = 0f;
-            NPC.defense = 18;
+            NPC.defense = 35;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
             NPC.width = 16;
             NPC.height = 16;
             NPC.HitSound = SoundID.NPCHit4;
+            NPC.scale = 1.8f;
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Music/StarGloveProvingGround");
+            }
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            base.OnSpawn(source);
+            if (source is EntitySource_Parent parent && parent.Entity is NPC n && n.ModNPC is FrostFist)
+            {
+                NPC.localAI[3] = n.whoAmI;
             }
         }
         public override void AI()
@@ -57,13 +67,7 @@
             }
             Vector2 toTarget = Target.position - NPC.position;
             NPC.rotation = toTarget.ToRotation() + MathHelper.PiOver4;
-            NPC.spriteDirection = NPC.direction;
-            NPC FrostFist = Main.npc[(int)NPC.localAI[0]];
-            if (FrostFist.type != ModContent.NPCType<FrostFist>() || !FrostFist.active)
-            {
-                NPC.active = false;
-            }
-            if (Target.dead)
+            NPC.spriteDirection = NPC.direction; if (Target.dead)
             {
                 NPC.velocity.Y++;
                 if (NPC.velocity.Y > 30)
@@ -75,444 +79,143 @@
             }
             switch (State)
             {
-                case 0://发射火拳
+                case 0://与炎拳的对话
                     {
-                        NPC.velocity = (NPC.velocity * 10 + toTarget.SafeNormalize(toTarget)) / 11;
                         Timer1++;
-                        if (Timer1 > 120)
+                        NPC.dontTakeDamage = true;
+                        if (Timer1 % 50 == 0)
                         {
-                            Vector2 center = NPC.Center + ((NPC.rotation - MathHelper.PiOver4).ToRotationVector2() * -20);
-                            for (float r = 0; r <= MathHelper.TwoPi; r += MathHelper.Pi / 10)
+                            if (Timer1 / 50 > 6f)
                             {
-                                Dust dust = Dust.NewDustDirect(center, 1, 1, DustID.FireworkFountain_Red);
-                                dust.noGravity = true;
-                                dust.velocity = r.ToRotationVector2() * 3;
-                                dust.velocity.X /= 2.5f;
-                                dust.velocity = dust.velocity.RotatedBy(NPC.rotation - MathHelper.PiOver4);
+                                NPC.dontTakeDamage = false;
+                                Timer1 = Timer2 = 0;
+                                State++;
+                                FrostFist.ai[0] = FrostFist.ai[1] = 0;//控制霜拳的
+                                FrostFist.ai[3]++;
+                                break;
                             }
-                            if (Main.netMode != 1)
+                            Timer2++;
+                            if (Timer2 < 2)
                             {
+                                NPC.rotation = (FrostFist.Center - NPC.Center).ToRotation() + MathHelper.PiOver4;
+                            }
+                            if (Timer2 < 1)
+                            {
+                                break;
+                            }
+
+                            string Text = Language.GetTextValue("Mods.StarBreaker.BurnFist.Boss.T" + (int)Timer2);
+                            PopupText.NewText(new()
+                            {
+                                Text = Text,
+                                Color = Color.OrangeRed,
+                                DurationInFrames = 120,
+                                Velocity = Vector2.UnitY * 5
+                            }, NPC.Center);
+                        }
+                        break;
+                    }
+                case 1://魔法攻击
+                    {
+                        NPC.velocity = (NPC.velocity * 10f + toTarget.RealSafeNormalize() * 4f) / 11f;
+                        Timer1++;
+                        if (Timer1 > 21)
+                        {
+                            Timer1 = 0;
+                            Timer2++;
+                            if (Timer2 > 8)
+                            {
+                                Timer2 = 0;
+                                State++;
+                                break;
+                            }
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                Vector2 center = NPC.Center - NPC.velocity * 10f;
                                 for (int i = -1; i <= 1; i++)
                                 {
-                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<Projs.FireFist>(), 110, 1.2f, Main.myPlayer);
-                                    Main.projectile[proj].friendly = false;
-                                    Main.projectile[proj].hostile = true;
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), center, NPC.velocity.RotatedBy(0.1 * i) * 4f, ModContent.ProjectileType<Projs.FireFist>(),
+                                        NPC.damage, 1.3f, Main.myPlayer);
                                 }
-                            }
-                            Timer1 = 115;
-                            Timer2++;
-                            if (Timer2 > 5)
-                            {
-                                Timer2 = 0;
-                                State++;
+                                for (int i = 0; i < 30; i++)
+                                {
+                                    Vector2 vel = Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 30 * i);
+                                    int dust = Dust.NewDust(center, 5, 5, DustID.Torch);
+                                    Main.dust[dust].velocity = vel;
+                                }
                             }
                         }
                         break;
                     }
-                case 1://蓄力冲刺
+                case 2://蓄力散射
                     {
-                        switch (Timer3)
+                        Timer1++;
+                        NPC.velocity = (NPC.velocity * 10f + toTarget.RealSafeNormalize()) / 11f;
+                        if (Timer1 % 10 == 0)
                         {
-                            case 0://蓄力
-                                {
-                                    NPC.velocity *= 0.9f;
-                                    if (NPC.velocity.X < 0.1f && NPC.velocity.X > -0.1f)
-                                    {
-                                        Timer1++;
-                                        if (Timer1 % 20 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                                        {
-                                            for (float i = 0; i <= MathHelper.TwoPi; i += MathHelper.Pi / 10)
-                                            {
-                                                Vector2 center = NPC.Center + i.ToRotationVector2() * 50;
-                                                Dust dust = Dust.NewDustDirect(center, 1, 1, DustID.FireworkFountain_Red);
-                                                dust.noGravity = true;
-                                                dust.velocity = (NPC.Center - center) / 13;
-                                            }
-                                            Timer2++;
-                                            if (Timer2 > 5)
-                                            {
-                                                Timer1 = 0;
-                                                Timer2 = 0;
-                                                Timer3++;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-                            case 1://冲刺
-                                {
-                                    if (Timer1 <= 0)
-                                    {
-                                        Timer1 = 30;
-                                        Timer2++;
-                                        NPC.velocity = toTarget.SafeNormalize(toTarget) * 20;
-                                        if (Timer2 > 3)
-                                        {
-                                            Timer2 = 0;
-                                            Timer3 = 0;
-                                            State++;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Timer1--;
-                                    }
+                            for (int i = 0; i < 30; i++)
+                            {
+                                Vector2 center = NPC.Center + Vector2.UnitX.RotatedBy(MathHelper.TwoPi / 30 * i) * 50;
+                                Vector2 vel = (NPC.Center - center) * 0.1f;
+                                int dust = Dust.NewDust(center, 5, 5, DustID.Torch);
+                                Main.dust[dust].velocity = vel;
+                                Main.dust[dust].noGravity = true;
+                            }
+                        }
 
-                                    if (Main.rand.NextBool(20))
-                                    {
-                                        Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.FireworkFountain_Red);
-                                        dust.noGravity = true;
-                                    }
-                                    break;
-                                }
-                            default:
-                                {
-                                    Timer3 = 0;
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-                case 2://幻影拳
-                    {
-                        float speed = toTarget.Length() > 500 ? 500 : toTarget.Length();
-                        NPC.velocity = toTarget.SafeNormalize(toTarget) * speed / 50;
-                        Timer1++;
-                        Vector2 ves = NPC.velocity.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
-                        if (Main.netMode != 1)
+                        if (Timer1 >= 50)
                         {
-                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
-                                170, 2f, Main.myPlayer);
-                            Main.projectile[proj].alpha = Main.rand.Next(100);
-                        }
-                        if (Timer1 > 120)
-                        {
-                            State++;
-                            Timer1 = 0;
-                        }
-                        break;
-                    }
-                case 3://强化结界
-                    {
-                        Timer1++;
-                        NPC.velocity = (NPC.velocity * 50 + (FrostFist.position + new Vector2(0, -50) - NPC.position).SafeNormalize(toTarget) * 10) / 51;
-                        if (Vector2.Distance(FrostFist.position, NPC.position) < 800)
-                        {
-                            FrostFist.defense = 100;
-                            FrostFist.damage = 200;
-                        }
-                        else
-                        {
-                            FrostFist.defense = FrostFist.defDefense;
-                            FrostFist.damage = FrostFist.defDamage;
-                        }
-                        for (float r = 0; r <= MathHelper.TwoPi; r += MathHelper.Pi / 20)
-                        {
-                            Vector2 center = NPC.position + (r.ToRotationVector2() * 800);
-                            Dust dust = Dust.NewDustDirect(center, 1, 1, DustID.FireworkFountain_Red);
-                            dust.velocity *= 0f;
-                            dust.noGravity = true;
-                        }
-                        if (Timer1 > 240)
-                        {
-                            FrostFist.defense = FrostFist.defDefense;
-                            FrostFist.damage = FrostFist.defDamage;
                             Timer1 = 0;
                             State++;
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                for (int i = -8; i <= 8; i++)
+                                {
+                                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RotatedBy(0.1 * i).RealSafeNormalize() * 14f, ModContent.ProjectileType<Projs.FireFist>(),
+                                        NPC.damage, 1.3f, Main.myPlayer);
+                                }
+                            }
+
                         }
                         break;
                     }
-                case 4://从地而出的火
+                case 3://连续冲3次,释放火球
                     {
-                        NPC.velocity *= 0.9f;
-                        if (NPC.velocity.Length() < 0.1f)
+                        Timer1++;
+                        if (Timer1 == 30)
                         {
-                            Timer1++;
-                            Vector2 center = new(Timer2, Timer3);
-                            if (Timer1 % 30 == 0)
+                            NPC.velocity = toTarget.RealSafeNormalize() * 20;
+                        }
+                        else if (Timer1 > 30)
+                        {
+                            if (Timer1 % 10 == 0)
                             {
-                                for (int i = 1; i <= 40; i++)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
-                                    Tile tile = Main.tile[(int)(Target.position.X / 16), (int)((Target.position.Y / 16) + i)];
-                                    center = Target.position + new Vector2(0, 16 * i);
-                                    Timer2 = center.X;
-                                    Timer3 = center.Y;
-                                    if (tile.HasTile)
+                                    for (int i = -1; i <= 1; i += 2)
                                     {
-                                        break;
+                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.RotatedBy(i * MathHelper.PiOver2), ModContent.ProjectileType<Projs.FireFist>(),
+                                            NPC.damage, 1.3f, Main.myPlayer);
                                     }
                                 }
-                                for (float r = 0; r <= MathHelper.TwoPi; r += MathHelper.Pi / 100)
-                                {
-                                    Dust dust = Dust.NewDustDirect(center, 1, 1, DustID.FireworkFountain_Red);
-                                    dust.noGravity = true;
-                                    dust.velocity = r.ToRotationVector2() * 10;
-                                    dust.velocity.X /= 10f;
-                                    dust.velocity = dust.velocity.RotatedBy(MathHelper.PiOver2);
-                                }
+                                NPC.velocity *= 0.96f;
                             }
-                            if (Timer1 >= 85)
+                            if (Timer1 > 50)
                             {
-                                if (Main.netMode != 1)
-                                {
-                                    for (int i = -2; i <= 2; i++)
-                                    {
-                                        Vector2 projCenter = center + new Vector2(i * 50, 0);
-                                        Projectile.NewProjectile(NPC.GetSource_FromAI(), projCenter, new Vector2(0, -5), ModContent.ProjectileType<Projs.FireFist>(),
-                                            110, 1.5f, Main.myPlayer);
-                                    }
-                                }
+                                Timer2++;
                                 Timer1 = 0;
-                                Timer2 = 0;
-                                Timer3 = 0;
-                                State++;
-                            }
-                        }
-                        break;
-                    }
-                case 5://抓取玩家
-                    {
-                        if (Timer3 == 0)
-                        {
-                            Timer1++;
-                            NPC.velocity = (NPC.velocity * 50 + toTarget.SafeNormalize(toTarget) * 10) / 51;
-                            for (float r = 0; r <= MathHelper.TwoPi; r += MathHelper.Pi / 20)
-                            {
-                                Vector2 center = NPC.position + (r.ToRotationVector2() * 50);
-                                Dust dust = Dust.NewDustDirect(center, 1, 1, DustID.FireworkFountain_Red);
-                                dust.velocity *= 0f;
-                                dust.noGravity = true;
-                            }
-                            if (Vector2.Distance(Target.position, NPC.position) < 50)
-                            {
-                                Timer3++;
-                                Timer1 = 0;
-                            }
-                            if (Timer1 > 60)
-                            {
-                                Timer1 = 0;
-                                State++;
-                            }
-                        }
-                        else
-                        {
-                            NPC.velocity *= 0.9f;
-                            Target.position = NPC.Center + NPC.velocity;
-                            Timer1++;
-                            if (Timer1 > 20)
-                            {
-                                Target.immune = false;
-                                Target.immuneTime = 0;
-                                if (Main.netMode != 1)
+                                if (Timer2 > 3)
                                 {
-                                    Vector2 ves = toTarget.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
-                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
-                                        20, 2f, Main.myPlayer);
-                                    Main.projectile[proj].alpha = Main.rand.Next(100);
-                                }
-                                if (Timer1 > 100)
-                                {
-                                    Timer1 = 0;
-                                    Timer3 = 0;
+                                    Timer2 = 0;
                                     State++;
                                 }
                             }
                         }
                         break;
                     }
-                case 6://绕着霜拳旋转
-                    {
-                        if (NPC.life >= NPC.lifeMax * 0.5f || FrostFist.life >= FrostFist.lifeMax * 0.5f)
-                        {
-                            if (NPC.life < NPC.lifeMax * 0.5f)
-                            {
-                                NPC.dontTakeDamage = true;
-                            }
-                            State = 0;
-                            break;
-                        }
-                        else
-                        {
-                            NPC.dontTakeDamage = false;
-                        }
-                        Timer1++;
-                        Vector2 center = FrostFist.position + (((NPC.position - FrostFist.position).ToRotation() - 0.1f).ToRotationVector2() * 300);
-                        NPC.velocity = (center - NPC.position) * 0.5f;
-                        if (Timer1 % 30 < 10)
-                        {
-                            Vector2 ves = toTarget.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
-                            if (Main.netMode != 1)
-                            {
-                                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
-                                    170, 2f, Main.myPlayer);
-                                Main.projectile[proj].alpha = Main.rand.Next(100);
-                            }
-                        }
-                        if (Timer1 > 100)
-                        {
-                            Timer1 = 0;
-                            State++;
-                        }
-                        break;
-                    }
-                case 7://二次函数冲刺
-                    {
-                        switch (Timer3)
-                        {
-                            case 0://转换位置,记录玩家位置
-                                {
-                                    NPC.velocity = (NPC.velocity * 5 + (Target.position + new Vector2(-250, -250) - NPC.position) * 0.1f) / 6;
-                                    if (NPC.velocity.Length() < 5f)
-                                    {
-                                        Timer1 = Target.position.X;
-                                        Timer2 = Target.position.Y;
-                                        Timer3++;
-                                    }
-                                    break;
-                                }
-                            case 1://开始冲刺
-                                {
-                                    NPC.velocity.X = 5;
-                                    NPC.velocity.Y = (NPC.velocity.Y * 3 + ((NPC.position - new Vector2(Timer1, Timer2)).X < 0 ? 10 : -10) * 1.1f) / 4;
-                                    if (Vector2.Distance(NPC.position, new Vector2(Timer1, Timer2)) % 30 < 1)
-                                    {
-                                        if (Main.netMode != 1)
-                                        {
-                                            for (int i = -1; i <= 1; i++)
-                                            {
-                                                int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 18) * 10, ModContent.ProjectileType<Projs.FireFist>(), 110, 1.2f, Main.myPlayer);
-                                                Main.projectile[proj].friendly = false;
-                                                Main.projectile[proj].hostile = true;
-                                            }
-                                        }
-                                    }
-                                    if (NPC.position.X > Timer1 + 300)
-                                    {
-                                        Timer3 = 0;
-                                        Timer1 = 0;
-                                        Timer2 = 0;
-                                        State++;
-                                    }
-                                    break;
-                                }
-                            default:
-                                {
-                                    Timer3 = 0;
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-                case 8://狙击火球
-                    {
-                        Timer1++;
-                        NPC.velocity *= 0.9f;
-                        if (Timer1 > 120)
-                        {
-                            Timer1 = 0;
-                            Timer2++;
-                            if (Main.netMode != 1)
-                            {
-                                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position, Vector2.One,
-                                                        ModContent.ProjectileType<Projs.SniperGloves>(), 150, 4f, Main.myPlayer, Target.whoAmI, ModContent.ProjectileType<Projs.FireFist>());
-                            }
-                            if (Timer2 > 3)
-                            {
-                                Timer2 = 0;
-                                State++;
-                                Timer3 = 0;
-                            }
-                        }
-                        break;
-                    }
-                case 9://星辰拳套特殊连携攻击
-                    {
-                        switch (Timer3)
-                        {
-                            case 0://炎拳冲刺
-                                {
-                                    if (FrostFist.ai[3] != 0)
-                                    {
-                                        if (Timer1 <= 0)
-                                        {
-                                            Timer1 = 10;
-                                            Timer2++;
-                                            NPC.velocity = toTarget.SafeNormalize(toTarget) * 20;
-                                            if (Main.netMode != 1)
-                                            {
-                                                for (int i = -1; i <= 1; i++)
-                                                {
-                                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget.SafeNormalize(toTarget).RotatedBy(i * MathHelper.Pi / 40) * 10, ModContent.ProjectileType<Projs.FireFist>(), 70, 1.2f, Main.myPlayer);
-                                                    Main.projectile[proj].friendly = false;
-                                                    Main.projectile[proj].hostile = true;
-                                                }
-                                            }
-                                            if (Timer2 > 5)
-                                            {
-                                                Timer2 = 0;
-                                                Timer3++;
-                                                FrostFist.ai[3]++;//霜拳切换ai
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Timer1--;
-                                        }
-
-                                        if (Main.rand.NextBool(20))
-                                        {
-                                            Dust dust = Dust.NewDustDirect(NPC.Center, 1, 1, DustID.FireworkFountain_Red);
-                                            dust.noGravity = true;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        NPC.velocity = toTarget * 0.1f;
-                                    }
-                                    break;
-                                }
-                            case 1://炎拳欧拉
-                                {
-                                    float speed = toTarget.Length() > 500 ? 500 : toTarget.Length();
-                                    if (Timer1 % 60 < 1)
-                                    {
-                                        NPC.velocity = toTarget.SafeNormalize(toTarget) * speed / 50;
-                                    }
-
-                                    Timer1++;
-                                    Vector2 ves = NPC.velocity.SafeNormalize(toTarget).RotateRandom(MathHelper.ToRadians(60));
-                                    if (Main.netMode != 1)
-                                    {
-                                        int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + (ves * 50), ves, ModContent.ProjectileType<Projs.OuLa>(),
-                                            170, 2f, Main.myPlayer);
-                                        Main.projectile[proj].alpha = Main.rand.Next(100);
-                                    }
-                                    if (Timer1 > 120 && FrostFist.ai[3] == 2)
-                                    {
-                                        Timer1 = 0;
-                                        Timer3++;
-                                        FrostFist.ai[3]++;//霜拳切换ai
-                                    }
-                                    break;
-                                }
-                            case 2://炎拳摸鱼
-                                {
-                                    Vector2 center = Target.position + new Vector2(0, -300);
-                                    NPC.velocity = (NPC.velocity * 100 + (center - NPC.position) * 0.1f) / 101;
-                                    if (FrostFist.ai[0] != 10)
-                                    {
-                                        Timer3 = 0;
-                                        State = 6;
-                                    }
-                                    break;
-                                }
-                        }
-                        break;
-                    }
                 default:
                     {
-                        State = 0;
+                        State = 1;
                         break;
                     }
             }
@@ -542,49 +245,6 @@
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            #region 旧位置储存
-            for (int j = NPC.oldRot.Length - 1; j > 0; j--)
-            {
-                NPC.oldRot[j] = NPC.oldRot[j - 1];
-            }
-            NPC.oldRot[0] = NPC.rotation;
-            #endregion
-            switch (State)
-            {
-                case 1:
-                    {
-                        if (Timer3 == 0)
-                        {
-                            Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Projs/Type/EnergyProj").Value;
-                            Color color = Color.Red;
-                            color.A = (byte)(Timer1 / 120f * 255);
-                            color.R = color.A;
-                            spriteBatch.Draw(texture, NPC.Center - screenPos, null, color, (Target.position - NPC.position).ToRotation(), new Vector2(0, texture.Height / 2), new Vector2(100, 3), 0f, 0f);
-                        }
-                        else
-                        {
-                            for (int i = 0; i < NPC.oldPos.Length; i += 2)
-                            {
-                                Texture2D NPCTexture = TextureAssets.Npc[NPC.type].Value;
-                                int frameCount = Main.npcFrameCount[NPC.type];
-                                Vector2 DrawOrigin = new Vector2(NPCTexture.Width / 2, NPCTexture.Height / frameCount / 2);
-                                Vector2 DrawPosition = NPC.oldPos[i] + new Vector2(NPC.width, NPC.height) / 2f - Main.screenPosition;
-                                DrawPosition -= new Vector2(NPCTexture.Width, NPCTexture.Height / frameCount) * NPC.scale / 2f;
-                                DrawPosition += DrawOrigin * NPC.scale + new Vector2(0f, 4f + NPC.gfxOffY);
-                                spriteBatch.Draw(NPCTexture,
-                                    DrawPosition,
-                                    new Rectangle?(NPC.frame),
-                                    new Color(0.5f, 0.5f, i / 6, (NPC.oldPos.Length - i) / NPC.oldPos.Length),
-                                    NPC.oldRot[i],
-                                    DrawOrigin,
-                                    1f,
-                                    NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
-                                    0f);
-                            }
-                        }
-                        break;
-                    }
-            }
             return base.PreDraw(spriteBatch, screenPos, drawColor);
         }
     }

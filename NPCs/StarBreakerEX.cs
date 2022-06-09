@@ -1,6 +1,5 @@
 ﻿using StarBreaker.Projs;
 using System.IO;
-using Terraria.Audio;
 using Terraria.Graphics.Effects;
 
 namespace StarBreaker.NPCs

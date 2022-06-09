@@ -1,5 +1,6 @@
 ﻿using StarBreaker.Items;
 using StarBreaker.Projs.Type;
+using System.Reflection;
 using Terraria.GameContent.Creative;
 
 namespace StarBreaker
@@ -51,6 +52,40 @@ namespace StarBreaker
                     origin, projectile.scale, SpriteEffects.None, 0);
             }
         }
+        /// <summary>
+        /// 绘制图片拖尾到旧位置上
+        /// </summary>
+        /// <param name="texture">图片</param>
+        /// <param name="oldPos">旧位置</param>
+        /// <param name="BeginColor">最开始的颜色</param>
+        /// <param name="EndColor">最后的颜色</param>
+        /// <param name="oldRot">旧的旋转</param>
+        /// <param name="origin"></param>
+        /// <param name="sourceRectangle">帧图切割</param>
+        /// <param name="dir">朝向,-1为反,1为正,-2为"FlipVertically"</param>
+        /// <param name="rot">旋转</param>
+        public static void DrawTailTexInPos(Texture2D texture, Vector2[] oldPos, Color BeginColor, Color EndColor, float rot, int dir = 1, Vector2 origin = default, Rectangle? sourceRectangle = null, float[] oldRot = null)
+        {
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (dir == -1)
+            {
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            else if (dir == -2)
+            {
+                spriteEffects = SpriteEffects.FlipVertically;
+            }
+            float myRot = rot;
+            for (int i = 0; i < oldPos.Length; i++)
+            {
+                if (oldRot != null)
+                {
+                    myRot = oldRot[i];
+                }
+                Color color = Color.Lerp(BeginColor, EndColor, (float)i / oldPos.Length);
+                Main.spriteBatch.Draw(texture, oldPos[i] - Main.screenPosition, sourceRectangle, color, myRot, origin, 1f, spriteEffects, 0f);
+            }
+        }
         public static void StarBrekaerUseBulletShoot(StarPlayer starPlayer, out int shootID, out int shootDamage, out EnergyBulletItem BulletPassive)
         {
             shootID = 0;
@@ -90,6 +125,8 @@ namespace StarBreaker
         }
         public static void PickAmmo_EnergyBulletItem(Player player, out int ShootItemID, out int shootDamage)
         {
+            ShootItemID = -1;
+            shootDamage = 0;
             if (player.HasAmmo(player.HeldItem))
             {
                 for (int i = 0; i < player.inventory.Length; i++)//遍历 背包
@@ -105,12 +142,9 @@ namespace StarBreaker
 
                         ShootItemID = item.type;
                         shootDamage = item.damage;
-                        return;
                     }
                 }
             }
-            ShootItemID = -1;
-            shootDamage = 0;
         }
         public static void Add_Hooks_ToProj(EnergyBulletItem bulletItem, int projWhoAmI)
         {
@@ -118,6 +152,28 @@ namespace StarBreaker
             {
                 AddHook(bulletItem, BulletProj, projWhoAmI);
             }
+        }
+        /// <summary>
+        /// 获取弹幕对应基础了能量类型弹幕基类
+        /// </summary>
+        /// <param name="projectile"></param>
+        /// <returns>返回实例或者null值</returns>
+        public static EnergyProj GetEnergyProj(Projectile projectile) => projectile.ModProjectile as EnergyProj;
+        /// <summary>
+        /// 尝试获取弹幕对应基础了能量类型弹幕基类
+        /// </summary>
+        /// <param name="projectile"></param>
+        /// <param name="energyProj"></param>
+        /// <returns></returns>
+        public static bool TryGetEnergyProj(Projectile projectile,out EnergyProj energyProj)
+        {
+            energyProj = null;
+            if(projectile.ModProjectile is EnergyProj energy)
+            {
+                energyProj = energy;
+                return true;
+            }
+            return false;
         }
         public static void Add_Hooks_ToProj(int useBulletID, int projWhoAmI)
         {
@@ -139,6 +195,16 @@ namespace StarBreaker
             {
                 DelHook(bulletItem, BulletProj, projWhoAmI);
             }
+        }
+        public static bool InBegin()
+        {
+            SpriteBatch spriteBatch = Main.spriteBatch;
+            FieldInfo field = spriteBatch.GetType().GetField("beginCalled", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (field != null && field.GetValue(spriteBatch) is bool s)
+            {
+                return s;
+            }
+            return false;
         }
         private static void AddHook(EnergyBulletItem bulletItem, EnergyProj BulletProj, int projWhoAmI)
         {

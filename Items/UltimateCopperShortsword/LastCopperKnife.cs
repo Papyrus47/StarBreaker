@@ -14,7 +14,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 0.14f;
             Item.useTime = Item.useAnimation = 60;
-            Item.useStyle = 1;
+            Item.useStyle = ItemUseStyleID.Swing;
             Item.useTurn = false;
             Item.autoReuse = true;
             Item.value = 24300;

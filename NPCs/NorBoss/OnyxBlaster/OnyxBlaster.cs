@@ -1,6 +1,4 @@
 ﻿using StarBreaker.Items.Weapon.HradMode;
-using Terraria.Audio;
-using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 
 namespace StarBreaker.NPCs.NorBoss.OnyxBlaster

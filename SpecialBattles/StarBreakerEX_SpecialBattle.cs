@@ -3,6 +3,7 @@
     public class StarBreakerEX_SpecialBattle : SpecialBattle
     {
         public BattleTile[] battleTiles;
+        public override Texture2D Texture => ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public struct BattleTile
         {
             public Vector2 Pos;
@@ -11,7 +12,7 @@
             public float Alpha;
             public float Rot;
             public bool Active;
-            public BattleTile(Vector2 pos,Texture2D texture,float scale = 1f,float alpha = 0f)
+            public BattleTile(Vector2 pos, Texture2D texture, float scale = 1f, float alpha = 0f)
             {
                 Pos = pos;
                 Texture = texture;
@@ -23,7 +24,7 @@
             public bool CheckActive()
             {
                 Vector2 playerCenter = Main.LocalPlayer.Center;
-                if(Vector2.Distance(playerCenter,Pos) > 1500)
+                if (Vector2.Distance(playerCenter, Pos) > 1500)
                 {
                     Active = false;
                 }
@@ -32,15 +33,14 @@
             public void Update_BattleTile(Player player)
             {
                 Vector2 playerCenter = player.Center;
-                if(Math.Abs(playerCenter.X - Pos.X) < Texture.Height * Scale && playerCenter.Y - Texture.Width * Scale < Pos.Y && playerCenter.Y > Pos.Y && !player.controlDown && !player.controlUp && !player.controlJump)
+                if (Math.Abs(playerCenter.X - Pos.X) < Texture.Height * Scale && playerCenter.Y - Texture.Width * Scale < Pos.Y && playerCenter.Y > Pos.Y && !player.controlDown && !player.controlUp && !player.controlJump)
                 {
                     player.GetModPlayer<StarPlayer>().CanFall = false;
                 }
             }
         }
-        public StarBreakerEX_SpecialBattle(Texture2D texture) : base(texture)
+        public StarBreakerEX_SpecialBattle() : base()
         {
-            this.texture = texture;
             active = true;
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -53,8 +53,8 @@
                     if (battleTiles[i].Active && battleTiles[i].Texture != null)
                     {
                         spriteBatch.Draw(battleTiles[i].Texture, battleTiles[i].Pos - Main.screenPosition,
-                            null, Color.White, battleTiles[i].Rot,new Vector2(0, battleTiles[i].Texture.Height / 2),
-                            new Vector2(1,1.5f) * battleTiles[i].Scale, SpriteEffects.None, 0);
+                            null, Color.White, battleTiles[i].Rot, new Vector2(0, battleTiles[i].Texture.Height / 2),
+                            new Vector2(1, 1.5f) * battleTiles[i].Scale, SpriteEffects.None, 0);
                     }
                 }
             }
@@ -74,7 +74,7 @@
             {
                 for (int i = 0; i < battleTiles.Length; i++)
                 {
-                    if(battleTiles[i].Active)
+                    if (battleTiles[i].Active)
                     {
                         if (battleTiles[i].CheckActive())
                         {

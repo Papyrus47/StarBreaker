@@ -42,7 +42,7 @@
                         {
                             if (Main.myPlayer == Projectile.owner)
                             {
-                                new Player().PickTile(posX + i, posY + j, 110);
+                                Main.LocalPlayer.PickTile(posX + i, posY + j, 110);
                             }
                         }
                     }

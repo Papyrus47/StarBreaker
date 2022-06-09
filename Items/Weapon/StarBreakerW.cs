@@ -165,7 +165,7 @@ namespace StarBreaker.Items.Weapon
             }
             else if (StarBreakerSystem.SpecialBattle == null)
             {
-                StarBreakerSystem.SpecialBattle = new SpecialBattles.StarBreakerEX_SpecialBattle(ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB").Value);
+                StarBreakerSystem.SpecialBattle = new SpecialBattles.StarBreakerEX_SpecialBattle();
             }
         }
         public override bool? UseItem(Player player)

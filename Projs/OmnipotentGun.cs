@@ -1,6 +1,5 @@
 ﻿using StarBreaker.Items.Bullet;
 using System.IO;
-using Terraria.Audio;
 
 namespace StarBreaker.Projs
 {
@@ -281,7 +280,7 @@ namespace StarBreaker.Projs
                     }
                 }
                 #endregion
-                if (item.consumable && gun.CanConsumeAmmo(item,player))
+                if (item.consumable && gun.CanConsumeAmmo(item, player))
                 {
                     item.stack--;
                 }

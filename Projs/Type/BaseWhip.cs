@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;
-
-namespace StarBreaker.Projs.Type
+﻿namespace StarBreaker.Projs.Type
 {
     public abstract class BaseWhip : ModProjectile
     {

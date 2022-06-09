@@ -1,5 +1,4 @@
 ﻿using StarBreaker.Projs.Bosses;
-using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 
 namespace StarBreaker.NPCs

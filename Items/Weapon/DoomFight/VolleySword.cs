@@ -1,6 +1,4 @@
 ﻿using StarBreaker.NPCs;
-using Terraria.Graphics.Effects;
-using Terraria.ID;
 
 namespace StarBreaker.Items.Weapon.DoomFight
 {
@@ -33,7 +31,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             int proj = Projectile.NewProjectile(source, position, velocity, type, damage * 10, knockback, player.whoAmI);
-            if(player.altFunctionUse == 2)
+            if (player.altFunctionUse == 2)
             {
                 Main.projectile[proj].ai[0] = -1;
                 Main.projectile[proj].extraUpdates = 1;
@@ -84,7 +82,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
                         if (Math.Abs(Projectile.ai[1]) > 3f)
                         {
                             Projectile.ai[1] = 0;
-                            if(Projectile.ai[0] == -1)
+                            if (Projectile.ai[0] == -1)
                             {
                                 Projectile.Kill();
                                 return;
@@ -145,15 +143,15 @@ namespace StarBreaker.Items.Weapon.DoomFight
                     {
                         if (Main.myPlayer == player.whoAmI)
                         {
-                            Projectile.velocity = (Projectile.velocity * 10 + (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 66)/11;
+                            Projectile.velocity = (Projectile.velocity * 10 + (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 66) / 11;
                         }
                         Projectile.ai[1]++;
-                        if(Projectile.ai[1] > 60)
+                        if (Projectile.ai[1] > 60)
                         {
                             Projectile.ai[0]++;
                             Projectile.ai[1] = 0;
                         }
-                        else if(Projectile.ai[1] == 30)
+                        else if (Projectile.ai[1] == 30)
                         {
                             NPC n = null;
                             if (!player.HasMinionAttackTargetNPC)
@@ -176,7 +174,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
 
                             if (Main.netMode != NetmodeID.MultiplayerClient && n != null)
                             {
-                                Projectile.NewProjectile(player.GetSource_ItemUse(player.HeldItem),Projectile.Center - Projectile.velocity * 5, Vector2.Zero,
+                                Projectile.NewProjectile(player.GetSource_ItemUse(player.HeldItem), Projectile.Center - Projectile.velocity * 5, Vector2.Zero,
                                     ModContent.ProjectileType<VolleySword_BigLine>(), Projectile.damage / 20, Projectile.knockBack, player.whoAmI, n.whoAmI);
                                 SoundEngine.PlaySound(SoundID.Item100, Projectile.Center);
                             }
@@ -195,7 +193,10 @@ namespace StarBreaker.Items.Weapon.DoomFight
             }
             oldVels[0] = Projectile.velocity;
         }
-        public override bool ShouldUpdatePosition() => false;
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
@@ -257,8 +258,15 @@ namespace StarBreaker.Items.Weapon.DoomFight
                     triangleList.Add(bars[i + 3]);
                 }
 
-                if (!(!Main.drawToScreen && Main.netMode != 2 && !Main.gameMenu && !Main.mapFullscreen && Lighting.NotRetro && Terraria.Graphics.Effects.Filters.Scene.CanCapture())) Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                if (StarBreakerWay.InBegin())
+                {
+                    Main.spriteBatch.End();
+                }
+
+                if (!StarBreakerWay.InBegin())
+                {
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                }
 
                 RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
@@ -271,7 +279,15 @@ namespace StarBreaker.Items.Weapon.DoomFight
                 Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, triangleList.ToArray(), 0, triangleList.Count / 3);
 
                 Main.graphics.GraphicsDevice.RasterizerState = originalState;
+
+            }
+            if (StarBreakerWay.InBegin())
+            {
                 Main.spriteBatch.End();
+            }
+
+            if (!StarBreakerWay.InBegin())
+            {
                 Main.spriteBatch.Begin();
             }
         }
@@ -313,15 +329,19 @@ namespace StarBreaker.Items.Weapon.DoomFight
                 {
                     linePos = new Vector2[Main.rand.Next(8, 16)];
                 }
-                if(linePos[0] == Vector2.Zero)
+                if (linePos[0] == Vector2.Zero)
                 {
                     linePos[0] = Projectile.Center;
                 }
                 Projectile.velocity = (npc.Center - linePos[0]) / 15;
-                if(Projectile.timeLeft % 5 == 0)
+                if (Projectile.timeLeft % 5 == 0)
                 {
                     Projectile.ai[1]++;
-                    if (Projectile.ai[1] >= linePos.Length) return;
+                    if (Projectile.ai[1] >= linePos.Length)
+                    {
+                        return;
+                    }
+
                     linePos[(int)Projectile.ai[1]] = Projectile.Center;
                 }
             }
@@ -359,9 +379,13 @@ namespace StarBreaker.Items.Weapon.DoomFight
                 List<CustomVertexInfo> customs = new();
                 for (int i = linePos.Length - 1; i > 1; i--)
                 {
-                    if (linePos[i] == Vector2.Zero) break;
+                    if (linePos[i] == Vector2.Zero)
+                    {
+                        break;
+                    }
+
                     Vector2 vel = (linePos[i] - linePos[i - 1]).NormalVector().RealSafeNormalize() * 6;
-                    customs.Add(new(linePos[i] + vel - Main.screenPosition,color,new Vector3(0.5f,0.5f,0)));
+                    customs.Add(new(linePos[i] + vel - Main.screenPosition, color, new Vector3(0.5f, 0.5f, 0)));
                     customs.Add(new(linePos[i] - vel - Main.screenPosition, color, new Vector3(0.5f, 0.5f, 0)));
                 }
                 if (customs.Count > 2)
@@ -370,7 +394,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
                     vertex.Add(customs[0]);
                     vertex.Add(customs[1]);
                     vertex.Add(customs[2]);
-                    for (int i = 0;i<customs.Count - 2;i+=2)
+                    for (int i = 0; i < customs.Count - 2; i += 2)
                     {
                         vertex.Add(customs[i]);
                         vertex.Add(customs[i + 2]);
@@ -382,7 +406,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
                     }
                     Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.FishingLine.Value;
                     Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList,
-                        vertex.ToArray(), 0,vertex.Count / 3);
+                        vertex.ToArray(), 0, vertex.Count / 3);
                 }
             }
             Main.spriteBatch.End();

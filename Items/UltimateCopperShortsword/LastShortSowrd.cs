@@ -1,5 +1,4 @@
-﻿using StarBreaker.Projs.UltimateCopperShortsword;
-using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
+﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -7,9 +6,10 @@ namespace StarBreaker.Items.UltimateCopperShortsword
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("最终铜短剑");
-            Tooltip.SetDefault("真正的力量" +
-                "\n右击物品以切换 跟随/炮塔 模式");
+            DisplayName.SetDefault("Ultimate copper short sword");
+            DisplayName.AddTranslation(7, "最终铜短剑");
+            Tooltip.SetDefault("真正的力量\n" +
+                "右击物品以切换 跟随/炮塔 模式");
         }
         public override void SetDefaults()
         {
@@ -24,10 +24,11 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.useTime = Item.useAnimation = 10;
             Item.rare = ItemRarityID.Red;
             Item.mana = 0;
-            Item.useStyle = ItemUseStyleID.Thrust;
+            Item.useStyle = ItemUseStyleID.Shoot;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<LostSword2>();
+            Item.shoot = ModContent.ProjectileType<LastCopperShortSowrdProj>();
             Item.shootSpeed = 21;
+            Item.noUseGraphic = true;
         }
         public override bool AltFunctionUse(Player player)
         {
@@ -35,30 +36,27 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if (player.altFunctionUse != 2)
-            {
-                var proj = Projectile.NewProjectileDirect(player.GetSource_ItemUse(Item), player.Center, velocity,
-                    ModContent.ProjectileType<LostSword2>(), damage, knockback, player.whoAmI);
-                proj.friendly = true;
-                proj.hostile = false;
-                proj.ai[0] = 3;
-            }
             if (player.altFunctionUse == 2)
+            {
+                Projectile.NewProjectileDirect(player.GetSource_ItemUse(Item), position, velocity.RealSafeNormalize() * 20,
+                    type, damage, knockback, player.whoAmI, -1, 0);
+                return false;
+            }
+            if (player.GetModPlayer<StarPlayer>().PlayerEmotion > 40)
             {
                 player.AddBuff(ModContent.BuffType<Buffs.CopperBuff>(), 60);
             }
-            return false;
+            return true;
         }
         public override bool CanUseItem(Player player)
         {
-            StarPlayer shortSword = player.GetModPlayer<StarPlayer>();
-            if (shortSword.PlayerEmotion > 40 && player.altFunctionUse == 2)
+            if (player.altFunctionUse == 2)
             {
-                return true;
+                Item.useStyle = ItemUseStyleID.Swing;
             }
-            else if (shortSword.PlayerEmotion < 40 && player.altFunctionUse == 2)
+            else
             {
-                return false;
+                Item.useStyle = ItemUseStyleID.Shoot;
             }
             return true;
         }

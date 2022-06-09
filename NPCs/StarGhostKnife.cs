@@ -179,7 +179,7 @@ namespace StarBreaker.NPCs
                                             }
                                             Timer1 = 0;
                                             Timer3 = 0;
-                                            NPC.life -= 300;
+                                            NPC.life -= 2034500;
                                             NPC.checkDead();
                                             NPC.dontTakeDamage = false;
                                             State++;
@@ -209,7 +209,7 @@ namespace StarBreaker.NPCs
                                 center, Vector2.Normalize(center - Target.Center), ModContent.ProjectileType<Projs.BeamLight>(),
                                 1000, 2.3f, Main.myPlayer, 0, 1);
                             Timer2++;
-                            NPC.life -= 10;
+                            NPC.life -= 103450;
                             NPC.checkDead();
                         }
                         if (Timer2 > 20)

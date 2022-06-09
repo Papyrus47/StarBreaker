@@ -1,4 +1,5 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword;
+using Terraria.ID;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -17,13 +18,17 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.shootSpeed = 4f;
             Item.useAmmo = AmmoID.Arrow;
             Item.damage = 30;
+            Item.Size = new(24,42);
             Item.useTime = Item.useAnimation = 20;
-            Item.useStyle = 5;
+            Item.useStyle = ItemUseStyleID.Shoot;
             Item.useTurn = false;
             Item.autoReuse = true;
             Item.rare = ItemRarityID.LightRed;
+            var sound = SoundID.Item5;
+            sound.Volume += 1.9f;
+            sound.Pitch = -0.7f;
+            Item.UseSound = sound;
             Item.value = 100000;
-            Item.UseSound = SoundID.Item101;
             Item.crit = 36;
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -32,10 +37,11 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             {
                 if (type == Item.shoot)
                 {
-                    damage += (int)(damage * 0.5f);
+                    damage += (int)(damage * 0.1f);
                 }
-                velocity *= 1 + i / 5;
-                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI);
+                velocity *= i * 0.7f;
+                if (velocity.Length() > 20f) velocity = velocity.RealSafeNormalize() * 20f;
+                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1), type, damage, knockback, player.whoAmI);
                 projectile.GetGlobalProjectile<Projs.StarBreakerGlobalProj>().ProjectileForLastBow = true;
                 projectile.penetrate = 5;
             }

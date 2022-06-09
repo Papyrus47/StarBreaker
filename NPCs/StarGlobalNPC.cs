@@ -79,8 +79,7 @@ namespace StarBreaker.NPCs
             //在这个重写函数进行判断
             if (EnergySmash)//如果buff存在了
             {
-                damage = Main.CalculateDamageNPCsTake((int)damage, defense - 20);//调用原版伤害计算,然后转回伤害
-                return false;
+                damage += Math.Max(0,(defense / 2) - 20);//调用原版伤害计算,然后转回伤害
             }
             if (BloodyBleed > 0 && !npc.immortal)//血鞭
             {

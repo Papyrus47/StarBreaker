@@ -17,7 +17,7 @@ namespace StarBreaker.Projs.TheGhost
         {
             foreach (Player player in Main.player)
             {
-                if (Main.rand.Next(100) == 0)
+                if (Main.rand.NextBool(100))
                 {
                     if (Vector2.Distance(player.Center, Projectile.Center) < 1000)
                     {

@@ -17,7 +17,7 @@
             Projectile.hostile = false;
             Projectile.aiStyle = -1;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 0;
+            Projectile.localNPCHitCooldown = 2;
         }
         public override void AI()
         {

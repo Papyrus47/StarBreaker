@@ -43,7 +43,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         public override bool? UseItem(Player player)
         {
             NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<ShortSword>());
-            SoundEngine.PlaySound(SoundID.Roar,player.Center);
+            SoundEngine.PlaySound(SoundID.Roar, player.Center);
             return true;
         }
     }

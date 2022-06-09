@@ -1,6 +1,4 @@
-﻿using Terraria.Audio;
-
-namespace StarBreaker.Projs.StarGhostKnife
+﻿namespace StarBreaker.Projs.StarGhostKnife
 {
     public class GhostFireHit : ModProjectile
     {
@@ -47,7 +45,7 @@ namespace StarBreaker.Projs.StarGhostKnife
                     player.velocity.X = Projectile.velocity.X > 0 ? 6 : -6;
                     if (Projectile.frame < 16)
                     {
-                        var sound = SoundEngine.PlaySound(SoundID.Item1,player.Center);
+                        var sound = SoundEngine.PlaySound(SoundID.Item1, player.Center);
                         SoundEngine.TryGetActiveSound(sound, out var activeSound);
                         activeSound.Volume = 4.5f;
                         activeSound.Sound.Pitch = -0.5f;

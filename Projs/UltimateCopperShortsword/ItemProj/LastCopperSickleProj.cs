@@ -17,8 +17,8 @@
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.idStaticNPCHitCooldown = 5;
-            Projectile.localNPCHitCooldown = 1;
+            Projectile.idStaticNPCHitCooldown = 10;
+            Projectile.localNPCHitCooldown = 10;
         }
         public override void AI()
         {

@@ -1,6 +1,5 @@
 ﻿using StarBreaker.Items;
 using System.IO;
-using Terraria.Audio;
 
 namespace StarBreaker.Projs
 {

@@ -15,7 +15,7 @@
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.useTurn = true;
             Item.useAnimation = 10;
-            Item.useTime = 10;
+            Item.useTime = 1;
             Item.autoReuse = false;
             Item.width = 12;
             Item.height = 12;
@@ -30,51 +30,50 @@
         {
             try
             {
-                int x = (int)Main.MouseWorld.X / 16 - 5;
-                int y = (int)Main.MouseWorld.Y / 16 - 3;
-                for (int i = -3; i <= 3; i++)//Y轴
+                if (player.itemAnimation > 8)
                 {
-                    for (int j = -5; j <= 5; j++)//X轴
+                    Point point = Main.MouseWorld.ToTileCoordinates();
+                    int[,] tileSet = _tileSet;
+                    for (int Y = 0; Y < _tileSet.GetLength(0); Y++)
                     {
-                        Tile tile = Main.tile[x + j, y + i];
-                        if (i == -3 || i == 3 || j == 5 || j == -5)//生成边框
+                        for (int X = 0; X < tileSet.GetLength(1); X++)
                         {
-                            if ((i == -3 || i == 3) && j == 3 && tile.HasTile)//如果两面有房子,生成平台
+                            int setX = point.X + X;
+                            int setY = point.Y + Y;
+                            Tile tile = Main.tile[setX, setY];
+                            if (tileSet[Y, X] != 1)//放墙
                             {
-                                for (int k = 0; k < 2; k++)
-                                {
-                                    Tile tile1 = Main.tile[x + j - k, y + i];
-                                    tile1.ClearTile();
-                                    WorldGen.PlaceTile(x + j - k, y + i, 19);
-                                    WorldGen.PlaceWall(x + j - k, y + i, WallID.Wood);
-                                }
+                                WorldGen.PlaceWall(setX, setY, WallID.Wood);
                             }
-                            else
+                            switch (tileSet[Y, X])
                             {
-                                WorldGen.PlaceTile(x + j, y + i, TileID.WoodBlock);
+                                case 1://放木头
+                                    {
+                                        WorldGen.PlaceTile(setX, setY, TileID.WoodBlock);
+                                        break;
+                                    }
+                                case 2://火把
+                                    {
+                                        WorldGen.PlaceTile(setX, setY, TileID.Torches);
+                                        break;
+                                    }
+                                case 3://工作台
+                                    {
+                                        WorldGen.PlaceTile(setX, setY, 18);
+                                        break;
+                                    }
+                                case 4://椅子
+                                    {
+                                        WorldGen.PlaceTile(setX, setY, 15, false, false, 1);
+                                        break;
+                                    }
+                                case 5:
+                                    {
+                                        WorldGen.PlaceTile(setX, setY, TileID.ClosedDoor);
+                                        break;
+                                    }
                             }
                         }
-                        else
-                        {
-                            WorldGen.PlaceWall(x + j, y + i, WallID.Wood);
-                        }
-                        if (i == 2 && j == 5)
-                        {
-                            for (int k = 0; k > -3; k--)
-                            {
-                                Tile tile1 = Main.tile[x + j, y + i + k];
-                                tile1.ClearEverything();
-                                WorldGen.PlaceWall(x + j, y + i + k, WallID.Wood);
-                            }
-                            WorldGen.PlaceDoor(x + j, y + i - 1, TileID.ClosedDoor);
-                        }
-                        if (i == 2 && j == -3)
-                        {
-                            WorldGen.PlaceTile(x + j, y + i, TileID.WorkBenches);
-                            WorldGen.PlaceTile(x + j + 2, y + i, 15);
-                            WorldGen.PlaceTile(x + j, y + i - 2, TileID.Torches);
-                        }
-
                     }
                 }
             }
@@ -88,7 +87,24 @@
                     Velocity = Vector2.UnitY * 5
                 }, player.Center);
             }
-            return base.UseItem(player);
+            return false;
+        }
+        //1是木块
+        //2是火把
+        //3是工作台
+        //4是椅子
+        //5是门
+        private int[,] _tileSet
+        {
+            get
+            {
+                return new int[,]{{ 1, 1, 1, 1, 1, 1,1,1,1,1},
+                { 1, 0, 0, 0,0,0,0,0, 0, 1},
+                { 1,2,0,0,0,0,0,0,0,0 },
+                { 1,0,0,0,0,0,0,0,0,0 },
+                { 1,0,3,0,0,0,4,0,0,5 },
+                { 1,1,1,1,1,1,1,1,1,1} };
+            }
         }
     }
 }

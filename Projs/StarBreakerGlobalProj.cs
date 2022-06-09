@@ -20,7 +20,7 @@
             }
         }
         public override void SetDefaults(Projectile projectile)//那么这里的这一个proj,是对所有存活着的弹幕都有效的
-            //大部分时候,Global和Mod系列不会差在哪里
+                                                               //大部分时候,Global和Mod系列不会差在哪里
         {
             base.SetDefaults(projectile);
             switch (projectile.type)
@@ -38,19 +38,19 @@
                         break;
                     }
             }
-            if(StarBreakerSystem.SpecialBattle != null)
+            if (StarBreakerSystem.SpecialBattle != null)
             {
                 projectile.tileCollide = false;
             }
         }
         public override bool PreAI(Projectile projectile)
-            //这里是修改弹幕ai的地方
-            //用了PreAI
-            //知道为什么每个mod要是修改 同一个东西就会出现冲突吗?
-            //因为tml会遍历所有mod的Global系列对应部分
-            //然后调用
-            //也就是说
-            //mod安装优先度越后,mod就会被越后调用(也就是覆盖了前者的ai,但是又没有完全覆盖,因为ai[0]之类的东西)
+        //这里是修改弹幕ai的地方
+        //用了PreAI
+        //知道为什么每个mod要是修改 同一个东西就会出现冲突吗?
+        //因为tml会遍历所有mod的Global系列对应部分
+        //然后调用
+        //也就是说
+        //mod安装优先度越后,mod就会被越后调用(也就是覆盖了前者的ai,但是又没有完全覆盖,因为ai[0]之类的东西)
         {
             switch (projectile.type)
             {
@@ -266,10 +266,9 @@
                 projectile.usesLocalNPCImmunity = true;
                 projectile.localNPCHitCooldown = 0;
                 projectile.tileCollide = false;
-                if (projectile.velocity.Length() > 2f && projectile.timeLeft % 5 == 0)
+                if (projectile.velocity.Length() > 2f && projectile.timeLeft % 2 == 0)
                 {
                     projectile.damage++;
-                    projectile.velocity *= 0.9f;
                 }
             }
             return base.PreAI(projectile);

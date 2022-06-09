@@ -31,8 +31,11 @@ namespace StarBreaker.Items.Bullet
 
         public override void ProjAI(Projectile Projectile)
         {
-            Projectile.penetrate = 5;
-            Projectile.extraUpdates = 2;
+            if (Projectile.extraUpdates != 2)
+            {
+                Projectile.penetrate = 5;
+                Projectile.extraUpdates = 2;
+            }
         }
     }
 }
