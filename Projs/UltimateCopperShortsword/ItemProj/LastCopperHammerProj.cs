@@ -52,7 +52,7 @@
         {
             StarBreakerWay.DrawTailTexInPos(TextureAssets.Projectile[Type].Value,Projectile.oldPos,
                 lightColor,lightColor* 0.3f,Projectile.rotation,Projectile.spriteDirection,Vector2.Zero,
-                null,null);
+                null,null,true);
             return false;
         }
     }

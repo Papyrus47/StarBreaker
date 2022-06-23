@@ -7,8 +7,8 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("最终铜枪");
-            Tooltip.SetDefault("使所有射出的子弹都会使敌人600层流血\n" +
-                "右键投掷出枪,命中方块或者击中敌人后消失(回到手中),如击中敌人施加700层流血(与上面效果叠加)");
+            Tooltip.SetDefault("使所有射出的子弹都会使敌人200层流血\n" +
+                "右键投掷出枪,命中方块或者击中敌人后消失(回到手中),如击中敌人施加300层流血(与上面效果叠加)");
         }
         public override void SetDefaults()
         {
@@ -65,7 +65,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
                 type = ModContent.ProjectileType<LastCopperGunProj>();
             }
             Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI);
-            projectile.GetGlobalProjectile<Projs.StarBreakerGlobalProj>().Bloody = 600;
+            projectile.GetGlobalProjectile<Projs.StarBreakerGlobalProj>().Bloody = 200;
             return false;
         }
     }

@@ -7,6 +7,8 @@ namespace StarBreaker
 {
     public class StarBreakerWay
     {
+        public const string TransparentTex = "Terraria/Images/Item_0";
+        public delegate void MyDust(Dust dust);
         public static void NPCDrawTail(NPC npc, Color drawColor, Color TailColor)
         {
             for (int j = npc.oldRot.Length - 1; j > 0; j--)
@@ -49,7 +51,7 @@ namespace StarBreaker
                 Vector2 pos = projectile.oldPos[i] + (new Vector2(projectile.width, projectile.height) / 2) - Main.screenPosition;
                 Vector2 origin = texture.Size() * 0.5f;
                 Main.spriteBatch.Draw(texture, pos, null, Color.Lerp(drawColor, TailColor, i / projectile.oldPos.Length), projectile.rotation,
-                    origin, projectile.scale, SpriteEffects.None, 0);
+                    origin, projectile.scale * (1f - (float)i / projectile.oldPos.Length), SpriteEffects.None, 0);
             }
         }
         /// <summary>
@@ -64,7 +66,8 @@ namespace StarBreaker
         /// <param name="sourceRectangle">帧图切割</param>
         /// <param name="dir">朝向,-1为反,1为正,-2为"FlipVertically"</param>
         /// <param name="rot">旋转</param>
-        public static void DrawTailTexInPos(Texture2D texture, Vector2[] oldPos, Color BeginColor, Color EndColor, float rot, int dir = 1, Vector2 origin = default, Rectangle? sourceRectangle = null, float[] oldRot = null)
+        /// <param name="DrawScale">绘制时会不会随着draw拖尾的长度缩小</param>
+        public static void DrawTailTexInPos(Texture2D texture, Vector2[] oldPos, Color BeginColor, Color EndColor, float rot, int dir = 1, Vector2 origin = default, Rectangle? sourceRectangle = null, float[] oldRot = null,bool DrawScale = false)
         {
             SpriteEffects spriteEffects = SpriteEffects.None;
             if (dir == -1)
@@ -83,8 +86,83 @@ namespace StarBreaker
                     myRot = oldRot[i];
                 }
                 Color color = Color.Lerp(BeginColor, EndColor, (float)i / oldPos.Length);
-                Main.spriteBatch.Draw(texture, oldPos[i] - Main.screenPosition, sourceRectangle, color, myRot, origin, 1f, spriteEffects, 0f);
+                float scale = 1f;
+                if(DrawScale)
+                {
+                    scale -= (float)i / oldPos.Length;
+                }
+                Main.spriteBatch.Draw(texture, oldPos[i] - Main.screenPosition, sourceRectangle, color, myRot, origin,scale, spriteEffects, 0f);
             }
+        }
+        /// <summary>
+        /// 为你的对象绘制一个边界,但是不能是玩家,仅限于npc和弹幕
+        /// 这个东西不能对非正常Draw的使用
+        /// </summary>
+        /// <param name="entity">对象</param>
+        public static void EntityDrawLight(Entity entity,Color lightColor)
+        {
+            if (entity is not Projectile && entity is not NPC)
+            {
+                return;
+            }
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            Texture2D texture;
+            Vector2 pos;
+            Color color;
+            float rot;
+            float scale;
+            float gfxOffY;
+            int frame;
+            int hegiht;
+            if (entity is NPC npc)
+            {
+                texture = TextureAssets.Npc[npc.type].Value;
+                hegiht = texture.Height / Main.npcFrameCount[npc.type];
+                frame = npc.frame.Y / hegiht;
+                pos = npc.Center;
+                gfxOffY = npc.gfxOffY;
+                scale = npc.scale;
+                rot = npc.rotation;
+                color = npc.GetAlpha(lightColor);
+                if(npc.spriteDirection == -1)
+                {
+                    spriteEffects = SpriteEffects.FlipHorizontally;
+                }
+            }
+            else if (entity is Projectile projectile)
+            {
+                texture = TextureAssets.Projectile[projectile.type].Value;
+                hegiht = texture.Height / Main.projFrames[projectile.type];
+                frame = projectile.frame;
+                pos = projectile.Center;
+                gfxOffY = projectile.gfxOffY;
+                scale = projectile.scale;
+                rot = projectile.rotation;
+                color = projectile.GetAlpha(lightColor);
+                if(projectile.spriteDirection == -1)
+                {
+                    spriteEffects = SpriteEffects.FlipHorizontally;
+                }
+            }
+            else return;//为了下面调用tex不报错
+            Rectangle rectangle = new(0, frame, texture.Width, hegiht);
+            Vector2 origin = rectangle.Size() / 2f;
+
+            Color floatingDaggerMinionGlowColor = color;
+            floatingDaggerMinionGlowColor.A /= 4;
+            for (int j = 0; j < 4; j++)
+            {
+                Vector2 DrawCenter = entity.Center - Main.screenPosition + new Vector2(0f, gfxOffY);
+                Vector2 spinningpoint = rot.ToRotationVector2();
+                double radians = (double)(Math.PI / 2 * (float)j);
+                Vector2 center = default(Vector2);
+                Main.EntitySpriteDraw(texture, DrawCenter + spinningpoint.RotatedBy(radians, center) * 2f, new Rectangle?(rectangle), floatingDaggerMinionGlowColor, rot, origin,scale, 0, 0);
+            }
+            if(entity is NPC)
+            {
+                rot += MathHelper.PiOver2;
+            }
+            Main.EntitySpriteDraw(texture, pos - Main.screenPosition + new Vector2(0f, gfxOffY), new Rectangle?(rectangle),color,rot, origin, scale, spriteEffects, 0);
         }
         public static void StarBrekaerUseBulletShoot(StarPlayer starPlayer, out int shootID, out int shootDamage, out EnergyBulletItem BulletPassive)
         {
@@ -146,6 +224,25 @@ namespace StarBreaker
                 }
             }
         }
+        public static void NewParticle(Color color, Texture2D texture, int timeLeft, Vector2 position, Vector2? velocity = null, float rotation = 0f, float scale = 1f)
+        {
+            var particle = new Particle.Particle(color, texture, position, velocity)
+            {
+                Maincolor = color,
+                timeLeft = timeLeft,
+                rotation = rotation,
+                scale = scale
+            };
+            NewParticle(particle);
+        }
+
+        public static void NewParticle(Particle.Particle particle)
+        {
+            if (Main.dedServ) return;
+
+            StarBreakerSystem.Particles.Add(particle);
+            particle.OnSpawn();
+        }
         public static void Add_Hooks_ToProj(EnergyBulletItem bulletItem, int projWhoAmI)
         {
             if (Main.projectile[projWhoAmI].ModProjectile is EnergyProj BulletProj && bulletItem != null)
@@ -200,11 +297,32 @@ namespace StarBreaker
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             FieldInfo field = spriteBatch.GetType().GetField("beginCalled", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (field != null && field.GetValue(spriteBatch) is bool s)
+            if (field != null && field.GetValue(spriteBatch) is bool canDraw)
             {
-                return s;
+                return canDraw;
             }
             return false;
+        }
+        /// <summary>
+        /// 多功能自定义粒子生成器
+        /// </summary>
+        /// <param name="center">位置</param>
+        /// <param name="type">类型</param>
+        /// <param name="dis">距离</param>
+        /// <param name="DustConst">粒子数量</param>
+        /// <param name="Draw">可以绘制粒子条件,与修改其他事物</param>
+        /// <param name="myDust">修改粒子</param>
+        public static void NewDustByYouself(Vector2 center,int type,Func<bool> Draw,float dis = 200,int DustConst = 30,MyDust myDust = null)
+        {
+            if (Draw != null && Draw.Invoke())
+            {
+                for (int i = 0; i < DustConst; i++)
+                {
+                    Vector2 DustCenter = center + Vector2.UnitX.RotatedBy(MathHelper.TwoPi * (float)i / DustConst) * dis;
+                    Dust dust = Main.dust[Dust.NewDust(DustCenter, 1, 1, type)];
+                    myDust?.Invoke(dust);
+                }
+            }
         }
         private static void AddHook(EnergyBulletItem bulletItem, EnergyProj BulletProj, int projWhoAmI)
         {
@@ -214,7 +332,6 @@ namespace StarBreaker
             BulletProj.Proj_OnHitNPC += bulletItem.ProjOnHitNPC;
             BulletProj.Proj_OnTileCollide += bulletItem.OnTileCollide;
             BulletProj.Proj_Draw += bulletItem.ProjPreDraw;
-            BulletProj.Proj_AI_Minion += bulletItem.ProjAI_Minion;
             Main.projectile[projWhoAmI].damage += bulletItem.Item.damage;
         }
         private static void DelHook(EnergyBulletItem bulletItem, EnergyProj BulletProj, int projWhoAmI)
@@ -225,14 +342,13 @@ namespace StarBreaker
             BulletProj.Proj_OnHitNPC -= bulletItem.ProjOnHitNPC;
             BulletProj.Proj_OnTileCollide -= bulletItem.OnTileCollide;
             BulletProj.Proj_Draw -= bulletItem.ProjPreDraw;
-            BulletProj.Proj_AI_Minion -= bulletItem.ProjAI_Minion;
             Main.projectile[projWhoAmI].damage -= bulletItem.Item.damage;
 
         }
     }
     public static class StarBreakerWay_ByExtension
     {
-        public static void NPC_AddOnHitDamage(this NPC npc, int damage, bool ByDefense = false)
+        public static void NPC_AddOnHitDamage(this NPC npc,Player player, int damage, bool ByDefense = false)
         {
             int LastDamage = damage;
             if (ByDefense)
@@ -240,17 +356,14 @@ namespace StarBreaker
                 LastDamage -= npc.defense;
             }
 
-            npc.life -= Math.Abs(LastDamage);
+            npc.StrikeNPC(LastDamage, 0, npc.direction);
             npc.checkDead();
             if (Main.netMode == NetmodeID.Server)
             {
                 NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, npc.whoAmI, damage);
             }
         }
-        public static void SacrificeCountNeededByItemId(this Item item, int num)
-        {
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[item.type] = num;
-        }
+        public static void SacrificeCountNeededByItemId(this Item item, int num) => CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[item.type] = num;
 
         public static Vector2 RealSafeNormalize(this Vector2 vector2)
         {

@@ -1,5 +1,6 @@
 ﻿using StarBreaker.Items.UltimateCopperShortsword;
 using StarBreaker.Items.Weapon;
+using StarBreaker.Items.Weapon.IceGunAndFireKnife;
 using StarBreaker.Projs;
 using StarBreaker.Projs.StarGhostKnife;
 using Terraria.GameInput;
@@ -303,8 +304,8 @@ namespace StarBreaker
                 Bullet2 = new();
                 Bullet2.SetDefaults(0);
             }
-            StarBreaker.Instantiate.starBreaker_UI.element1.Item = Bullet1;
-            StarBreaker.Instantiate.starBreaker_UI.element2.Item = Bullet2;
+            StarBreakerSystem.starBreaker_UI.element1.Item = Bullet1;
+            StarBreakerSystem.starBreaker_UI.element2.Item = Bullet2;
             base.OnEnterWorld(Player);
         }
         public override void ModifyScreenPosition()
@@ -313,9 +314,17 @@ namespace StarBreaker
             {
                 Main.screenPosition = Main.npc[FrostFistModScr].position - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
             }
-            if (Player.heldProj >= 0 && Main.projectile[Player.heldProj].type == ModContent.ProjectileType<GhostFireHit>() && Main.projectile[Player.heldProj].frame % 6 == 0)
+            if (Player.heldProj >= 0)
             {
-                Main.screenPosition += Main.rand.NextVector2Unit() * 8;
+                Projectile projectile = Main.projectile[Player.heldProj];
+                if (projectile.type == ModContent.ProjectileType<GhostFireHit>() && projectile.frame % 6 == 0)
+                {
+                    Main.screenPosition += Main.rand.NextVector2Unit() * 8;
+                }
+                else if (projectile.type == ModContent.ProjectileType<FireKnife>())
+                {
+                    IceGunAndFireKnife iceGunAndFireKnife = Player.HeldItem.ModItem as IceGunAndFireKnife;
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
+using Terraria.ID;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -7,13 +8,13 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("最终铜链锯");
-            Tooltip.SetDefault("");
+            Tooltip.SetDefault("锯子的头飞走了!");
         }
         public override void SetDefaults()
         {
             Item.Size = new Vector2(40, 40);
             Item.UseSound = SoundID.Item1;
-            Item.damage = 110;
+            Item.damage = 70;
             Item.DamageType = DamageClass.Melee;
             Item.crit = 64;
             Item.knockBack = 3.4f;
@@ -24,7 +25,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.width = 44;
             Item.height = 22;
             Item.mana = 0;
-            Item.useStyle = 5;
+            Item.useStyle = ItemUseStyleID.Shoot;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<LastCopperChainSawProj>();
             Item.shootSpeed = 10;

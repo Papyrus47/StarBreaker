@@ -18,8 +18,8 @@
             Projectile.tileCollide = true;
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.usesIDStaticNPCImmunity = true;
             Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
         }
         public override void AI()
         {
@@ -37,6 +37,7 @@
                         {
                             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                             Projectile.velocity.Y += 0.01f;
+                            Projectile.velocity = Projectile.velocity * 0.97f;
                             break;
                         }
                     case 1://停留一段时间
@@ -75,7 +76,7 @@
                                 {
                                     Projectile.velocity = (player.position - Projectile.position).SafeNormalize(default) * 10;
                                     target.Center = Projectile.position;
-                                    if (Projectile.Distance(player.position) < 200)
+                                    if (Projectile.Distance(player.position) < 30)
                                     {
                                         Projectile.Kill();
                                         target.velocity = (target.position - player.position).SafeNormalize(default) * 20f;
@@ -83,10 +84,10 @@
                                         {
                                             for (int i = 0; i < 30; i++)
                                             {
-                                                int NPC_Hit_damage = Main.rand.Next(300, 350);
+                                                int NPC_Hit_damage = Main.rand.Next(Projectile.damage * 2,Projectile.damage * 2 + 50);
                                                 target.life -= NPC_Hit_damage;
                                                 target.HitEffect(0, 10.0);
-                                                Main.player[Projectile.owner].dpsDamage += NPC_Hit_damage;
+                                                Main.player[Projectile.owner].addDPS(NPC_Hit_damage);
                                                 CombatText.NewText(target.Hitbox, CombatText.DamagedHostile, NPC_Hit_damage);
                                             }
                                             target.checkDead();
@@ -122,7 +123,7 @@
                         int NPC_Hit_damage = Projectile.damage + Main.rand.Next(-20, 20);
                         target.life -= NPC_Hit_damage;
                         target.HitEffect(0, 1.0);
-                        Main.player[Projectile.owner].dpsDamage += NPC_Hit_damage;
+                        Main.player[Projectile.owner].addDPS(NPC_Hit_damage);
                         CombatText.NewText(target.Hitbox, CombatText.DamagedHostile, NPC_Hit_damage);
                     }
                     target.checkDead();

@@ -49,7 +49,7 @@
             #region 粒子与弹幕
             List<Vector2> list = new();//new一个list
             Projectile.FillWhipControlPoints(Projectile, list);//为list填充点
-            if (Projectile.ai[0] % 5 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+            if (Projectile.ai[0] % 5 == 0 && Main.netMode != NetmodeID.MultiplayerClient && player.ownedProjectileCounts[ModContent.ProjectileType<LastCopperWhipOnUseProj>()] < 5)
             {
                 Vector2 pos = list[^1];
                 Dust.NewDustDirect(pos, 2, 2, ModContent.DustType<Dusts.LastCopperWhipDust>());
@@ -141,6 +141,7 @@
                             break;
                         case 19:
                             rectangle.Y = height * 4;//鞭子图4
+                            origin.Y -= 8;
                             break;
                         default://其他情况不绘制
                             canDraw = false;

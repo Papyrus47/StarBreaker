@@ -9,7 +9,6 @@ namespace StarBreaker.Projs.Type
         public bool ShouldUpdatePositionByProjVel = true;//根据速度改变位置
         #region 委托
         public delegate void ProjAI(Projectile projectile);
-        public delegate void ProjAI_Minion(Projectile projectile);
         public delegate void ProjOnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit);
         public delegate void ProjKill(Projectile projectile);
         public delegate bool ProjOnTileCollide(Projectile projectile, Vector2 oldVelocity);
@@ -18,7 +17,6 @@ namespace StarBreaker.Projs.Type
         #endregion
         #region 事件
         public event ProjAI Proj_AI;
-        public event ProjAI_Minion Proj_AI_Minion;
         public event ProjOnHitNPC Proj_OnHitNPC;
         public event ProjKill Proj_Kill;
         public event ProjOnTileCollide Proj_OnTileCollide;
@@ -41,23 +39,13 @@ namespace StarBreaker.Projs.Type
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
             StateAI();
-            if (Projectile.friendly && !Projectile.hostile)
+            if (Projectile.friendly && !Projectile.hostile && Proj_AI != null)
             {
-                if (!Projectile.minion && Proj_AI != null)
-                {
-                    Proj_AI(Projectile);
-                }
-                else if (Proj_AI_Minion != null)
-                {
-                    Proj_AI_Minion(Projectile);
-                }
+                Proj_AI(Projectile);
             }
 
         }
-        public override bool ShouldUpdatePosition()
-        {
-            return ShouldUpdatePositionByProjVel;
-        }
+        public override bool ShouldUpdatePosition() => ShouldUpdatePositionByProjVel;
 
         public override void Kill(int timeLeft)
         {

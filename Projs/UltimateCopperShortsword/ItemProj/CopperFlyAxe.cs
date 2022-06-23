@@ -39,10 +39,6 @@
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (Main.rand.NextBool() || damage > 50 || crit)
-            {
-                Projectile.timeLeft += 30;
-            }
             if (Projectile.ai[1] == 1)
             {
                 target.buffImmune[BuffID.Poisoned] = false;

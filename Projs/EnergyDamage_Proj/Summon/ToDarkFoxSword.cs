@@ -13,8 +13,6 @@ namespace StarBreaker.Projs.EnergyDamage_Proj.Summon
         {
             DrawBulletBody = null;
             Projectile.alpha = 0;
-            Projectile.minion = true;
-            Projectile.minionSlots = 0.5f;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.width = Projectile.height = 62;

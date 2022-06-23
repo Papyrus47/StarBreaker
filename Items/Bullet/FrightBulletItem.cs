@@ -31,7 +31,7 @@ namespace StarBreaker.Items.Bullet
         {
             if (target.life < target.lifeMax * 0.5f)
             {
-                target.NPC_AddOnHitDamage(damage);
+                target.NPC_AddOnHitDamage(Main.player[projectile.owner],damage);
             }
         }
     }

@@ -14,7 +14,6 @@ namespace StarBreaker.Items
             Item.DamageType = DamageClass.Ranged;
         }
         public virtual void ProjAI(Projectile projectile) { }
-        public virtual void ProjAI_Minion(Projectile projectile) { }
         public virtual void Kill(Projectile projectile) { }
         public virtual void ProjOnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit) { }
         public virtual bool OnTileCollide(Projectile projectile, Vector2 oldVelocity) { return true; }

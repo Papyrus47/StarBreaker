@@ -49,7 +49,7 @@
                         }
                         else
                         {
-                            UseAI(100, 0.8f, 0.3f, Projectile.localAI[0], -MathHelper.PiOver2 * (Projectile.ai[0] % 2 == 0).ToDirectionInt());
+                            UseAI(100, 0.8f, 0.4f, Projectile.localAI[0], -MathHelper.PiOver2 * (Projectile.ai[0] % 2 == 0).ToDirectionInt());
                         }
                         if (Math.Abs(Timer) > MathHelper.ToRadians(200))
                         {

@@ -1,5 +1,6 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword;
 using System.IO;
+using Terraria.ID;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
 {
@@ -296,7 +297,8 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                     }
                 case 5://插地，受攻击回血
                     {
-                        if (Timer1 == 0)
+                        Timer1++;
+                        if (Timer1 < 60)
                         {
                             for (int i = 0; i < 200; i++)
                             {
@@ -315,11 +317,13 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                         }
                         else
                         {
-                            NPC.velocity = (new Vector2(Timer2, Timer3) - NPC.Center) * 0.2f;
+                            if (Timer2 > 0 && Timer3 > 0)
+                            {
+                                NPC.velocity = (new Vector2(Timer2, Timer3) - NPC.Center) * 0.2f;
+                            }
                             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver4;
                             if (NPC.velocity.Length() < 0.1f)
                             {
-                                Timer1++;
                                 if (Timer1 > 180)
                                 {
                                     Timer1 = 0;
@@ -340,7 +344,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                         {
                             for (int i = 0; i <= 100; i++)
                             {
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     Dust dust = Dust.NewDustDirect(NPC.Center + ((i * MathHelper.TwoPi / 100).ToRotationVector2() * 800), 1, 1, DustID.FireworkFountain_Green);
                                     dust.noGravity = true;

@@ -96,8 +96,7 @@
                                     player.MinionAttackTargetNPC = npc.whoAmI;
                                 }
                             }
-                            Vector2 pos = player.Center + new Vector2(projectile.velocity.X * 10, -20 - slotsPos);
-                            projectile.velocity = (projectile.velocity * 20 + Vector2.Normalize(pos - projectile.position) * 8) / 21;
+                            FlyingProj_Move(player, projectile, 4.5f, 9f);
                         }
                         #endregion
                         #region 发射
@@ -175,42 +174,7 @@
                                     player.MinionAttackTargetNPC = npc.whoAmI;
                                 }
                             }
-                            #region 待机移动
-                            Vector2 vel = player.Center - projectile.Center - new Vector2(0f, 60f);
-                            float velSpeed = 6f;
-                            vel.X -= 40f * player.slotsMinions * player.direction;
-                            vel.Y -= 10f;
-                            float velLength = vel.Length();
-                            if (velLength > 2000f)
-                            {
-                                projectile.position = player.position;
-                            }//传送
-                            else if (velLength > 500f)
-                            {
-                                velSpeed = 10f;//改变速度
-                            }
-
-                            if (velLength > 200f && velSpeed < 9f)
-                            {
-                                velSpeed = 9f;//加速
-                            }
-
-                            if (velLength > 10f)
-                            {
-                                vel.Normalize();
-                                if (velLength < 50f)
-                                {
-                                    velSpeed /= 2f;
-                                }
-                                vel *= velSpeed;
-                                projectile.velocity = (projectile.velocity * 20 + vel) / 21;
-                            }
-                            else
-                            {
-                                projectile.direction = player.direction;
-                                projectile.velocity *= 0.9f;
-                            }
-                            #endregion
+                            FlyingProj_Move(player, projectile);
                         }
                         #endregion
                         #region 攻击,16帧一攻击,发射三串火球,攻击3次后瞬移
@@ -332,6 +296,44 @@
             {
                 target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += Bloody;
             }
+        }
+        private void FlyingProj_Move(Player player,Projectile projectile,float velSpeed = 6f,float velSpeed_MoveFast = 10f)
+        {
+            #region 待机移动
+            Vector2 vel = player.Center - projectile.Center - new Vector2(0f, 60f);
+            vel.X -= 40f * player.slotsMinions * player.direction;
+            vel.Y -= 10f;
+            float velLength = vel.Length();
+            if (velLength > 2000f)
+            {
+                projectile.position = player.position;
+            }//传送
+            else if (velLength > 500f)
+            {
+                velSpeed = velSpeed_MoveFast;//改变速度
+            }
+
+            if (velLength > 200f && velSpeed < 9f)
+            {
+                velSpeed = velSpeed_MoveFast / 2f;//加速
+            }
+
+            if (velLength > 10f)
+            {
+                vel.Normalize();
+                if (velLength < 50f)
+                {
+                    velSpeed /= 2f;
+                }
+                vel *= velSpeed;
+                projectile.velocity = (projectile.velocity * 20 + vel) / 21;
+            }
+            else
+            {
+                projectile.direction = player.direction;
+                projectile.velocity *= 0.9f;
+            }
+            #endregion
         }
     }
 }

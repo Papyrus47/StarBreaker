@@ -10,6 +10,8 @@ global using Terraria.GameContent.Bestiary;
 global using Terraria.ID;
 global using Terraria.Localization;
 global using Terraria.ModLoader;
+global using System.Threading;
+global using System.Threading.Tasks;
 //这个我分享一下
 //1.4是C#10版本
 //所以有一个global using

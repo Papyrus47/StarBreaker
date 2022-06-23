@@ -1,13 +1,13 @@
 ﻿using Terraria.Graphics.Shaders;
 
-namespace StarBreaker
+namespace StarBreaker.Effects
 {
-    public class TestScreenShaderData : ScreenShaderData
+    public class GhostSlash : ScreenShaderData
     {
-        public TestScreenShaderData(string passName) : base(passName)
+        public GhostSlash(string passName) : base(passName)
         {
         }
-        public TestScreenShaderData(Ref<Effect> shader, string passName) : base(shader, passName)
+        public GhostSlash(Ref<Effect> shader, string passName) : base(shader, passName)
         {
         }
         public override void Update(GameTime gameTime)

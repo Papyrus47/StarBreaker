@@ -8,7 +8,8 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("最终铜弓");
-            Tooltip.SetDefault("不管怎么说,不要让它生锈");
+            Tooltip.SetDefault("不管怎么说,不要让它生锈\n" +
+                "将射弹转换为铜箭,使用铜箭时提升10%的伤害");
         }
         public override void SetDefaults()
         {
@@ -41,7 +42,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
                 }
                 velocity *= i * 0.7f;
                 if (velocity.Length() > 20f) velocity = velocity.RealSafeNormalize() * 20f;
-                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1), type, damage, knockback, player.whoAmI);
+                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1),Item.shoot, damage, knockback, player.whoAmI);
                 projectile.GetGlobalProjectile<Projs.StarBreakerGlobalProj>().ProjectileForLastBow = true;
                 projectile.penetrate = 5;
             }

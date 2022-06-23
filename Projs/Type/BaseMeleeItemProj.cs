@@ -27,7 +27,7 @@ namespace StarBreaker.Projs.Type
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
-                Projectile.Center + Projectile.velocity * DrawLength, Projectile.width / 2, ref Projectile.localAI[1]);
+                Projectile.Center + Projectile.velocity * DrawLength * 0.8f, Projectile.width / 2, ref Projectile.localAI[1]);
         }
         public override bool PreDraw(ref Color lightColor)
         {
@@ -65,8 +65,8 @@ namespace StarBreaker.Projs.Type
                 var factor = i / (float)oldVels.Length;
                 var color = Color.Lerp(LerpColor, LerpColor2, factor);
                 var w = MathHelper.Lerp(0.5f, 0.05f, factor);
-                bars.Add(new(projectile.Center + (oldVels[i] + vel.RealSafeNormalize()) * DrawLength, color, new Vector3((float)Math.Sqrt(factor), 1, w)));
-                bars.Add(new(projectile.Center + (oldVels[i] + vel.RealSafeNormalize()).RealSafeNormalize() * 5f, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
+                bars.Add(new(projectile.Center + (oldVels[i] * 0.8f + vel.RealSafeNormalize()) * DrawLength, color, new Vector3((float)Math.Sqrt(factor), 1, w)));
+                bars.Add(new(projectile.Center + (oldVels[i] * 0.8f + vel.RealSafeNormalize()).RealSafeNormalize() * 3f, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
             }
             if (bars.Count > 2)
             {

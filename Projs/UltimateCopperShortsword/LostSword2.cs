@@ -65,6 +65,11 @@
                 Projectile.Center + (Projectile.rotation - MathHelper.PiOver4).ToRotationVector2() * -8,
                 5, ref r);
         }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            StarBreakerWay.EntityDrawLight(Projectile, lightColor);
+            return false;
+        }
         public override void PostDraw(Color lightColor)
         {
             if (Projectile.ai[1] == 1 && Projectile.ai[0] != 0)
@@ -84,7 +89,7 @@
             else
             {
                 Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Type].Value;
-                for (int i = 1; i < 7; i++)
+                for (int i = 3; i < 7; i++)
                 {
                     Main.spriteBatch.Draw(texture,
                         Projectile.oldPos[i] + new Vector2(Projectile.width, Projectile.height) / 2f - Main.screenPosition,

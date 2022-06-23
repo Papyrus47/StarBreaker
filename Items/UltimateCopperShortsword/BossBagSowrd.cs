@@ -38,7 +38,9 @@ namespace StarBreaker.Items.UltimateCopperShortsword
                         ModContent.ItemType<LastShortSowrd>(),
                         ModContent.ItemType<LastCopperKnife>(),
                         ModContent.ItemType<LastCopperWhip>(),
-                        ModContent.ItemType<LastCopperGun>()
+                        ModContent.ItemType<LastCopperGun>(),
+                        ModContent.ItemType<LastCopperJackhammer>(),
+                        ModContent.ItemType<LastCopperSowrdSummonStaff>()
             };
             for (int i = 0; i < ID.Length; i++)
             {

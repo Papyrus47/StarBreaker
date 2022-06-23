@@ -873,7 +873,8 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
             }
 
             StarBreakerWay.NPCDrawTail(NPC, drawColor, color);
-            return base.PreDraw(spriteBatch, screenPos, drawColor);
+            StarBreakerWay.EntityDrawLight(NPC, drawColor);
+            return false;
         }
         public override void BossHeadRotation(ref float rotation)
         {

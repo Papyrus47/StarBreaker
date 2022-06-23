@@ -1,5 +1,7 @@
 ﻿using StarBreaker.NPCs;
 using StarBreaker.SpecialBattles;
+using StarBreaker.StarUI;
+using StarBreaker.StarUI.Research;
 using System.IO;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
@@ -14,6 +16,22 @@ namespace StarBreaker
         public static bool downedStarFist;
         public static bool downedOnyxBlaster;
         public static SpecialBattle SpecialBattle = null;
+        public static List<Particle.Particle> Particles = new();
+
+        #region UI变量
+        #region 星击子弹UI
+        public static StarBreakerUIState starBreaker_UI;
+        internal UserInterface _userInterface;
+        #endregion
+        #region 星击能量条显示UI
+        public static StarChargeUIState chargeUIState;
+        internal UserInterface chargeUser;
+        #endregion
+        #endregion
+        #region 测试用 血魂任务书
+        public static StarBook_UI book_UI;
+        internal UserInterface starBook_UI;
+        #endregion
         public override void SaveWorldData(TagCompound tag)
         {
             if (downedStarBreakerNom)
@@ -55,6 +73,54 @@ namespace StarBreaker
             downedStarBreakerEX = false;
             downedStarSpiralBlade = false;
             downedStarFist = false;
+            Particles = new();
+
+            #region UI加载
+            starBreaker_UI = new();
+            starBreaker_UI.Activate();
+            _userInterface = new();
+            _userInterface.SetState(starBreaker_UI);
+
+            chargeUIState = new();
+            chargeUIState.Activate();
+            chargeUser = new();
+            chargeUser.SetState(chargeUIState);
+
+            book_UI = new();
+            book_UI.Activate();
+            starBook_UI = new();
+            starBook_UI.SetState(book_UI);
+            #endregion
+        }
+        public override void Load()
+        {
+            #region UI加载
+            starBreaker_UI = new();
+            starBreaker_UI.Activate();
+            _userInterface = new();
+            _userInterface.SetState(starBreaker_UI);
+
+            chargeUIState = new();
+            chargeUIState.Activate();
+            chargeUser = new();
+            chargeUser.SetState(chargeUIState);
+
+            book_UI = new();
+            book_UI.Activate();
+            starBook_UI = new();
+            starBook_UI.SetState(book_UI);
+            #endregion
+        }
+        public override void Unload()
+        {
+            SpecialBattle = null;
+            Particles = null;
+            starBreaker_UI = null;
+            _userInterface = null;
+            chargeUIState = null;
+            chargeUser = null;
+            starBook_UI = null;
+            book_UI = null;
         }
         public override void PostUpdateEverything()
         {
@@ -69,6 +135,11 @@ namespace StarBreaker
                     SpecialBattle = null;
                 }
             }
+            foreach (var particle in Particles.ToArray()) particle.Update();
+        }
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+            foreach (var particle in Particles.ToArray()) particle.Draw(spriteBatch);
         }
         public override void OnWorldUnload()
         {
@@ -76,6 +147,10 @@ namespace StarBreaker
             downedStarBreakerEX = false;
             downedStarSpiralBlade = false;
             downedStarFist = false;
+            starBook_UI = null;
+            _userInterface = null;
+            chargeUIState = null;
+            chargeUser = null;
         }
         public override void NetSend(BinaryWriter writer)
         {
@@ -98,8 +173,9 @@ namespace StarBreaker
         }
         public override void UpdateUI(GameTime gameTime)
         {
-            StarBreaker.Instantiate._userInterface?.Update(gameTime);
-            StarBreaker.Instantiate.chargeUser?.Update(gameTime);
+            _userInterface?.Update(gameTime);
+            chargeUser?.Update(gameTime);
+            starBook_UI?.Update(gameTime);
             base.UpdateUI(gameTime);
         }
         public override void PostUpdateWorld()
@@ -125,7 +201,7 @@ namespace StarBreaker
                     "StarBreaker:Bullet",//名字
                     delegate
                     {
-                        StarBreaker.Instantiate._userInterface.Draw(Main.spriteBatch, new GameTime());
+                        _userInterface.Draw(Main.spriteBatch, new GameTime());
                         return true;
                     },//委托
                     InterfaceScaleType.UI)
@@ -133,7 +209,13 @@ namespace StarBreaker
                 layers.Insert(Index, new LegacyGameInterfaceLayer("StarBreaker:Charge",
                 delegate
                 {
-                    StarBreaker.Instantiate.chargeUser.Draw(Main.spriteBatch, new GameTime());
+                    chargeUser.Draw(Main.spriteBatch, new GameTime());
+                    return true;
+                }, InterfaceScaleType.UI));
+                layers.Insert(Index, new LegacyGameInterfaceLayer("BloodSoul:StarBook",
+                delegate
+                {
+                    starBook_UI.Draw(Main.spriteBatch, new GameTime());
                     return true;
                 }, InterfaceScaleType.UI));
             }

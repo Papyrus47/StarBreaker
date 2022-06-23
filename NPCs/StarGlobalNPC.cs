@@ -39,12 +39,12 @@ namespace StarBreaker.NPCs
         {
             if (StarSpiralBladeProj > -1 && StarSpiralBladeProj <= 200)
             {
-                if (!Main.projectile[StarSpiralBladeProj].active || npc.type == ModContent.NPCType<StarSpiralBladeN>())
+                if (!Main.projectile[StarSpiralBladeProj].active || npc.type == ModContent.NPCType<StarSpiralBladeN>() || Main.projectile[StarSpiralBladeProj].timeLeft <= 2000)
                 {
                     StarSpiralBladeProj = -1;
                     return;
                 }
-                npc.velocity += (Main.projectile[StarSpiralBladeProj].position - npc.position).SafeNormalize(default);
+                npc.position = npc.position + (Main.projectile[StarSpiralBladeProj].position - npc.position).RealSafeNormalize() * 10;
             }
             if (XuanYuSlowTime > 0)
             {

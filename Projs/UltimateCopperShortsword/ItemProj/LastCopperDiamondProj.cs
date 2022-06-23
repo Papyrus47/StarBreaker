@@ -1,4 +1,6 @@
-﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿using Terraria.ID;
+
+namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperDiamondProj : ModProjectile
     {
@@ -23,7 +25,7 @@
             if (Projectile.ai[0] > 5)
             {
                 Projectile.ai[0] = 0;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(null, Projectile.Center, Projectile.velocity.SafeNormalize(default) * 10, ModContent.ProjectileType<CopperDrillBit>(),
                         Projectile.damage, Projectile.knockBack, Projectile.owner);

@@ -4,132 +4,167 @@ namespace StarBreaker.Projs
 {
     public class StarSpiralBladeProj : ModProjectile
     {
+        private List<Vector2> pointList = new();
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("星辰旋刃");
         }
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 200;
+            Projectile.timeLeft = 1;
             Projectile.tileCollide = false;
             Projectile.extraUpdates = 0;
             Projectile.width = Projectile.height = 112;
             Projectile.hostile = false;
-            Projectile.friendly = true;
+            Projectile.friendly = false;
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 2;
+            pointList = new();
         }
         public override void AI()
         {
-            Projectile.rotation += Projectile.localAI[0];
-            if (Projectile.localAI[1] == 0)
-            {
-                Projectile.localAI[0] += 0.1f;
-                if (Projectile.localAI[0] > 30)
-                {
-                    Projectile.localAI[1]++;
-                }
-            }
-            else
-            {
-                Projectile.localAI[0] -= 0.1f;
-                if (Projectile.localAI[0] < -30)
-                {
-                    Projectile.localAI[1]--;
-                }
-            }
             Player player = Main.player[Projectile.owner];
-            Projectile.damage = player.GetWeaponDamage(player.HeldItem) + (int)Math.Abs(Projectile.localAI[0] * 5);
-            if (Main.mouseLeft && player.HeldItem.type == ModContent.ItemType<StarSpiralBlade>() && Projectile.timeLeft < 170)
-            {
-                Projectile.timeLeft = 5;
-            }
-            else if (player.ownedProjectileCounts[Type] > 1)
+
+            if (player.dead)
             {
                 Projectile.Kill();
+                return;
             }
-            if (Projectile.timeLeft < 100)
+            Projectile.damage = Projectile.originalDamage + (Projectile.timeLeft < 1500 ? Projectile.timeLeft : 1500);
+            Projectile.rotation += Projectile.timeLeft * 0.1f;//旋转
+            if(Projectile.rotation > 1000)//避免角度炸了,虽然没什么可能
             {
-                Projectile.timeLeft = 5;
-                Projectile.velocity = (player.Center - Projectile.Center).RealSafeNormalize() * 30;
-                if (Vector2.Distance(player.Center, Projectile.Center) < 112)
-                {
-                    Projectile.Kill();
-                }
+                Projectile.rotation -= 1000;
             }
-            else
-            {
-                if (player.HasMinionAttackTargetNPC)
-                {
-                    if (!Projectile.OwnerMinionAttackTargetNPC.CanBeChasedBy())
-                    {
-                        player.MinionAttackTargetNPC = -1;
-                        return;
-                    }
-                    if (Projectile.timeLeft < 150)
-                    {
-                        Projectile.timeLeft = 200;
-                    }
 
-                    Projectile.velocity = (Projectile.velocity * 9f + (Projectile.OwnerMinionAttackTargetNPC.Center - Projectile.Center) * 0.3f) / 10f;
-                }
-                else
+            if(player.channel && !Projectile.friendly)
+            {
+                if (Projectile.ai[1] < 15000)
                 {
-                    float max = 3000;
-                    foreach (NPC npc in Main.npc)
+                    Projectile.ai[1] += 20;
+                }
+                Projectile.timeLeft = (int)Projectile.ai[1] + 1;
+                if (Projectile.timeLeft < 5) Projectile.timeLeft = 5;
+
+                Projectile.Center = player.Center;
+                player.itemTime = player.itemAnimation = 2;
+
+                pointList.Clear();//清空所有点,避免重复
+
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    pointList.Add(Main.MouseWorld);
+                }
+                float max = 800;
+                bool AddPoint_MouseToNPC = Projectile.ai[1] > 10000;
+                foreach (NPC npc in Main.npc)//获取所有范围内npc,添加他们的点
+                {
+                    float dis = Vector2.Distance(npc.Center, Projectile.Center);
+                    if (dis < 1500 && npc.active && npc.CanBeChasedBy() && !npc.friendly)
                     {
-                        float dis = Vector2.Distance(npc.Center, Projectile.Center);
-                        if (npc.active && !npc.friendly && npc.CanBeChasedBy() && dis < max)
+                        pointList.Add(npc.Center);//添加npc位置
+
+                        dis = Vector2.Distance(npc.Center, Main.MouseWorld);//计算鼠标到npc的距离
+                        if (AddPoint_MouseToNPC && dis < max && Main.myPlayer == player.whoAmI)
                         {
                             max = dis;
                             player.MinionAttackTargetNPC = npc.whoAmI;
                         }
                     }
                 }
-            }
-        }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
-            if (target.immortal)
-            {
-                return;
-            }
-
-            Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
-            target.GetGlobalNPC<NPCs.StarGlobalNPC>().StarSpiralBladeProj = Projectile.whoAmI;
-            if (Projectile.localAI[1] == 0)
-            {
-                int dama = (int)((damage * 5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
-                if (dama <= 0)
+                if(AddPoint_MouseToNPC && player.HasMinionAttackTargetNPC)
                 {
-                    dama = 1;
+                    Vector2 center = Projectile.Center;
+                    Vector2 targetCenter = Projectile.OwnerMinionAttackTargetNPC.Center;
+                    Vector2 vel = Projectile.velocity;
+                    for(int i =0;i<100;i++)
+                    {
+                        vel = (vel * 10 + (targetCenter - center).RealSafeNormalize() * 60) / 11;
+                        center += vel;
+                        pointList.Add(center);
+                    }
                 }
-
-                Main.player[Projectile.owner].addDPS((int)target.StrikeNPC(dama, knockback, 10));
-                if (Main.netMode == NetmodeID.Server)
+            }
+            else if(Projectile.friendly)
+            {
+                if (Projectile.timeLeft > 10000 && Projectile.ai[0] >= pointList.Count && player.HasMinionAttackTargetNPC)
                 {
-                    NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
+                    Projectile.velocity = (Projectile.velocity * 10 + (Projectile.OwnerMinionAttackTargetNPC.Center - Projectile.Center).RealSafeNormalize() * 60) / 11;
+                }
+                else
+                {
+                    if (Projectile.ai[0] < pointList.Count && Projectile.timeLeft > 500)
+                    {
+                        Vector2 center = pointList[(int)Projectile.ai[0]];
+                        if (Vector2.Distance(Projectile.Center, center) < 50)
+                        {
+                            Projectile.ai[0]++;
+                            Projectile.alpha = 150;
+                        }
+                        else if (Projectile.alpha > 100)
+                        {
+                            Projectile.alpha = 0;
+                            Projectile.velocity = (center - Projectile.Center) / 5f;
+                        }
+                    }
+                    else
+                    {
+                        if(Projectile.alpha > 0)
+                        {
+                            Projectile.alpha--;
+                        }
+                        if(Vector2.Distance(player.Center,Projectile.Center) < 30)
+                        {
+                            Projectile.Kill();
+                        }
+                        Projectile.velocity =(Projectile.velocity +(player.Center - Projectile.Center) * 0.5f) / 2f;
+                    }
                 }
             }
             else
             {
-                for (int i = 0; i < 3; i++)
+                Projectile.alpha = 150;//透明
+                Projectile.friendly = true;
+            }
+            Projectile.timeLeft -= 2;
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            Projectile.timeLeft -= 5;
+            if(Projectile.timeLeft > 2000)
+            {
+                target.GetGlobalNPC<NPCs.StarGlobalNPC>().StarSpiralBladeProj = Projectile.whoAmI;
+            }
+        }
+        public override void PostDraw(Color lightColor)
+        {
+            if (Projectile.timeLeft > 400)
+            {
+                Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+                Vector2 origin = texture.Size() * 0.5f;
+                int conut = Projectile.timeLeft / 400;
+                if(conut > 6)
                 {
-                    int dama = (int)((damage * 2.5f) + Math.Abs(Projectile.localAI[0] * 10) - target.defense);
-                    if (dama <= 0)
-                    {
-                        dama = 1;
-                    }
-
-                    Main.player[Projectile.owner].addDPS((int)target.StrikeNPC(dama, knockback, 10));
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, target.whoAmI, dama);
-                    }
+                    conut = 6;
                 }
-                target.HitEffect(0, 10);
-                target.checkDead();
+                for (int i = 0; i <= conut; i++)
+                {
+                    Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor * 0.6f, Projectile.rotation + (i * 0.9f),
+                            origin, Projectile.scale, SpriteEffects.None, 0);
+                }
+            }
+            Player player = Main.player[Projectile.owner];
+            if (pointList != null && player.channel && !Projectile.friendly)
+            {
+                List<CustomVertexInfo> customVertexInfos = new();
+                customVertexInfos.Add(new(Projectile.Center - Main.screenPosition, Color.Purple, new(0.5f, 0.5f, 0)));
+                for (int i = 0; i < pointList.Count; i++)
+                {
+                    customVertexInfos.Add(new(pointList[i] - Main.screenPosition, Color.Purple, new(0.5f, 0.5f, 0)));
+                }
+                Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, customVertexInfos.ToArray(), 0, customVertexInfos.Count - 1);
             }
         }
     }

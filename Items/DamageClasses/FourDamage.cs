@@ -9,7 +9,7 @@
         }
         public override StatInheritanceData GetModifierInheritance(DamageClass damageClass)
         {
-            return new StatInheritanceData(10, 10, 0, 0, 0);
+            return new StatInheritanceData(4.5f,4.5f, 0, 0, 0);
         }
         public override bool GetEffectInheritance(DamageClass damageClass)
         {

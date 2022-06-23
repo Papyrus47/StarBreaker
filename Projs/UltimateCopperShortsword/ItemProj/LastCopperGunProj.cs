@@ -26,7 +26,7 @@
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += 700;
+            target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += 300;
         }
     }
 }

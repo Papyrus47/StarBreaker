@@ -33,10 +33,10 @@ namespace StarBreaker.StarUI
                 Main.LocalPlayer.mouseInterface = true;
                 if (ValidItemFunc == null || ValidItemFunc(Main.mouseItem))
                 {
-                    ItemSlot.Handle(ref Item, _context);
+                    ItemSlot.Handle(ref Item, _context);//添加绘制的物品 ?
                 }
             }
-            ItemSlot.Draw(spriteBatch, ref Item, _context, rectangle.TopLeft());
+            ItemSlot.Draw(spriteBatch, ref Item, _context, rectangle.TopLeft());//绘制物品上去
 
             Main.inventoryScale = oldScale;
         }

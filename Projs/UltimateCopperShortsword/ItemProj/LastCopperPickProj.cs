@@ -1,4 +1,6 @@
-﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿using System.Threading.Tasks;
+
+namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperPickProj : ModProjectile
     {

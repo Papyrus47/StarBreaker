@@ -39,14 +39,14 @@ namespace StarBreaker.NPCs
         {
             NPC.aiStyle = -1;
             NPC.boss = true;
-            NPC.lifeMax = 100000000;
+            NPC.lifeMax = int.MaxValue / 3;
             NPC.knockBackResist = 0f;
             NPC.defense = 18;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
             NPC.width = 32;
             NPC.height = 20;
-            NPC.damage = 500;
+            NPC.damage = 3000000;
             NPC.defense = 10;
             if (!Main.dedServ)
             {
@@ -151,8 +151,8 @@ namespace StarBreaker.NPCs
                                         if (Main.netMode != 1)
                                         {
                                             Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(),
-                                                NPC.Center, Vector2.Zero, ModContent.ProjectileType<GhostSlash>(), 430, 2f, Main.myPlayer);
-                                            GhostSlash slash = proj.ModProjectile as GhostSlash;
+                                                NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projs.GhostSlash>(), 430, 2f, Main.myPlayer);
+                                            Projs.GhostSlash slash = proj.ModProjectile as Projs.GhostSlash;
                                             slash.StartingPoint = start;
                                             slash.EndPoint = end;
                                         }
@@ -171,7 +171,7 @@ namespace StarBreaker.NPCs
                                         {
                                             foreach (Projectile proj in Main.projectile)
                                             {
-                                                if (proj.active && proj.type == ModContent.ProjectileType<GhostSlash>())
+                                                if (proj.active && proj.type == ModContent.ProjectileType<Projs.GhostSlash>())
                                                 {
                                                     proj.Kill();
                                                     break;

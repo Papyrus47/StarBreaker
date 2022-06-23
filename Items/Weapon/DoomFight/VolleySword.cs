@@ -205,7 +205,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
                 return false;
             }
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
-                Projectile.Center + Projectile.velocity * 5f, Projectile.width / 2, ref Projectile.localAI[1]);
+                Projectile.Center + Projectile.velocity * 4, Projectile.width / 2, ref Projectile.localAI[1]);
         }
         public override bool PreDraw(ref Color lightColor)
         {
@@ -241,8 +241,8 @@ namespace StarBreaker.Items.Weapon.DoomFight
                 var factor = i / (float)oldVels.Length;
                 var color = Color.Lerp(Color.AliceBlue * 0.4f, Color.Blue, 1 - factor);
                 var w = MathHelper.Lerp(0.5f, 0.05f, factor);
-                bars.Add(new(Projectile.Center + (oldVels[i] + vel.RealSafeNormalize()) * 5f, color, new Vector3((float)Math.Sqrt(factor), 1, w)));
-                bars.Add(new(Projectile.Center + (oldVels[i] + vel.RealSafeNormalize()).RealSafeNormalize() * 2f, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
+                bars.Add(new(Projectile.Center + (oldVels[i] * 0.8f + vel.RealSafeNormalize()) * 5f, color, new Vector3((float)Math.Sqrt(factor), 1, w)));
+                bars.Add(new(Projectile.Center + (oldVels[i] * 0.8f + vel.RealSafeNormalize()).RealSafeNormalize() * 2f, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
             }
             if (bars.Count > 2)
             {

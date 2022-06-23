@@ -1,4 +1,5 @@
-﻿using StarBreaker.Items.Weapon.DoomFight;
+﻿using StarBreaker.Effects;
+using StarBreaker.Items.Weapon.DoomFight;
 using StarBreaker.Projs.Type;
 using StarBreaker.Projs.Waste;
 using StarBreaker.StarUI;
@@ -23,17 +24,6 @@ namespace StarBreaker
 
         private RenderTarget2D render;
 
-        #region UI变量
-        #region 星击子弹UI
-        public StarBreakerUIState starBreaker_UI;
-        internal UserInterface _userInterface;
-        #endregion
-        #region 星击能量条显示UI
-        public StarChargeUIState chargeUIState;
-        internal UserInterface chargeUser;
-
-        #endregion
-        #endregion
         public override void Load()
         {
             Instantiate = this;//加载时，获取Mod实例
@@ -52,7 +42,7 @@ namespace StarBreaker
             {
                 GhostSlash = ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value;
                 Filters.Scene["StarBreaker:GhostSlash"] = new Filter(
-                    new TestScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value), "GhostSlash"), EffectPriority.Medium);
+                    new GhostSlash(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value), "GhostSlash"), EffectPriority.Medium);
                 Filters.Scene["StarBreaker:GhostSlash"].Load();
             }
             #endregion
@@ -79,22 +69,6 @@ namespace StarBreaker
             MusicLoader.AddMusic(this, "Sounds/Music/Bloodtower2");
             MusicLoader.AddMusic(this, "Music/Argalia");
             MusicLoader.AddMusic(this, "Music/UnderfootEnterenceBoss");
-            #endregion
-            #region UI加载
-            if (!Main.dedServ)//不在服务器上
-            {
-                starBreaker_UI = new();//创建UIState实例
-                starBreaker_UI.Activate();//激活
-                _userInterface = new();//创建实例
-
-                _userInterface.SetState(starBreaker_UI);//送入userInterface
-                                                        //更新UI到了System里面
-
-                chargeUIState = new();
-                chargeUIState.Activate();
-                chargeUser = new();
-                chargeUser.SetState(chargeUIState);
-            }
             #endregion
             #region 特殊战背景
             On.Terraria.Main.DrawTiles += Main_DrawTiles;
@@ -196,7 +170,7 @@ namespace StarBreaker
             {
                 GhostSlash = ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value;
                 Filters.Scene["StarBreaker:GhostSlash"] = new Filter(
-                    new TestScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value), "GhostSlash"), EffectPriority.Medium);
+                    new GhostSlash(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value), "GhostSlash"), EffectPriority.Medium);
                 Filters.Scene["StarBreaker:GhostSlash"].Load();
             }
             #endregion
@@ -260,8 +234,6 @@ namespace StarBreaker
         }
         public override void Unload()
         {
-            starBreaker_UI = null;
-            _userInterface = null;
             Instantiate = null;
             FrostFistHealMagic = null;
             LightStar = null;
