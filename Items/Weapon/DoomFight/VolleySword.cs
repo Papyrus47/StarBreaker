@@ -174,7 +174,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
 
                             if (Main.netMode != NetmodeID.MultiplayerClient && n != null)
                             {
-                                Projectile.NewProjectile(player.GetSource_ItemUse(player.HeldItem), Projectile.Center - Projectile.velocity * 5, Vector2.Zero,
+                                Projectile.NewProjectile(player.GetSource_ItemUse(player.HeldItem), Projectile.Center - Projectile.velocity.RealSafeNormalize() * 100, Vector2.Zero,
                                     ModContent.ProjectileType<VolleySword_BigLine>(), Projectile.damage / 20, Projectile.knockBack, player.whoAmI, n.whoAmI);
                                 SoundEngine.PlaySound(SoundID.Item100, Projectile.Center);
                             }
@@ -295,7 +295,6 @@ namespace StarBreaker.Items.Weapon.DoomFight
     public class VolleySword_BigLine : ModProjectile
     {
         private Vector2[] linePos;
-        public override string Texture => "StarBreaker/Images/Extra_49";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Line");
@@ -304,7 +303,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
         public override void SetDefaults()
         {
             Projectile.friendly = true;
-            Projectile.timeLeft = 60;
+            Projectile.timeLeft = 120;
             Projectile.aiStyle = -1;
             Projectile.width = Projectile.height = 5;
             Projectile.tileCollide = false;
@@ -316,34 +315,30 @@ namespace StarBreaker.Items.Weapon.DoomFight
         public override void AI()
         {
             NPC npc = Main.npc[(int)Projectile.ai[0]];
-            Projectile.Center = -(npc.Center - Projectile.Center) + npc.Center;
-            Projectile.rotation = (Projectile.Center - npc.Center).ToRotation();
             if (!npc.active)
             {
                 Projectile.Kill();
             }
-
-            if (Projectile.timeLeft <= 30)
+            if (linePos == null) linePos = new Vector2[15];
+            if (Projectile.velocity == Vector2.Zero)
             {
-                if (linePos == null)
+                Projectile.extraUpdates = 3;
+                Projectile.timeLeft *= 3;
+                Projectile.rotation = (Projectile.Center - npc.Center).ToRotation();
+                Projectile.velocity = (npc.Center - Projectile.Center) / 15;
+            }
+            else
+            {
+                if (Projectile.ai[1] < linePos.Length)
                 {
-                    linePos = new Vector2[Main.rand.Next(8, 16)];
-                }
-                if (linePos[0] == Vector2.Zero)
-                {
-                    linePos[0] = Projectile.Center;
-                }
-                Projectile.velocity = (npc.Center - linePos[0]) / 15;
-                if (Projectile.timeLeft % 5 == 0)
-                {
-                    Projectile.ai[1]++;
-                    if (Projectile.ai[1] >= linePos.Length)
-                    {
-                        return;
-                    }
-
                     linePos[(int)Projectile.ai[1]] = Projectile.Center;
+                    Projectile.velocity = Projectile.velocity.RotatedByRandom(0.15);
+                    Projectile.ai[1]++;
                 }
+            }
+            if (linePos != null && Projectile.ai[1] >= linePos.Length)
+            {
+                Projectile.Center -= Projectile.velocity;
             }
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -353,7 +348,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
 
         public override bool? CanHitNPC(NPC target)
         {
-            if (target.whoAmI != (int)Projectile.ai[0] || Projectile.timeLeft > 30)
+            if (target.whoAmI != (int)Projectile.ai[0] || linePos == null || Projectile.ai[1] < linePos.Length)
             {
                 return false;
             }
@@ -368,23 +363,21 @@ namespace StarBreaker.Items.Weapon.DoomFight
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(0, 0, 255, 180), Projectile.rotation, texture.Size() * 0.5f,
-                new Vector2(0.3f, 0.8f) * 0.3f, SpriteEffects.None, 0);
             if (linePos != null)
             {
-                Color color = Color.LightBlue * 0.8f;
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
+                Main.spriteBatch.Draw(texture, linePos[1] - Main.screenPosition, null, new Color(50, 100, 255, 0), Projectile.rotation, texture.Size() * 0.5f,
+                    new Vector2(0.3f, 0.8f) * 2.5f, SpriteEffects.None, 0);
+                Color color = Color.LightBlue;
                 List<CustomVertexInfo> customs = new();
-                for (int i = linePos.Length - 1; i > 1; i--)
+                for (int i = linePos.Length - 1; i >= 1; i--)
                 {
                     if (linePos[i] == Vector2.Zero)
                     {
                         break;
                     }
-
-                    Vector2 vel = (linePos[i] - linePos[i - 1]).NormalVector().RealSafeNormalize() * 6;
+                    float width = 9 * (1 - (i * 1f / linePos.Length));
+                    Vector2 vel = (linePos[i] - linePos[i - 1]).NormalVector().RealSafeNormalize() * width;
                     customs.Add(new(linePos[i] + vel - Main.screenPosition, color, new Vector3(0.5f, 0.5f, 0)));
                     customs.Add(new(linePos[i] - vel - Main.screenPosition, color, new Vector3(0.5f, 0.5f, 0)));
                 }
@@ -409,15 +402,12 @@ namespace StarBreaker.Items.Weapon.DoomFight
                         vertex.ToArray(), 0, vertex.Count / 3);
                 }
             }
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin();
             return false;
         }
     }
     public class VolleySword_SmallLine : ModProjectile
     {
         private Vector2[] linePos;
-        public override string Texture => "StarBreaker/Images/Extra_49";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Line");
@@ -426,7 +416,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
         public override void SetDefaults()
         {
             Projectile.friendly = true;
-            Projectile.timeLeft = 80;
+            Projectile.timeLeft = 40;
             Projectile.aiStyle = -1;
             Projectile.width = Projectile.height = 5;
             Projectile.tileCollide = false;
@@ -438,31 +428,35 @@ namespace StarBreaker.Items.Weapon.DoomFight
         public override void AI()
         {
             NPC npc = Main.npc[(int)Projectile.ai[0]];
-            Projectile.Center = -(npc.Center - Projectile.Center) + npc.Center;
-            Projectile.rotation = (Projectile.Center - npc.Center).ToRotation();
             if (!npc.active)
             {
                 Projectile.Kill();
             }
-
-            if (Projectile.timeLeft <= 60)
+            if (linePos == null) linePos = new Vector2[15];
+            if (Projectile.velocity == Vector2.Zero)
             {
-                if (linePos == null)
+                Projectile.extraUpdates = 3;
+                Projectile.timeLeft *= 3;
+                Projectile.rotation = (Projectile.Center - npc.Center).ToRotation();
+                Projectile.velocity = (npc.Center - Projectile.Center) / 15;
+            }
+            else
+            {
+                if (Projectile.ai[1] < linePos.Length)
                 {
-                    linePos = new Vector2[Main.rand.Next(8, 16)];
-                }
-                if (Projectile.timeLeft % 4 == 0)
-                {
-                    linePos[0] = Projectile.Center;
-                    linePos[^1] = npc.Center;
-                    for (int i = 1; i < linePos.Length - 1; i++)
-                    {
-                        Vector2 vector = linePos[^1] - linePos[0];
-                        vector = vector.RotatedByRandom(0.4);
-                        linePos[i] = linePos[i - 1] + vector / linePos.Length;
-                    }
+                    linePos[(int)Projectile.ai[1]] = Projectile.Center;
+                    Projectile.velocity = Projectile.velocity.RotatedByRandom(0.15);
+                    Projectile.ai[1]++;
                 }
             }
+        }
+        public override bool ShouldUpdatePosition()
+        {
+            if (linePos != null && Projectile.ai[1] >= linePos.Length)
+            {
+                return false;
+            }
+            return base.ShouldUpdatePosition();
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
@@ -471,7 +465,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
 
         public override bool? CanHitNPC(NPC target)
         {
-            if (target.whoAmI != (int)Projectile.ai[0] || Projectile.timeLeft > 60)
+            if (target.whoAmI != (int)Projectile.ai[0] || linePos == null || Projectile.ai[1] < linePos.Length)
             {
                 return false;
             }
@@ -486,24 +480,23 @@ namespace StarBreaker.Items.Weapon.DoomFight
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(0, 0, 255, 180), Projectile.rotation, texture.Size() * 0.5f,
-                new Vector2(0.3f, 0.8f) * 0.3f, SpriteEffects.None, 0);
             if (linePos != null)
             {
-                CustomVertexInfo[] customs = new CustomVertexInfo[linePos.Length];
-                for (int i = 0; i < linePos.Length; i++)
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
+                Main.spriteBatch.Draw(texture, linePos[0] - Main.screenPosition, null, new Color(50, 100, 255, 0), Projectile.rotation, texture.Size() * 0.5f,
+                    new Vector2(0.3f, 0.8f), SpriteEffects.None, 0);
+                CustomVertexInfo[] customs = new CustomVertexInfo[linePos.Length + 1];
+                customs[0] = new(linePos[0] - Main.screenPosition, Color.LightBlue, new Vector3(0.5f, 0.5f, 0));
+                for (int i = 1; i < linePos.Length; i++)
                 {
+                    if (linePos[i] == Vector2.Zero) break;
                     customs[i] = new(linePos[i] - Main.screenPosition, Color.LightBlue, new Vector3(0.5f, 0.5f, 0));
                 }
                 Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.FishingLine.Value;
                 Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip,
-                    customs, 0, customs.Length - 1);
+                    customs, 0, customs.Length - 2);
+
             }
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin();
             return false;
         }
     }

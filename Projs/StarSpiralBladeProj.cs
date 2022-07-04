@@ -33,12 +33,12 @@ namespace StarBreaker.Projs
             }
             Projectile.damage = Projectile.originalDamage + (Projectile.timeLeft < 1500 ? Projectile.timeLeft : 1500);
             Projectile.rotation += Projectile.timeLeft * 0.1f;//旋转
-            if(Projectile.rotation > 1000)//避免角度炸了,虽然没什么可能
+            if (Projectile.rotation > 1000)//避免角度炸了,虽然没什么可能
             {
                 Projectile.rotation -= 1000;
             }
 
-            if(player.channel && !Projectile.friendly)
+            if (player.channel && !Projectile.friendly)
             {
                 if (Projectile.ai[1] < 15000)
                 {
@@ -54,6 +54,7 @@ namespace StarBreaker.Projs
 
                 if (player.whoAmI == Main.myPlayer)
                 {
+                    pointList.Add(player.Center);
                     pointList.Add(Main.MouseWorld);
                 }
                 float max = 800;
@@ -73,53 +74,47 @@ namespace StarBreaker.Projs
                         }
                     }
                 }
-                if(AddPoint_MouseToNPC && player.HasMinionAttackTargetNPC)
+                if (AddPoint_MouseToNPC && player.HasMinionAttackTargetNPC)
                 {
-                    Vector2 center = Projectile.Center;
+                    Vector2 center = pointList[^2];
                     Vector2 targetCenter = Projectile.OwnerMinionAttackTargetNPC.Center;
-                    Vector2 vel = Projectile.velocity;
-                    for(int i =0;i<100;i++)
+                    Vector2 vel = Projectile.velocity.RealSafeNormalize() * 30;
+                    for (int i = 0; i < 100; i++)
                     {
                         vel = (vel * 10 + (targetCenter - center).RealSafeNormalize() * 60) / 11;
                         center += vel;
+                        if(i % 2 == 0)vel = vel.RotatedBy(0.1);
                         pointList.Add(center);
                     }
                 }
             }
-            else if(Projectile.friendly)
+            else if (Projectile.friendly)
             {
-                if (Projectile.timeLeft > 10000 && Projectile.ai[0] >= pointList.Count && player.HasMinionAttackTargetNPC)
+                if (Projectile.ai[0] < pointList.Count && Projectile.timeLeft > 500)
                 {
-                    Projectile.velocity = (Projectile.velocity * 10 + (Projectile.OwnerMinionAttackTargetNPC.Center - Projectile.Center).RealSafeNormalize() * 60) / 11;
+                    Vector2 center = pointList[(int)Projectile.ai[0]];
+                    if (Vector2.Distance(Projectile.Center, center) < 50)
+                    {
+                        Projectile.ai[0]++;
+                        Projectile.alpha = 150;
+                    }
+                    else if (Projectile.alpha > 100)
+                    {
+                        Projectile.alpha = 0;
+                        Projectile.velocity = (center - Projectile.Center) / 5f;
+                    }
                 }
                 else
                 {
-                    if (Projectile.ai[0] < pointList.Count && Projectile.timeLeft > 500)
+                    if (Projectile.alpha > 0)
                     {
-                        Vector2 center = pointList[(int)Projectile.ai[0]];
-                        if (Vector2.Distance(Projectile.Center, center) < 50)
-                        {
-                            Projectile.ai[0]++;
-                            Projectile.alpha = 150;
-                        }
-                        else if (Projectile.alpha > 100)
-                        {
-                            Projectile.alpha = 0;
-                            Projectile.velocity = (center - Projectile.Center) / 5f;
-                        }
+                        Projectile.alpha--;
                     }
-                    else
+                    if (Vector2.Distance(player.Center, Projectile.Center) < 30)
                     {
-                        if(Projectile.alpha > 0)
-                        {
-                            Projectile.alpha--;
-                        }
-                        if(Vector2.Distance(player.Center,Projectile.Center) < 30)
-                        {
-                            Projectile.Kill();
-                        }
-                        Projectile.velocity =(Projectile.velocity +(player.Center - Projectile.Center) * 0.5f) / 2f;
+                        Projectile.Kill();
                     }
+                    Projectile.velocity = (Projectile.velocity + (player.Center - Projectile.Center) * 0.5f) / 2f;
                 }
             }
             else
@@ -158,7 +153,6 @@ namespace StarBreaker.Projs
             if (pointList != null && player.channel && !Projectile.friendly)
             {
                 List<CustomVertexInfo> customVertexInfos = new();
-                customVertexInfos.Add(new(Projectile.Center - Main.screenPosition, Color.Purple, new(0.5f, 0.5f, 0)));
                 for (int i = 0; i < pointList.Count; i++)
                 {
                     customVertexInfos.Add(new(pointList[i] - Main.screenPosition, Color.Purple, new(0.5f, 0.5f, 0)));

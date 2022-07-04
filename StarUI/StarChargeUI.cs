@@ -34,8 +34,8 @@ namespace StarBreaker.StarUI
             starCharge = new(0, 0);
             starCharge.Width.Set(48, 0);
             starCharge.Height.Set(22, 0);
-            starCharge.Top.Set(600,0);
-            starCharge.Left.Set(Main.screenWidth / 3f, 0);
+            starCharge.Top.Set(Main.screenHeight / 2 - 50f,0);
+            starCharge.Left.Set(Main.screenWidth / 2, 0);
             Append(starCharge);
         }
 
@@ -45,7 +45,8 @@ namespace StarBreaker.StarUI
             {
                 return;
             }
-            starCharge.SetValue(100, Main.LocalPlayer.GetModPlayer<StarPlayer>().StarCharge);
+            starCharge.Left.Set(Main.screenWidth / 2, 0);
+            starCharge.SetValue(10, 10 - Main.LocalPlayer.GetModPlayer<StarPlayer>().StarCharge);
             base.Draw(spriteBatch);
         }
     }

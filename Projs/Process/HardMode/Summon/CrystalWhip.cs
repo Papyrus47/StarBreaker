@@ -11,7 +11,7 @@ namespace StarBreaker.Projs.Process.HardMode.Summon
             DisplayName.SetDefault("Crystal Whip");
             DisplayName.AddTranslation((int)GameCulture.CultureName.Chinese, "水晶鞭");
         }
-        public override void PostWhipAI()
+        public override void WhipAI()
         {
             Projectile.FillWhipControlPoints(Projectile, ListVector2);
             if (Projectile.ai[0] % 2 == 0)

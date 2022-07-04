@@ -163,10 +163,10 @@ namespace StarBreaker.Items.Weapon
                     Main.projectile[who].originalDamage = Item.damage * 2;
                 }
             }
-            else if (StarBreakerSystem.SpecialBattle == null)
-            {
-                StarBreakerSystem.SpecialBattle = new SpecialBattles.StarBreakerEX_SpecialBattle();
-            }
+            //else if (StarBreakerSystem.SpecialBattle == null)
+            //{
+            //    StarBreakerSystem.SpecialBattle = new SpecialBattles.StarBreakerEX_SpecialBattle();
+            //}
         }
         public override bool? UseItem(Player player)
         {

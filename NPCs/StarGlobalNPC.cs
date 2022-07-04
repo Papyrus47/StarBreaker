@@ -7,6 +7,7 @@ namespace StarBreaker.NPCs
         public override bool InstancePerEntity => true;//必须加上,且返回值为true,否则GlobalNPC不能创建实例字段
         public bool EnergySmash = false;//声明并赋值一个实例字段
         public bool StarDoomMark = false;
+        public int BloodRippingWhipTime = 0;
         public int BloodyBleed = 0;//流血效果
         public int CursedWhipHit = 0;//诅咒鞭
         public int StarSpiralBladeProj = -1;//星辰旋刃弹幕
@@ -33,6 +34,18 @@ namespace StarBreaker.NPCs
                 StarFrostFist = -1;
             }
 
+            if (VolleyAIStop > 0)
+            {
+                npc.aiStyle = -114514;
+                npc.velocity = Vector2.Zero;
+                return false;
+            }
+            else if (npc.aiStyle == -114514)
+            {
+                NPC n = new();
+                n.SetDefaults(npc.type);
+                npc.aiStyle = n.aiStyle;
+            }
             return true;
         }
         public override void PostAI(NPC npc)
@@ -102,8 +115,9 @@ namespace StarBreaker.NPCs
                         Dust.NewDust(npc.position, npc.width, npc.height, DustID.Blood);
                     }
                 }
-                if (!crit)
+                if (!crit && BloodRippingWhipTime <= 0)
                 {
+                    if (BloodyBleed <= 2) BloodyBleed = 0;
                     BloodyBleed -= BloodyBleed / 3;
                 }
             }
@@ -129,6 +143,8 @@ namespace StarBreaker.NPCs
         public override void ResetEffects(NPC npc)//重置东西用的重写函数
         {
             EnergySmash = false;//这样可以避免buff不存在时,效果依然存在
+            if(BloodRippingWhipTime > 0) BloodRippingWhipTime--;
+            if (VolleyAIStop > 0) VolleyAIStop--;
             base.ResetEffects(npc);
         }
     }

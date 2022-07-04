@@ -1,4 +1,6 @@
-﻿namespace StarBreaker.Items.Weapon.HradMode
+﻿using Terraria.ID;
+
+namespace StarBreaker.Items.Weapon.HradMode
 {
     public class OnyxBlasterGun : ModItem
     {
@@ -94,17 +96,18 @@
             }
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + Projectile.velocity * 12;
             Projectile.ai[0]++;
-            if (Projectile.ai[0] > 30)
+            if (Projectile.ai[0] > 40)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient && player.HasAmmo(player.HeldItem))
                 {
-                    player.PickAmmo(player.HeldItem, out int ammoID, out float speed, out int damage, out float kn, out ammoID);
+                    int ammoID;
+                    player.PickAmmo(player.HeldItem, out ammoID, out _, out int damage, out _, out ammoID);
                     if (Projectile.ai[1] > 8)
                     {
-                        for (int i = 0; i < 8; i++)
+                        for (int i = 0; i < 5; i++)
                         {
                             Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Projectile.Center, Projectile.velocity * 15,
-                                661, Projectile.damage, Projectile.knockBack, player.whoAmI);
+                                ProjectileID.BlackBolt, Projectile.damage, Projectile.knockBack, player.whoAmI);
                         }
                         if (Main.myPlayer == player.whoAmI)
                         {
@@ -124,12 +127,12 @@
                             {
                                 center = n.Center;
                             }
-                            for (int i = -3; i <= 3; i++)
+                            for (int i = -1; i <= 1; i++)
                             {
                                 Vector2 Realcenter = center;
                                 Realcenter += new Vector2(i * 60, -600);
                                 int proj = Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Realcenter, (Main.MouseWorld - Realcenter).RealSafeNormalize() * 30,
-                                                                        661, Projectile.damage, Projectile.knockBack, player.whoAmI);
+                                                                        ProjectileID.BlackBolt, Projectile.damage, Projectile.knockBack, player.whoAmI);
                                 Main.projectile[proj].tileCollide = false;
                                 Main.projectile[proj].extraUpdates = 5;
                                 Main.projectile[proj].timeLeft = 300;
@@ -137,7 +140,7 @@
                                 Realcenter = Projectile.Center;
                                 Realcenter -= Projectile.velocity.RotatedBy(i * 0.2) * 200;
                                 proj = Projectile.NewProjectile(player.GetSource_ItemUse_WithPotentialAmmo(player.HeldItem, ammoID), Realcenter, (Main.MouseWorld - Realcenter).RealSafeNormalize() * 30,
-                                                                        661, Projectile.damage, Projectile.knockBack, player.whoAmI);
+                                                                        ProjectileID.BlackBolt, Projectile.damage, Projectile.knockBack, player.whoAmI);
                                 Main.projectile[proj].tileCollide = false;
                                 Main.projectile[proj].extraUpdates = 1;
                                 Main.projectile[proj].timeLeft = 300;
@@ -149,7 +152,7 @@
                     {
                         for (int i = 0; i < Projectile.ai[1] + 1; i++)
                         {
-                            if (i > 10)
+                            if (i > 5)
                             {
                                 break;
                             }

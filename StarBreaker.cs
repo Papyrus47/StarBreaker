@@ -78,6 +78,12 @@ namespace StarBreaker
             On.Terraria.Player.HoneyCollision += Player_HoneyCollision;
             #endregion
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic += Main_UpdateAudio_DecideOnNewMusic;//可以修改原版曲子
+            IL.Terraria.Main.DoUpdateInWorld += Main_DoUpdateInWorld;
+        }
+
+        private void Main_DoUpdateInWorld(MonoMod.Cil.ILContext il)
+        {
+            throw new NotImplementedException();
         }
 
         private void Player_HoneyCollision(On.Terraria.Player.orig_HoneyCollision orig, Player self, bool fallThrough, bool ignorePlats)
@@ -131,14 +137,14 @@ namespace StarBreaker
             }
             else
             {
-                orig.Invoke(self, solidLayer, forRenderTargets, intoRenderTargets, waterStyleOverride);
+                try
+                {
+                    orig.Invoke(self, solidLayer, forRenderTargets, intoRenderTargets, waterStyleOverride);
+                }
+                catch { }
             }
         }
 
-        public override void AddRecipeGroups()
-        {
-            base.AddRecipeGroups();
-        }
         private void Main_UpdateAudio_DecideOnNewMusic(On.Terraria.Main.orig_UpdateAudio_DecideOnNewMusic orig, Main self)
         {
             orig(self);

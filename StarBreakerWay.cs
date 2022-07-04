@@ -324,6 +324,7 @@ namespace StarBreaker
                 }
             }
         }
+        public static float Vector2ToFloat_Atan2(Vector2 vector2, int dir = 1) => (float)Math.Atan2(vector2.Y * dir, vector2.X * dir);
         private static void AddHook(EnergyBulletItem bulletItem, EnergyProj BulletProj, int projWhoAmI)
         {
             BulletProj.Proj_AI += bulletItem.ProjAI;

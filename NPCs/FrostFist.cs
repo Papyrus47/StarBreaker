@@ -228,8 +228,8 @@ namespace StarBreaker.NPCs
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapon.FrostFistW>(), 1));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapon.BurnFistW>(), 1));
+            //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapon.FrostFistW>(), 1));
+            //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapon.BurnFistW>(), 1));
         }
         public override void OnSpawn(IEntitySource source)
         {

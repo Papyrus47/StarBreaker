@@ -254,33 +254,6 @@ namespace StarBreaker.Projs
             {
                 target.velocity += (Projectile.rotation - (Projectile.spriteDirection == -1 ? 0f : MathHelper.Pi)).ToRotationVector2() * -0.5f;
             }
-            #region 充能
-            Player player = Main.player[Projectile.owner];
-            StarPlayer starPlayer = player.GetModPlayer<StarPlayer>();
-            if (starPlayer.StarCharge < 100)
-            {
-                starPlayer.StarCharge += 15;
-            }
-            if (starPlayer.StarCharge > 100)
-            {
-                starPlayer.StarCharge = 100;
-            }
-            else if (starPlayer.StarCharge == 100)
-            {
-                int da = 0;
-                for (int i = 0; i < 5; i++)
-                {
-                    int AddDamage = damage + 100;
-                    target.life -= AddDamage;
-                    player.dpsDamage += AddDamage;
-                    target.checkDead();
-                    da += AddDamage;
-                    CombatText.NewText(target.Hitbox, CombatText.OthersDamagedHostile, AddDamage);
-                }
-                NetMessage.SendData(MessageID.DamageNPC, -1, -1, null, da, target.whoAmI);
-                starPlayer.StarCharge = 0;
-            }
-            #endregion
             #region 说话
             if (!target.active)
             {

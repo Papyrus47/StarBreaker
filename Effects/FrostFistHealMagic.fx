@@ -24,7 +24,7 @@ float4 PixelShaderFunction(PSInput input) : COLOR0
     float4 color = tex2D(uImage0, float2(coord.x,coord.y));//获取对应在贴图上的颜色
     if (all(color))
     {
-        return float4(0,0,0,0);
+        return float4(1,1,1,1);
     }
     color.rbg = input.Color.rbg;
     return color;//返回其颜色
