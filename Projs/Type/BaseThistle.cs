@@ -8,6 +8,14 @@ namespace StarBreaker.Projs.Type
 {
     public abstract class BaseThistle : ModProjectile
     {
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            float r = 0;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(),targetHitbox.Size(),
+                Projectile.Center - (Projectile.rotation.ToRotationVector2() * Projectile.width / 2f * Projectile.scale),
+                Projectile.Center + (Projectile.rotation.ToRotationVector2() * Projectile.width / 2f * Projectile.scale),
+                Projectile.height,ref r);
+        }
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;

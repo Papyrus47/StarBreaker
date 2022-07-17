@@ -43,6 +43,7 @@
                         player.KillMe(PlayerDeathReason.ByCustomReason(player.name + "鬼神之力的过度使用"), 10, player.direction);
                     }
                     player.velocity.X = Projectile.velocity.X > 0 ? 6 : -6;
+                    player.GetModPlayer<StarPlayer>().screenMove.NewScreenMove(6, Main.rand.NextVector2Unit() * 8);
                     if (Projectile.frame < 16)
                     {
                         var sound = SoundEngine.PlaySound(SoundID.Item1, player.Center);

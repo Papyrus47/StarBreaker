@@ -9,18 +9,11 @@
         }
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 200;
-            Projectile.height = Projectile.width = 18;
-            Projectile.ownerHitCheck = true;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = -1;
-            Projectile.penetrate = -1;
-            Projectile.extraUpdates = 1;
-            Projectile.tileCollide = false;
-            Projectile.DamageType = DamageClass.SummonMeleeSpeed;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
+            Projectile.DefaultToWhip();
             Projectile.aiStyle = -1;
+            Projectile.WhipSettings.Segments = 10;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 0;
         }
         public override void AI()
         {
@@ -86,82 +79,75 @@
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            #region 绘制线
-            List<Vector2> list = new();//new一个list
-            Projectile.FillWhipControlPoints(Projectile, list);//为list填充点
-            Texture2D texture2D = TextureAssets.FishingLine.Value;//获取鱼线贴图
-            Rectangle rectangle = texture2D.Frame();
-            Color color = Color.White;//颜色
-            Vector2 pos = list[0];//位置
-            Vector2 origin = new Vector2(rectangle.Width / 2, 2f);//绘制偏移
+            List<Vector2> list = new List<Vector2>();
+            Projectile.FillWhipControlPoints(Projectile, list);
 
-            for (int i = 0; i < list.Count - 1; i++)//for循环绘制线
+            Texture2D texture = TextureAssets.FishingLine.Value;
+            Rectangle frame = texture.Frame();
+            Vector2 origin = new Vector2(frame.Width / 2, 2);
+
+            Vector2 pos = list[0];
+            for (int i = 0; i < list.Count - 1; i++)
             {
-                //剩下的无法理解（bushi
-                Vector2 vector2 = list[i + 1] - list[i];
-                float rot = vector2.ToRotation() - MathHelper.PiOver2;
-                color = Lighting.GetColor(list[i].ToTileCoordinates(), color);
-                if (list.Count > 0)
-                {
-                    color = Color.Lerp(Color.Orange, color, i / list.Count);
-                }
+                Vector2 element = list[i];
+                Vector2 diff = list[i + 1] - element;
 
-                Vector2 scale = new Vector2(1f, (vector2.Length() + 2f) / rectangle.Height);
-                Main.spriteBatch.Draw(texture2D, pos - Main.screenPosition, new Rectangle?(rectangle), color, rot, origin, scale, SpriteEffects.None, 0);
-                pos += vector2;
+                float rotation = diff.ToRotation() - MathHelper.PiOver2;
+                Color color = Lighting.GetColor(element.ToTileCoordinates(), Color.Orange);
+                Vector2 scale = new Vector2(1, (diff.Length() + 2) / frame.Height);
+
+                Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, SpriteEffects.None, 0);
+
+                pos += diff;
             }
-            #endregion
-            #region 绘制弹幕
-            texture2D = TextureAssets.Projectile[Type].Value;//获取弹幕贴图
-            rectangle = texture2D.Frame(1, 5);//切割帧图
-            int height = rectangle.Height;
-            rectangle.Height -= 2;//减少帧图高度
-            origin = rectangle.Size() * 0.5f;
+
+            SpriteEffects flip = Projectile.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            Main.instance.LoadProjectile(Type);
+            texture = TextureAssets.Projectile[Type].Value;
             pos = list[0];
-            for (int i = 0; i < list.Count - 1; i++)//绘制鞭子身子
+
+            for (int i = 0; i < list.Count - 1; i++)
             {
-                bool canDraw = true;
-                if (i != 0)
+                frame = new Rectangle(0, 0, 14, 22);
+                origin = new Vector2(6, 14);
+                float scale = 1;
+
+                Vector2 element = list[i];
+                Vector2 diff = list[i + 1] - element;
+                float rotation = diff.ToRotation() - MathHelper.PiOver2; //旋转
+                Color color = Lighting.GetColor(element.ToTileCoordinates());
+
+                if (i == list.Count - 2)
                 {
-                    switch (i)
-                    {
-                        case 3:
-                        case 5:
-                        case 7:
-                            rectangle.Y = height;//鞭子图1
-                            break;
-                        case 9:
-                        case 11:
-                        case 13:
-                            rectangle.Y = height * 2;//鞭子图2
-                            break;
-                        case 15:
-                        case 17:
-                            rectangle.Y = height * 3;//鞭子图3
-                            break;
-                        case 19:
-                            rectangle.Y = height * 4;//鞭子图4
-                            origin.Y -= 8;
-                            break;
-                        default://其他情况不绘制
-                            canDraw = false;
-                            break;
-                    }
+                    frame.Y = 96;
+                    frame.Height = 24;
+                    origin.Y -= 15;
+
+                    Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
+                    float t = Projectile.ai[1] / timeToFlyOut;
+                    scale = MathHelper.Lerp(1.5f, 2f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
                 }
-                else
+                else if (i > 10)
                 {
-                    origin.Y -= 4;
+                    frame.Y = 24;
+                    frame.Height = 14;
                 }
-                Vector2 vector = list[i + 1] - list[i];
-                if (canDraw)
+                else if (i > 5)
                 {
-                    float rot = vector.ToRotation() - MathHelper.PiOver2;
-                    Color alpha = Projectile.GetAlpha(Lighting.GetColor(list[i].ToTileCoordinates()));
-                    Main.spriteBatch.Draw(texture2D, pos - Main.screenPosition, new Rectangle?(rectangle), alpha, rot, origin, 1f, SpriteEffects.None, 0f); ;
+                    frame.Y = 48;
+                    frame.Height = 14;
                 }
-                pos += vector;
+                else if (i > 0)
+                {
+                    frame.Y = 72;
+                    frame.Height = 14;
+                }
+
+                Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
+
+                pos += diff;
             }
-            #endregion
             return false;
         }
     }

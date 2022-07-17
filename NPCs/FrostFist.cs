@@ -81,7 +81,7 @@ namespace StarBreaker.NPCs
             {
                 case 0://与炎拳的对话
                     {
-                        Target.GetModPlayer<StarPlayer>().FrostFistModScr = NPC.whoAmI;
+                        Target.GetModPlayer<StarPlayer>().screenMove.NewScreenMove(2, Vector2.Zero, NPC.Center - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2));
                         Timer1++;
                         NPC.dontTakeDamage = true;
                         if (Timer1 % 50 == 0)

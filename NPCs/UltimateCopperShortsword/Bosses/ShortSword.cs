@@ -13,6 +13,60 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
             set => NPC.damage = value;
         }
         private Vector2 MK5_2_Center;
+        private SwordHeartTalk[] swordHeartTalks = null;
+        private struct SwordHeartTalk
+        {
+            public string Text;
+            public Vector2 Center;
+            public float Rot;
+            public const float Scale = 1.5f;
+            public Color Color;
+            public int TimeLeft;
+            public bool Active => TimeLeft > 0;
+            public SwordHeartTalk(Vector2 center,float rot,Color color)
+            {
+                Text = Main.rand.Next<string>(new string[5]
+                {
+                    "对...是你抛弃了我...",
+                    "我要对你实行复仇,因为你抛弃了我",
+                    "体验这份被抛弃的感受吧!",
+                    "我不会就此消失...",
+                    "我是那么害怕被不被人重视..."
+                });
+                Center = center;
+                Rot = rot;
+                if(Rot < -MathHelper.PiOver4)
+                {
+                    Rot = -MathHelper.PiOver4;
+                }
+                else if(Rot > MathHelper.PiOver4)
+                {
+                    Rot = MathHelper.PiOver4;
+                }
+                Color = color;
+                TimeLeft = 200 + 10 * Text.Length;
+            }
+            public void CheckActive()
+            {
+                if(!Active)
+                {
+                    Color color = Color.Orange;
+                    color.A = 0;
+                    this = new(new Vector2(Main.rand.Next(Main.screenWidth),Main.rand.Next(Main.screenHeight)),Main.rand.NextFloat(-MathHelper.PiOver4,MathHelper.PiOver4),color);
+                }
+            }
+            public void Draw()
+            {
+                TimeLeft--;
+                string text = (string)Text.Clone();
+                int index = (200 + 10 * Text.Length - TimeLeft) / Text.Length;
+                if (index < Text.Length && index >= 0)
+                {
+                    text = Text.Remove(index);
+                }
+                StarBreakerWay.DrawString(Main.spriteBatch, text, Center, Color, Rot,Vector2.Zero, Scale, SpriteEffects.None);
+            }
+        }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Short Sword");
@@ -321,6 +375,22 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            if(swordHeartTalks == null)
+            {
+                swordHeartTalks = new SwordHeartTalk[8];
+            }
+            else
+            {
+                for (int i = 0; i < swordHeartTalks.Length; i++)
+                {
+                    if (!swordHeartTalks[i].Active)
+                    {
+                        swordHeartTalks[i].CheckActive();
+                        break;
+                    }
+                    swordHeartTalks[i].Draw();
+                }
+            }
             switch (State)
             {
                 case 1:

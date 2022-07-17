@@ -1,4 +1,8 @@
 ﻿using StarBreaker.Items.Weapon;
+using Terraria.Graphics.Effects;
+using Terraria.Graphics.Shaders;
+using Filters = Terraria.Graphics.Effects.Filters;
+using Terraria.ID;
 
 namespace StarBreaker.Projs
 {
@@ -17,6 +21,7 @@ namespace StarBreaker.Projs
             Projectile.width = Projectile.height = 112;
             Projectile.hostile = false;
             Projectile.friendly = false;
+            Projectile.DamageType = ModContent.GetInstance<Items.DamageClasses.FourDamage>();
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 2;
@@ -31,13 +36,16 @@ namespace StarBreaker.Projs
                 Projectile.Kill();
                 return;
             }
+            if(Projectile.DamageType.Type == DamageClass.Melee.Type)//手持旋转
+            {
+                return;
+            }
             Projectile.damage = Projectile.originalDamage + (Projectile.timeLeft < 1500 ? Projectile.timeLeft : 1500);
             Projectile.rotation += Projectile.timeLeft * 0.1f;//旋转
             if (Projectile.rotation > 1000)//避免角度炸了,虽然没什么可能
             {
                 Projectile.rotation -= 1000;
             }
-
             if (player.channel && !Projectile.friendly)
             {
                 if (Projectile.ai[1] < 15000)
@@ -46,6 +54,19 @@ namespace StarBreaker.Projs
                 }
                 Projectile.timeLeft = (int)Projectile.ai[1] + 1;
                 if (Projectile.timeLeft < 5) Projectile.timeLeft = 5;
+
+                if (Projectile.ai[1] > 13000 && Main.netMode != NetmodeID.Server)
+                {
+                    if (!Filters.Scene["StarBreaker:ShockWave"].IsActive())
+                    {
+                        Filters.Scene.Activate("StarBreaker:ShockWave", Projectile.Center).GetShader().UseColor(1,5,15).UseTargetPosition(Projectile.Center);
+                    }
+                    else
+                    {
+                        float progress = (Projectile.ai[1] - 13000f) / 2000f;
+                        Filters.Scene["StarBreaker:ShockWave"].GetShader().UseProgress(1f - progress).UseOpacity(180f).UseTargetPosition(Projectile.Center);
+                    }
+                }
 
                 Projectile.Center = player.Center;
                 player.itemTime = player.itemAnimation = 2;
@@ -119,6 +140,10 @@ namespace StarBreaker.Projs
             }
             else
             {
+                if (Filters.Scene["StarBreaker:ShockWave"].IsActive())
+                {
+                    Filters.Scene["StarBreaker:ShockWave"].Deactivate();
+                }
                 Projectile.alpha = 150;//透明
                 Projectile.friendly = true;
             }
@@ -134,12 +159,16 @@ namespace StarBreaker.Projs
         }
         public override void PostDraw(Color lightColor)
         {
+            if (Projectile.DamageType.Type == DamageClass.Melee.Type)//手持旋转
+            {
+                return;
+            }
             if (Projectile.timeLeft > 400)
             {
                 Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
                 Vector2 origin = texture.Size() * 0.5f;
                 int conut = Projectile.timeLeft / 400;
-                if(conut > 6)
+                if (conut > 6)
                 {
                     conut = 6;
                 }

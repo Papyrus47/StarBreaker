@@ -19,7 +19,7 @@
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.maxRunSpeed = 10;
+            player.maxRunSpeed = 100;
             player.moveSpeed += 2f;
             player.statDefense = player.statLife = player.statLifeMax2 = 1000;
             if (!player.controlDown && !player.controlJump)

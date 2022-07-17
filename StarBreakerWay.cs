@@ -1,4 +1,5 @@
-﻿using StarBreaker.Items;
+﻿using ReLogic.Graphics;
+using StarBreaker.Items;
 using StarBreaker.Projs.Type;
 using System.Reflection;
 using Terraria.GameContent.Creative;
@@ -312,19 +313,23 @@ namespace StarBreaker
         /// <param name="DustConst">粒子数量</param>
         /// <param name="Draw">可以绘制粒子条件,与修改其他事物</param>
         /// <param name="myDust">修改粒子</param>
-        public static void NewDustByYouself(Vector2 center,int type,Func<bool> Draw,float dis = 200,int DustConst = 30,MyDust myDust = null)
+        public static void NewDustByYouself(Vector2 center,int type,Func<bool> Draw,Vector2 vector,float dis = 200,int DustConst = 30,MyDust myDust = null)
         {
             if (Draw != null && Draw.Invoke())
             {
                 for (int i = 0; i < DustConst; i++)
                 {
-                    Vector2 DustCenter = center + Vector2.UnitX.RotatedBy(MathHelper.TwoPi * (float)i / DustConst) * dis;
+                    Vector2 DustCenter = center + vector.RotatedBy(MathHelper.TwoPi * (float)i / DustConst) * dis;
                     Dust dust = Main.dust[Dust.NewDust(DustCenter, 1, 1, type)];
                     myDust?.Invoke(dust);
                 }
             }
         }
         public static float Vector2ToFloat_Atan2(Vector2 vector2, int dir = 1) => (float)Math.Atan2(vector2.Y * dir, vector2.X * dir);
+        public static void DrawString(SpriteBatch spriteBatch, string text, Vector2 pos, Color color, float rot, Vector2 origin, float scale, SpriteEffects spriteEffects = SpriteEffects.None) => 
+            spriteBatch.DrawString(FontAssets.MouseText.Value, text, pos, color, rot, origin, scale, spriteEffects, 0f);
+        public static void DrawString(SpriteBatch spriteBatch,DynamicSpriteFont dynamicSpriteFont ,string text, Vector2 pos, Color color, float rot, Vector2 origin, float scale, SpriteEffects spriteEffects = SpriteEffects.None) =>
+    spriteBatch.DrawString(dynamicSpriteFont, text, pos, color, rot, origin, scale, spriteEffects, 0f);
         private static void AddHook(EnergyBulletItem bulletItem, EnergyProj BulletProj, int projWhoAmI)
         {
             BulletProj.Proj_AI += bulletItem.ProjAI;

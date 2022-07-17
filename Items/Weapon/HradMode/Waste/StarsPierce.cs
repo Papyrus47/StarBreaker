@@ -6,9 +6,9 @@
         {
             DisplayName.SetDefault("Star Broad Sword");
             DisplayName.AddTranslation((int)GameCulture.CultureName.Chinese, "繁星刺破");
-            Tooltip.SetDefault("刺击\n" +
+            Tooltip.SetDefault("星辰之主的巨型刺剑,两边开刃也可当作剑一样使用\n" +
+                "其高频震动的剑刃使其可以刺穿许多物品\n" +
                 "命中敌人时,施加50层流血");
-            Item.staff[Type] = true;
         }
         public override void SetDefaults()
         {

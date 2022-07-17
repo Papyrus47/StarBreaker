@@ -6,17 +6,6 @@ namespace StarBreaker.NPCs.CupricOxideSword
     public class CupricOxideSword : FSMNPC
     {
         private Vector2 TargetOldPos;
-        private int Damage
-        {
-            get
-            {
-                if (Main.masterMode || Main.expertMode)
-                {
-                    return NPC.damage / 2;
-                }
-                return NPC.damage;
-            }
-        }
         public override string BossHeadTexture => base.Texture;
         public override void SetStaticDefaults()
         {

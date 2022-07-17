@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Terraria.GameContent.UI.Elements;
+using Terraria.GameInput;
 using Terraria.UI;
 
 namespace StarBreaker.StarUI.Research
@@ -16,10 +17,10 @@ namespace StarBreaker.StarUI.Research
             starBook_Task = new();
 
             StarBook_BookPanel starBook_BookPanel = new StarBook_BookPanel();
-            starBook_BookPanel.Top.Set(Main.screenHeight / 2f, 0f);
-            starBook_BookPanel.Left.Set(Main.screenWidth / 2f, 0f);
-            starBook_BookPanel.Width.Set(618,0);
-            starBook_BookPanel.Height.Set(498, 0);
+            starBook_BookPanel.Width.Set(206 * 4.5f,0);
+            starBook_BookPanel.Height.Set(166 * 4.5f, 0);
+            starBook_BookPanel.Top.Set(-starBook_BookPanel.Height.Pixels / 2f, 0.5f);
+            starBook_BookPanel.Left.Set(-starBook_BookPanel.Width.Pixels / 2f, 0.5f);
             Append(starBook_BookPanel);
             #region 遍历所有的类,获取对应的事件
             var starBook_Event = typeof(StarBook_Event).Assembly.GetTypes()//获取所有的类库下所有的类
@@ -36,12 +37,12 @@ namespace StarBreaker.StarUI.Research
                 starBook_Task[i].Height.Set(22, 0);
                 #endregion
                 starBook_Task[i].Top.Set(i % 16 * 30, 0);//设置位置
-                float left = 51.5f;
+                float precent = 0.25f;
                 if(i % 16 >= 8)
                 {
-                    left = 462;
+                    precent = 0.75f;
                 }
-                starBook_Task[i].Left.Set(left, 0);
+                starBook_Task[i].Left.Set(0,precent);
             }
             #endregion
             for(int i = 0;i< starBook_Task.Count;i++)
@@ -90,8 +91,13 @@ namespace StarBreaker.StarUI.Research
                 else if (DrawTaskUI_Index > -1 && DrawTaskUI_Index < starBook_Task.Count && starBook_Task[DrawTaskUI_Index] is StarBook_TaskUI taskUI)
                 {
                     taskUI.Update(gameTime);
+                    if(Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+                    {
+                        DrawTaskUI_Index = -1;
+                    }
                 }
             }
+            
         }
     }
     public class StarBook_BookPanel : UIPanel
@@ -99,7 +105,7 @@ namespace StarBreaker.StarUI.Research
         public override void Draw(SpriteBatch spriteBatch)
         {
             Texture2D texture = ModContent.Request<Texture2D>((GetType().Namespace + "." + GetType().Name).Replace('.', '/')).Value;
-            spriteBatch.Draw(texture, new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), null, Color.White, 0, texture.Size() * 0.5f, 3f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture,new Vector2(GetDimensions().X,GetDimensions().Y), null, Color.White, 0, Vector2.Zero, 4.5f, SpriteEffects.None, 0f);
         }
     }
 }

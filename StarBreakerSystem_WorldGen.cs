@@ -23,10 +23,10 @@ namespace StarBreaker
                          {
                              for (int y = 0; y < texture.Height; y++)
                              {
-                                 if (colors[x + y * texture.Width].R == 255)
+                                 if (colors[x + y * texture.Width].R == 255 && colors[x + y * texture.Width].B == 255)
                                  {
                                      int posX = x + Main.maxTilesX / 4;
-                                     int posY = y - 30;
+                                     int posY = y + Main.maxTilesY / 16;
                                      WorldGen.KillTile(posX, posY, false, false, false);
                                      WorldGen.KillWall(posX, posY, false);
                                      Main.tile[posX, posY].ClearEverything();

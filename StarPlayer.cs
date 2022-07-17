@@ -12,10 +12,11 @@ namespace StarBreaker
     {
         public bool SummonStarWenpon;
         public bool InIdeaDriven;
-        public int FrostFistModScr = -1;
         public int SummonStarShieldTime;
         public bool CanFall;
         public int GhostSwordAttack;
+        public ScreenMove screenMove;
+
         public readonly Dictionary<StarGhostKnifeAtk, string> GhostSwordName = new()
         {
             { StarGhostKnifeAtk.Kalla, "冥炎之卡洛" },
@@ -109,7 +110,6 @@ namespace StarBreaker
             SummonStarWenpon = false;
             SwordSum = false;
             DrumDraw = false;
-            FrostFistModScr = -1;
             if (SummonStarShieldTime > 0)
             {
                 SummonStarShieldTime--;
@@ -310,20 +310,38 @@ namespace StarBreaker
         }
         public override void ModifyScreenPosition()
         {
-            if (FrostFistModScr != -1)
+            screenMove.Update();
+        }
+        public struct ScreenMove
+        {
+            /// <summary>
+            /// 存活时间(帧为单位)
+            /// </summary>
+            public int TimeLeft;
+            /// <summary>
+            /// 如果不为null,则先将屏幕位置修正到对应位置上,再更新速度移动
+            /// </summary>
+            public Vector2? Center;
+            public bool Active => TimeLeft > 0;
+            /// <summary>
+            /// 速度
+            /// </summary>
+            public Vector2 Velocity;
+            /// <summary>
+            /// 生成新的屏幕移动
+            /// </summary>
+            public void NewScreenMove(int timeLeft,Vector2 vel,Vector2? center = null)
             {
-                Main.screenPosition = Main.npc[FrostFistModScr].position - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
+                TimeLeft = timeLeft;
+                Velocity = vel;
+                Center = center;
             }
-            if (Player.heldProj >= 0)
+            public void Update()//根据速度更新屏幕位置
             {
-                Projectile projectile = Main.projectile[Player.heldProj];
-                if (projectile.type == ModContent.ProjectileType<GhostFireHit>() && projectile.frame % 6 == 0)
+                if (Active)
                 {
-                    Main.screenPosition += Main.rand.NextVector2Unit() * 8;
-                }
-                else if (projectile.type == ModContent.ProjectileType<FireKnife>())
-                {
-                    IceGunAndFireKnife iceGunAndFireKnife = Player.HeldItem.ModItem as IceGunAndFireKnife;
+                    Main.screenPosition += Velocity;
+                    TimeLeft--;
                 }
             }
         }

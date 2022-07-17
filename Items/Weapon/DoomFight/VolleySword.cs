@@ -322,17 +322,17 @@ namespace StarBreaker.Items.Weapon.DoomFight
             if (linePos == null) linePos = new Vector2[15];
             if (Projectile.velocity == Vector2.Zero)
             {
-                Projectile.extraUpdates = 3;
+                Projectile.extraUpdates = 6;
                 Projectile.timeLeft *= 3;
                 Projectile.rotation = (Projectile.Center - npc.Center).ToRotation();
-                Projectile.velocity = (npc.Center - Projectile.Center) / 15;
+                Projectile.velocity = (npc.Center - Projectile.Center).RealSafeNormalize() * 70;
             }
             else
             {
                 if (Projectile.ai[1] < linePos.Length)
                 {
                     linePos[(int)Projectile.ai[1]] = Projectile.Center;
-                    Projectile.velocity = Projectile.velocity.RotatedByRandom(0.15);
+                    Projectile.velocity = Projectile.velocity.RotatedBy(Math.Sin(Projectile.timeLeft) * 0.6f);
                     Projectile.ai[1]++;
                 }
             }
@@ -359,7 +359,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.GetGlobalNPC<StarGlobalNPC>().VolleyAIStop = 300;
+            target.GetGlobalNPC<StarGlobalNPC>().VolleyAIStop = 50;
         }
         public override bool PreDraw(ref Color lightColor)
         {

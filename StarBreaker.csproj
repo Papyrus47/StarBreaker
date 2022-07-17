@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="Items\Weapon\HradMode\新文件夹\" />
     <Folder Include="Items\Weapon\StarBreakerWeapon\" />
+    <Folder Include="NPCs\SpecialTownNPC\" />
     <Folder Include="Projs\Process\NoHardMode\" />
   </ItemGroup>
 </Project>

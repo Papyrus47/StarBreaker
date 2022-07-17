@@ -54,16 +54,6 @@ namespace StarBreaker.NPCs.StarDoomStaff
             rotation = NPC.rotation;
         }
 
-        public override void SendExtraAI(BinaryWriter writer)
-        {
-            base.SendExtraAI(writer);
-            writer.Write(TargerPlayerDeadCounts);
-        }
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            base.ReceiveExtraAI(reader);
-            TargerPlayerDeadCounts = reader.ReadInt32();
-        }
         public override void AI()
         {
             if (NPC.target == 255 || NPC.target <= 0)
@@ -135,7 +125,6 @@ namespace StarBreaker.NPCs.StarDoomStaff
 
                     State = 1;
                     Timer1 = Timer2 = Timer3 = 0;
-                    NPC.netUpdate = true;
                 }
             }
             else

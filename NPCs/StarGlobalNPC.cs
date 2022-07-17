@@ -1,4 +1,5 @@
-﻿using StarBreaker.Items.Weapon;
+﻿using MonoMod.Cil;
+using StarBreaker.Items.Weapon;
 
 namespace StarBreaker.NPCs
 {
@@ -17,6 +18,24 @@ namespace StarBreaker.NPCs
         public static int StarBreaker = -1;
         public static int StarGhostKnife = -1;
         public static int StarFrostFist = -1;
+        public override void Load()//加载这个玩意的时候
+        {
+            base.Load();
+            On.Terraria.NPC.UpdateNPC_Inner += NPC_UpdateNPC_Inner;
+        }
+
+        private void NPC_UpdateNPC_Inner(On.Terraria.NPC.orig_UpdateNPC_Inner orig, NPC self, int i)
+        {
+            if (self.GetGlobalNPC<StarGlobalNPC>().VolleyAIStop == 0)
+            {
+                orig.Invoke(self, i);
+            }
+            else
+            {
+                self.GetGlobalNPC<StarGlobalNPC>().VolleyAIStop--;
+            }
+        }
+
         public override bool PreAI(NPC npc)
         {
             if (npc.type == ModContent.NPCType<StarBreakerN>() || npc.type == ModContent.NPCType<StarBreakerEX>())
@@ -32,19 +51,6 @@ namespace StarBreaker.NPCs
             if (npc.type == ModContent.NPCType<FrostFist>())
             {
                 StarFrostFist = -1;
-            }
-
-            if (VolleyAIStop > 0)
-            {
-                npc.aiStyle = -114514;
-                npc.velocity = Vector2.Zero;
-                return false;
-            }
-            else if (npc.aiStyle == -114514)
-            {
-                NPC n = new();
-                n.SetDefaults(npc.type);
-                npc.aiStyle = n.aiStyle;
             }
             return true;
         }
@@ -144,7 +150,6 @@ namespace StarBreaker.NPCs
         {
             EnergySmash = false;//这样可以避免buff不存在时,效果依然存在
             if(BloodRippingWhipTime > 0) BloodRippingWhipTime--;
-            if (VolleyAIStop > 0) VolleyAIStop--;
             base.ResetEffects(npc);
         }
     }

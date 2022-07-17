@@ -6,7 +6,6 @@
     //等到我有另外npc的帧图再搞一个带帧图的走地机boss
     public class EnchantedSword : FSMNPC
     {
-        public override string Texture => "Terraria/Images/Item_" + ItemID.EnchantedSword;
         public override string BossHeadTexture => Texture;
         public override void SetStaticDefaults()
         {

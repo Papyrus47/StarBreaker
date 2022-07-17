@@ -1,9 +1,11 @@
-﻿using StarBreaker.Effects;
+﻿using ReLogic.Content;
+using StarBreaker.Effects;
 using StarBreaker.Items.Weapon.DoomFight;
 using StarBreaker.Projs.Type;
 using StarBreaker.Projs.Waste;
 using StarBreaker.StarUI;
 using Terraria.Graphics.Effects;
+using Terraria.Graphics.Shaders;
 using Terraria.UI;
 using static On.Terraria.Graphics.Effects.FilterManager;
 using Filters = Terraria.Graphics.Effects.Filters;
@@ -17,7 +19,6 @@ namespace StarBreaker
         public static ModKeybind ToggleGhostSwordAttack;
         public static Effect FrostFistHealMagic;
         public static Effect LightStar;
-        public static Effect GhostSlash;
         public static Effect EliminateRaysShader;
         public static Effect OffsetShader;//偏移用的shader
         public static Effect UseSwordShader;//剑类挥动
@@ -27,23 +28,27 @@ namespace StarBreaker
         public override void Load()
         {
             Instantiate = this;//加载时，获取Mod实例
+            AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
             #region 鼠标按键
             ToggleGhostSwordAttack = KeybindLoader.RegisterKeybind(this, "星辰鬼刀-状态切换", "E");
             #endregion
             #region 普通shader
-            FrostFistHealMagic = ModContent.Request<Effect>("StarBreaker/Effects/Content/FrostFistHealMagic").Value;
-            LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
-            EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader").Value;
-            OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset").Value;
-            UseSwordShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/UseSwordShader").Value;
+            FrostFistHealMagic = ModContent.Request<Effect>("StarBreaker/Effects/Content/FrostFistHealMagic",mode).Value;
+            LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar", mode).Value;
+            EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader", mode).Value;
+            OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset", mode).Value;
+            UseSwordShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/UseSwordShader", mode).Value;
             #endregion
             #region 屏幕shader
             if (!Main.dedServ)
             {
-                GhostSlash = ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value;
                 Filters.Scene["StarBreaker:GhostSlash"] = new Filter(
-                    new GhostSlash(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value), "GhostSlash"), EffectPriority.Medium);
-                Filters.Scene["StarBreaker:GhostSlash"].Load();
+                    new GhostSlash(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash",mode).Value), "GhostSlash"), EffectPriority.Medium);
+                Filters.Scene["StarBreaker:GhostSlash"].Load();//星辰鬼刀
+
+                Filters.Scene["StarBreaker:ShockWave"] = new Filter(new ScreenShaderData(
+                    new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/ShockWave", mode).Value), "ShockWave"), EffectPriority.VeryHigh);
+                Filters.Scene["StarBreaker:ShockWave"].Load();//屏幕震撼shader
             }
             #endregion
             #region sky
@@ -78,12 +83,6 @@ namespace StarBreaker
             On.Terraria.Player.HoneyCollision += Player_HoneyCollision;
             #endregion
             On.Terraria.Main.UpdateAudio_DecideOnNewMusic += Main_UpdateAudio_DecideOnNewMusic;//可以修改原版曲子
-            IL.Terraria.Main.DoUpdateInWorld += Main_DoUpdateInWorld;
-        }
-
-        private void Main_DoUpdateInWorld(MonoMod.Cil.ILContext il)
-        {
-            throw new NotImplementedException();
         }
 
         private void Player_HoneyCollision(On.Terraria.Player.orig_HoneyCollision orig, Player self, bool fallThrough, bool ignorePlats)
@@ -164,22 +163,6 @@ namespace StarBreaker
 
         public override void PostSetupContent()
         {
-            #region 普通shader
-            FrostFistHealMagic = ModContent.Request<Effect>("StarBreaker/Effects/Content/FrostFistHealMagic").Value;
-            LightStar = ModContent.Request<Effect>("StarBreaker/Effects/Content/LightStar").Value;
-            EliminateRaysShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/EliminateRaysShader").Value;
-            OffsetShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/Offset").Value;
-            UseSwordShader = ModContent.Request<Effect>("StarBreaker/Effects/Content/UseSwordShader").Value;
-            #endregion
-            #region 屏幕shader
-            if (!Main.dedServ)
-            {
-                GhostSlash = ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value;
-                Filters.Scene["StarBreaker:GhostSlash"] = new Filter(
-                    new GhostSlash(new Ref<Effect>(ModContent.Request<Effect>("StarBreaker/Effects/Content/GhostSlash").Value), "GhostSlash"), EffectPriority.Medium);
-                Filters.Scene["StarBreaker:GhostSlash"].Load();
-            }
-            #endregion
             #region 标题更改
             try
             {

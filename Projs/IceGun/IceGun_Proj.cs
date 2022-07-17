@@ -38,7 +38,7 @@
             if (Projectile.ai[1] < 360) Projectile.ai[1]++;
             if(Projectile.ai[1] % 2 == 0)
             {
-                StarBreakerWay.NewDustByYouself(Projectile.Center, DustID.Ice, () => true, 50, (int)Projectile.ai[1] / 10,
+                StarBreakerWay.NewDustByYouself(Projectile.Center, DustID.Ice, () => true,Vector2.UnitX, 50, (int)Projectile.ai[1] / 10,
                     (dust) =>
                     {
                         dust.noGravity = true;
