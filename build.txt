@@ -1,0 +1,4 @@
+displayName = Star Breaker
+author = papyrus
+version = 0.0.4.3
+includeSource = true
