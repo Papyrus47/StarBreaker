@@ -1,4 +1,6 @@
-﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿using StarBreaker.Items.Type;
+
+namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class EnergyWhirlingBlade : BaseEnergyMelee
     {
@@ -36,7 +38,7 @@
             Item item = new(source.AmmoItemIdUsed);
             if (item.ModItem is EnergyBulletItem bullet)
             {
-                StarBreakerWay.Add_Hooks_ToProj(bullet, proj);
+                StarBreakerUtils.Add_Hooks_ToProj(bullet, proj);
             }
             return false;
         }

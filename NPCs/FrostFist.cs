@@ -1,5 +1,4 @@
-﻿using Terraria.GameContent.ItemDropRules;
-using Terraria.Graphics.Effects;
+﻿using Terraria.Graphics.Effects;
 
 namespace StarBreaker.NPCs
 {
@@ -242,7 +241,7 @@ namespace StarBreaker.NPCs
         }
         public override void OnKill()
         {
-            StarBreakerSystem.downedStarFist = true;
+            //StarBreakerSystem.downedStarFist = true;
         }
         public override bool CheckDead()
         {

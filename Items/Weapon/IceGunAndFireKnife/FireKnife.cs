@@ -15,11 +15,15 @@
             Projectile.Size = new(26);
             Projectile.hide = true;
         }
-        public override bool? CanDamage() => false;
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
-            if(player.HeldItem == null || player.HeldItem.type != ModContent.ItemType<IceGunAndFireKnife>())
+            if (player.HeldItem == null || player.HeldItem.type != ModContent.ItemType<IceGunAndFireKnife>())
             {
                 Projectile.Kill();
                 return;
@@ -30,7 +34,7 @@
                 {
                     Projectile.localAI[0] = 1;
                     int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<FireKnife_Blade>(),
-                        Projectile.damage,Projectile.knockBack, player.whoAmI);
+                        Projectile.damage, Projectile.knockBack, player.whoAmI);
                     Main.projectile[proj].localAI[0] = 0;
                 }
                 IceGunAndFireKnife iceGunAndFireKnife = player.HeldItem.ModItem as IceGunAndFireKnife;
@@ -38,7 +42,7 @@
                 Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver4;
                 Projectile.timeLeft = 2;
                 player.itemRotation = Projectile.velocity.ToRotation();
-                if(player.direction == -1)
+                if (player.direction == -1)
                 {
                     player.itemRotation += MathHelper.Pi;
                 }
@@ -47,7 +51,7 @@
                     if (Projectile.ai[0] <= 0)//判断攻击
                     {
                         Projectile.ai[0] = 200;
-                        if(Projectile.ai[1] == 0)
+                        if (Projectile.ai[1] == 0)
                         {
                             Projectile.ai[1]++;
                         }
@@ -56,7 +60,7 @@
                             Projectile.ai[1] = 0;
                             Projectile.ai[0] = 0;
                             Projectile.localAI[1] = 0;
-                            if(iceGunAndFireKnife.InMax)
+                            if (iceGunAndFireKnife.InMax)
                             {
                                 iceGunAndFireKnife.ChannelTime = 0;
                             }
@@ -67,7 +71,7 @@
                     {
                         player.heldProj = Projectile.whoAmI;
                         player.itemTime = player.itemAnimation = 3;
-                        if(iceGunAndFireKnife.InMax)
+                        if (iceGunAndFireKnife.InMax)
                         {
                             if (Projectile.ai[0] > 150)
                             {
@@ -75,7 +79,7 @@
                                 if (Projectile.localAI[1] < 0.3f)
                                 {
                                     Projectile.localAI[1] += 0.05f;
-                                    if(Main.myPlayer == player.whoAmI)
+                                    if (Main.myPlayer == player.whoAmI)
                                     {
                                         Projectile.velocity = (player.Center - Main.MouseWorld).RealSafeNormalize();
                                     }
@@ -108,13 +112,13 @@
                 }
                 else
                 {
-                    if(player.controlUseTile)
+                    if (player.controlUseTile)
                     {
                         player.itemTime = player.itemAnimation = 2;
                         player.velocity *= 0.8f;
                     }
-                    Projectile.velocity = (Projectile.velocity * 5 + new Vector2(3 * player.direction, 8))/6;
-                    Projectile.Center = Vector2.Lerp(Projectile.Center,player.Center + new Vector2(-40 * player.direction, -15),0.1f);
+                    Projectile.velocity = (Projectile.velocity * 5 + new Vector2(3 * player.direction, 8)) / 6;
+                    Projectile.Center = Vector2.Lerp(Projectile.Center, player.Center + new Vector2(-40 * player.direction, -15), 0.1f);
                 }
             }
         }
@@ -124,17 +128,26 @@
         }
         public override void PostDraw(Color lightColor)
         {
-            if (Main.LocalPlayer.HeldItem == null) return;
+            if (Main.LocalPlayer.HeldItem == null)
+            {
+                return;
+            }
 
             IceGunAndFireKnife iceGunAndFireKnife = Main.LocalPlayer.HeldItem.ModItem as IceGunAndFireKnife;
-            if (iceGunAndFireKnife == null) return;
+            if (iceGunAndFireKnife == null)
+            {
+                return;
+            }
 
-            Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Items/Weapon/IceGunAndFireKnife/GunAndKnifeChannelUI").Value;
-            Main.spriteBatch.Draw(texture, Main.LocalPlayer.Center + new Vector2(0, -50) - Main.screenPosition, null, Color.White,0,texture.Size() * 0.5f,1f,SpriteEffects.None,0);
+            Texture2D texture = StarBreakerAssetTexture.GunAndKnifeChannelUI.Value;
+            Main.spriteBatch.Draw(texture, Main.LocalPlayer.Center + new Vector2(0, -50) - Main.screenPosition, null, Color.White, 0, texture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
 
-            texture = ModContent.Request<Texture2D>("StarBreaker/Items/Weapon/IceGunAndFireKnife/GunAndKnifeChannelUI_Line").Value;
-            Main.spriteBatch.Draw(texture, Main.LocalPlayer.Center + new Vector2(0, -50) - Main.screenPosition,new(0,0,(int)(texture.Width * (iceGunAndFireKnife.ChannelTime / 1800f)),texture.Height),iceGunAndFireKnife.InMax ? Color.Red : Color.Purple, 0, texture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
+            texture = StarBreakerAssetTexture.GunAndKnifeChannelUI_Line.Value;
+            Main.spriteBatch.Draw(texture, Main.LocalPlayer.Center + new Vector2(0, -50) - Main.screenPosition, new(0, 0, (int)(texture.Width * (iceGunAndFireKnife.ChannelTime / 1800f)), texture.Height), iceGunAndFireKnife.InMax ? Color.Red : Color.Purple, 0, texture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
         }
-        public override bool ShouldUpdatePosition() => false;
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
     }
 }

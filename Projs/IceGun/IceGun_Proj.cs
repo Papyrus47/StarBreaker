@@ -19,7 +19,7 @@
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
-            if(player.channel)
+            if (player.channel)
             {
                 Projectile.timeLeft = 2;
             }
@@ -27,18 +27,26 @@
             player.itemTime = player.itemAnimation = 2;
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
-            if (Projectile.spriteDirection == -1) Projectile.rotation += MathHelper.Pi;
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.Pi;
+            }
+
             player.ChangeDir(Projectile.direction);
             player.heldProj = Projectile.whoAmI;
-            player.itemRotation = StarBreakerWay.Vector2ToFloat_Atan2(Projectile.velocity,Projectile.direction);
-            if(Main.myPlayer == player.whoAmI)
+            player.itemRotation = StarBreakerUtils.Vector2ToFloat_Atan2(Projectile.velocity, Projectile.direction);
+            if (Main.myPlayer == player.whoAmI)
             {
                 Projectile.velocity = (Main.MouseWorld - player.Center).RealSafeNormalize() * 20f;
             }
-            if (Projectile.ai[1] < 360) Projectile.ai[1]++;
-            if(Projectile.ai[1] % 2 == 0)
+            if (Projectile.ai[1] < 360)
             {
-                StarBreakerWay.NewDustByYouself(Projectile.Center, DustID.Ice, () => true,Vector2.UnitX, 50, (int)Projectile.ai[1] / 10,
+                Projectile.ai[1]++;
+            }
+
+            if (Projectile.ai[1] % 2 == 0)
+            {
+                StarBreakerUtils.NewDustByYouself(Projectile.Center, DustID.Ice, () => true, Vector2.UnitX, 50, (int)Projectile.ai[1] / 10,
                     (dust) =>
                     {
                         dust.noGravity = true;
@@ -65,8 +73,16 @@
                 }
             }
         }
-        public override bool ShouldUpdatePosition() => false;
-        public override bool? CanDamage() => false;
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
+
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
@@ -78,7 +94,7 @@
                 origin.X += 40;
             }
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition,
-                new Rectangle(0,0,texture.Width,texture.Height / 2 - 1), lightColor, Projectile.rotation, origin, Projectile.scale, spriteEffects, 0);
+                new Rectangle(0, 0, texture.Width, texture.Height / 2 - 1), lightColor, Projectile.rotation, origin, Projectile.scale, spriteEffects, 0);
             return false;
         }
     }

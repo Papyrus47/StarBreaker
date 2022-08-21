@@ -34,23 +34,27 @@
         }
         public override void HoldItem(Player player)
         {
-            if(player.ownedProjectileCounts[ModContent.ProjectileType<FireKnife>()] == 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<FireKnife>()] == 0)
             {
                 Projectile.NewProjectile(Item.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<FireKnife>(),
-                    player.GetWeaponDamage(Item),player.GetWeaponKnockback(Item),player.whoAmI);
+                    player.GetWeaponDamage(Item), player.GetWeaponKnockback(Item), player.whoAmI);
             }
-            if(player.altFunctionUse == 2 && ChannelTime < 3600)
+            if (player.altFunctionUse == 2 && ChannelTime < 3600)
             {
                 ChannelTime++;
             }
         }
-        public override bool AltFunctionUse(Player player) => true;
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             Player player = Main.player[Item.playerIndexTheItemIsReservedFor];
             foreach (TooltipLine line in tooltips)
             {
-                if(line.Mod == "Terraria" && line.Name == "Damage")
+                if (line.Mod == "Terraria" && line.Name == "Damage")
                 {
                     line.Text = player.GetWeaponDamage(Item).ToString() + "近战伤害";
                 }
@@ -61,21 +65,21 @@
         public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
             Texture2D texture = TextureAssets.Item[Type].Value;
-            
-            Rectangle frame = new(0,0,texture.Width,texture.Height / 2);//分为2帧
+
+            Rectangle frame = new(0, 0, texture.Width, texture.Height / 2);//分为2帧
             if (InMax)
             {
                 frame.Y = frame.Height;
             }
             Vector2 origin = frame.Size() * 0.5f;
-            spriteBatch.Draw(TextureAssets.Item[Type].Value,Item.Center, frame,lightColor, 0, origin, scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(TextureAssets.Item[Type].Value, Item.Center, frame, lightColor, 0, origin, scale, SpriteEffects.None, 0);
             return false;
         }
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             Texture2D texture = TextureAssets.Item[Type].Value;
             frame.Height = texture.Height / 2;
-            if(InMax)
+            if (InMax)
             {
                 frame.Y = frame.Height;
             }

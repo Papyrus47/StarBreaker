@@ -37,7 +37,7 @@
         }
         public override void AI()
         {
-            if(NPC.target < 0 || NPC.target == 255 || !Target.active || Target.dead)
+            if (NPC.target < 0 || NPC.target == 255 || !Target.active || Target.dead)
             {
                 NPC.TargetClosest();
             }//获取目标,不用说了
@@ -45,8 +45,16 @@
             if (Target.dead)//死亡
             {
                 NPC.velocity.X += NPC.velocity.X;//逃跑
-                if (NPC.velocity.X < 0.1f) NPC.velocity.X = 0.1f;
-                if (Math.Abs(NPC.velocity.X) > 10) NPC.active = false;
+                if (NPC.velocity.X < 0.1f)
+                {
+                    NPC.velocity.X = 0.1f;
+                }
+
+                if (Math.Abs(NPC.velocity.X) > 10)
+                {
+                    NPC.active = false;
+                }
+
                 return;
             }
             switch (State)
@@ -251,7 +259,11 @@
                     }
             }
         }
-        public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;
+        public override void BossHeadRotation(ref float rotation)
+        {
+            rotation = NPC.rotation;
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Texture2D texture = TextureAssets.Npc[Type].Value;

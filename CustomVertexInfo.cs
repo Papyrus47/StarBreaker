@@ -2,14 +2,14 @@
 {
     public struct CustomVertexInfo : IVertexType
     {
-        private static VertexDeclaration _vertexDeclaration = new VertexDeclaration(new VertexElement[3]
+        public static VertexDeclaration _vertexDeclaration = new VertexDeclaration(new VertexElement[3]
         {
                 new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 0),
                 new VertexElement(8, VertexElementFormat.Color, VertexElementUsage.Color, 0),
                 new VertexElement(12, VertexElementFormat.Vector3, VertexElementUsage.TextureCoordinate, 0)
         });
         /// <summary>
-        /// 绘制位置(世界坐标)
+        /// 绘制位置
         /// </summary>
         public Vector2 Position;
         /// <summary>

@@ -2,7 +2,7 @@
 {
     public class LastCopperMagicStaffProj : ModProjectile
     {
-        public override string Texture => StarBreakerWay.TransparentTex;
+        public override string Texture => StarBreakerUtils.TransparentTex;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("紫魔法");
@@ -29,7 +29,15 @@
                 {
                     Color color = Main.rand.NextBool() ? Color.MediumPurple : Color.RosyBrown;
                     color.A = 0;
-                    StarBreakerWay.NewParticle(new Particle.StarParticle(color,Projectile.Center));
+                    Particle.LightStar LightStar = new();
+                    LightStar.SetBasicInfo(StarBreakerAssetTexture.LightStar, null, Vector2.Zero, Projectile.Center);
+                    LightStar.color = color;
+                    LightStar.Rotation = Main.rand.NextFloat(6.28f);
+                    LightStar.RotationVelocity = Main.rand.NextFloat(0.1f);
+                    LightStar.Scale = new(Main.rand.NextFloat(0.2f, 0.4f));
+                    LightStar.TimeLeft = 120;
+                    LightStar.ScaleVelocity = new(-0.02f);
+                    StarBreakerUtils.AddParticle(LightStar, false);
                 }
             }
             if (Projectile.timeLeft < 260)
@@ -55,6 +63,9 @@
                 Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.ToRadians(9));
             }
         }
-        public override bool PreDraw(ref Color lightColor) => false;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            return false;
+        }
     }
 }

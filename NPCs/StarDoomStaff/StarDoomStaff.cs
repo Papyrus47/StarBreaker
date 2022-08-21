@@ -1,5 +1,4 @@
 ﻿using StarBreaker.Projs.StarDoomStaff.Boss;
-using System.IO;
 using Terraria.GameContent.ItemDropRules;
 
 namespace StarBreaker.NPCs.StarDoomStaff

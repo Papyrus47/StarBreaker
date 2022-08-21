@@ -1,4 +1,5 @@
-﻿using StarBreaker.Projs.Bullets;
+﻿using StarBreaker.Items.Type;
+using StarBreaker.Projs.Bullets;
 using Terraria.GameContent.Creative;
 
 namespace StarBreaker.Items.Bullet

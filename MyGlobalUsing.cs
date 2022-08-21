@@ -1,5 +1,7 @@
 ﻿global using Microsoft.Xna.Framework;
 global using Microsoft.Xna.Framework.Graphics;
+global using ReLogic.Content;
+global using StarBreaker.MyGraphics.RenderTargetProjDraws.ProjDraw;
 global using System;
 global using System.Collections.Generic;
 global using Terraria;
@@ -10,8 +12,6 @@ global using Terraria.GameContent.Bestiary;
 global using Terraria.ID;
 global using Terraria.Localization;
 global using Terraria.ModLoader;
-global using System.Threading;
-global using System.Threading.Tasks;
 //这个我分享一下
 //1.4是C#10版本
 //所以有一个global using

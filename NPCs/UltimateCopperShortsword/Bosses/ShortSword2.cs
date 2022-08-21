@@ -1,6 +1,5 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword;
 using System.IO;
-using Terraria.ID;
 
 namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
 {
@@ -52,7 +51,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
             {
                 if (!Active)
                 {
-                    Color color = Color.Lerp(Color.Orange,Color.Green,0.5f);
+                    Color color = Color.Lerp(Color.Orange, Color.Green, 0.5f);
                     color.A = 0;
                     this = new(new Vector2(Main.rand.Next(Main.screenWidth), Main.rand.Next(Main.screenHeight)), Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4), color);
                 }
@@ -67,7 +66,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 {
                     text = Text.Remove(index);
                 }
-                StarBreakerWay.DrawString(Main.spriteBatch, text, Center, Color, Rot, Vector2.Zero, Scale, SpriteEffects.None);
+                StarBreakerUtils.DrawString(Main.spriteBatch, text, Center, Color, Rot, Vector2.Zero, Scale, SpriteEffects.None);
             }
         }
         public override void SetStaticDefaults()
@@ -462,7 +461,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 color = new Color(0.3f, 0.8f, 0.1f, 0.2f);
             }
 
-            StarBreakerWay.NPCDrawTail(NPC, drawColor, color);
+            StarBreakerUtils.NPCDrawTail(NPC, drawColor, color);
             return base.PreDraw(spriteBatch, screenPos, drawColor);
         }
         public override void BossHeadRotation(ref float rotation)

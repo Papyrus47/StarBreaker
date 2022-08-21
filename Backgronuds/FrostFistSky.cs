@@ -103,7 +103,7 @@ namespace StarBreaker.Backgronuds
             }
             if (maxDepth >= 0 && minDepth < 0)
             {
-                Main.spriteBatch.Draw(ModContent.Request<Texture2D>("StarBreaker/Backgronuds/FrostFistSky").Value,
+                Main.spriteBatch.Draw(StarBreakerAssetTexture.FrostFistSky.Value,
                     new Rectangle(Main.screenWidth, Main.screenHeight, Main.screenWidth, Main.screenHeight), null, Color.White * 0.35f * intensity, MathHelper.Pi, Vector2.Zero, SpriteEffects.FlipVertically, 0);
             }
             if (maxDepth >= 3.4028235E+35f && minDepth < 3.4028235E+35f)

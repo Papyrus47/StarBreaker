@@ -301,7 +301,7 @@ namespace StarBreaker.NPCs
         }
         public override void OnKill()
         {
-            StarBreakerSystem.downedStarBreakerEX = true;
+            StarBreakerSystem.downed.downedStarBreakerEX = true;
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {

@@ -29,7 +29,7 @@
                 for (int j = -3; j <= 3; j++)
                 {
                     int posX = (int)(Projectile.Center.X) / 16;
-                    int posY = (int)(Projectile.Center.Y)/ 16;
+                    int posY = (int)(Projectile.Center.Y) / 16;
                     if (posX + i > 0 && posX + i < Main.maxTilesX)
                     {
                         if (posY + j > 0 && posY + j < Main.maxTilesY)
@@ -50,9 +50,9 @@
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            StarBreakerWay.DrawTailTexInPos(TextureAssets.Projectile[Type].Value,Projectile.oldPos,
-                lightColor,lightColor* 0.3f,Projectile.rotation,Projectile.spriteDirection,Vector2.Zero,
-                null,null,true);
+            StarBreakerUtils.DrawTailTexInPos(TextureAssets.Projectile[Type].Value, Projectile.oldPos,
+                lightColor, lightColor * 0.3f, Projectile.rotation, Projectile.spriteDirection, Vector2.Zero,
+                null, null, true);
             return false;
         }
     }

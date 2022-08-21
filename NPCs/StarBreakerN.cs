@@ -65,7 +65,7 @@ namespace StarBreaker.NPCs
         }
         public override void OnKill()
         {
-            StarBreakerSystem.downedStarBreakerNom = true;
+            StarBreakerSystem.downed.downedStarBreakerNom = true;
         }
         public override void BossHeadRotation(ref float rotation)
         {
@@ -333,7 +333,7 @@ namespace StarBreaker.NPCs
             {
                 float dis = (NPC.Center - Target.Center).Length();
                 float color = (dis - 200) / dis;
-                spriteBatch.Draw(ModContent.Request<Texture2D>("StarBreaker/NPCs/SanDan").Value,
+                spriteBatch.Draw(StarBreakerAssetTexture.MyExtras[7].Value,
                     NPC.Center - Main.screenPosition,
                     null,
                     new Color(color, 1f, 0f, 1f),

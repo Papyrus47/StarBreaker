@@ -8,6 +8,8 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         {
             DisplayName.SetDefault("宝藏袋");
             Tooltip.SetDefault("{$CommonItemTooltip.RightClickToOpen}");
+            ItemID.Sets.BossBag[Type] = true;
+            ItemID.Sets.PreHardmodeLikeBossBag[Type] = true;
         }
         public override void SetDefaults()
         {
@@ -18,33 +20,30 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.rare = ItemRarityID.Purple;
             Item.expert = true;
         }
-        public override bool CanRightClick()
+        public override bool CanRightClick() => true;
+        public override void RightClick(Player player)
         {
-            return true;
-        }
-        public override int BossBagNPC => ModContent.NPCType<ShortSword3>();
-        public override void OpenBossBag(Player player)
-        {
+            IEntitySource openItem = player.GetSource_OpenItem(Type);
             int[] ID =
-            {
-                ModContent.ItemType<LastCopperAxe>(),
-                 ModContent.ItemType<LastCopperBow>(),
-                  ModContent.ItemType<LastCopperChainSaw>(),
-                   ModContent.ItemType<LastCopperDiamond>(),
-                    ModContent.ItemType<LastCopperHammer>(),
-                     ModContent.ItemType<LastCopperPick>(),
-                      ModContent.ItemType<LastCopperSickle>(),
-                       ModContent.ItemType<LastCopperSpear>(),
-                        ModContent.ItemType<LastShortSowrd>(),
-                        ModContent.ItemType<LastCopperKnife>(),
-                        ModContent.ItemType<LastCopperWhip>(),
-                        ModContent.ItemType<LastCopperGun>(),
-                        ModContent.ItemType<LastCopperJackhammer>(),
-                        ModContent.ItemType<LastCopperSowrdSummonStaff>()
-            };
+                {
+                     ModContent.ItemType<LastCopperAxe>(),
+                      ModContent.ItemType<LastCopperBow>(),
+                       ModContent.ItemType<LastCopperChainSaw>(),
+                        ModContent.ItemType<LastCopperDiamond>(),
+                         ModContent.ItemType<LastCopperHammer>(),
+                          ModContent.ItemType<LastCopperPick>(),
+                           ModContent.ItemType<LastCopperSickle>(),
+                            ModContent.ItemType<LastCopperSpear>(),
+                             ModContent.ItemType<LastShortSowrd>(),
+                             ModContent.ItemType<LastCopperKnife>(),
+                             ModContent.ItemType<LastCopperWhip>(),
+                             ModContent.ItemType<LastCopperGun>(),
+                             ModContent.ItemType<LastCopperJackhammer>(),
+                             ModContent.ItemType<LastCopperSowrdSummonStaff>()
+                 };
             for (int i = 0; i < ID.Length; i++)
             {
-                player.QuickSpawnItem(player.GetSource_OpenItem(Type), ID[i]);
+                player.QuickSpawnItem(openItem, ID[i]);
             }
         }
     }

@@ -34,8 +34,8 @@
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Rectangle rectangle = new(0,0,texture.Width,texture.Height);
-            Vector2 origin = new Vector2(rectangle.Width / 2,rectangle.Height);
+            Rectangle rectangle = new(0, 0, texture.Width, texture.Height);
+            Vector2 origin = new Vector2(rectangle.Width / 2, rectangle.Height);
             Vector2 scale = new(Projectile.scale);
             float lerp = Utils.GetLerpValue(30f, 25f, Projectile.Opacity, true);
             scale.Y *= lerp;

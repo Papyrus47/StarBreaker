@@ -1,4 +1,6 @@
-﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿using StarBreaker.Items.Type;
+
+namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class IronBreakGun : BaseEnergyRanged
     {
@@ -59,7 +61,7 @@
                 {
                     foreach (EnergyBulletItem bullet in bulletItems)
                     {
-                        StarBreakerWay.Add_Hooks_ToProj(bullet, proj);
+                        StarBreakerUtils.Add_Hooks_ToProj(bullet, proj);
                     }
                 }
             }

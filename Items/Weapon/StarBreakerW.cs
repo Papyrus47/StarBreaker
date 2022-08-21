@@ -1,12 +1,15 @@
-﻿using StarBreaker.Items.DamageClasses;
+﻿using Mono.Cecil;
+using StarBreaker.Items.DamageClasses;
 using StarBreaker.Projs;
 using Terraria.GameContent.Creative;
+using Terraria.ModLoader.IO;
 
 namespace StarBreaker.Items.Weapon
 {
     public class StarBreakerW : ModItem
     {
-        private bool _hasMe;
+        private bool _hasMe,_onSpwan;
+        public List<int> UseAmmo; 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Star Breaker");
@@ -14,6 +17,7 @@ namespace StarBreaker.Items.Weapon
             Tooltip.SetDefault("星辰之力,寄宿于之上，强度可以击碎星空\n" +
                 "使用能量子弹/能量聚集器作为子弹");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            UseAmmo = new(20);
         }
         public override void SetDefaults()
         {
@@ -35,6 +39,22 @@ namespace StarBreaker.Items.Weapon
             Item.noUseGraphic = true;
             Item.noMelee = true;
             _hasMe = true;
+            if (UseAmmo == null) UseAmmo = new(20);
+        }
+        public override void SaveData(TagCompound tag)
+        {
+            for(int i = 0;i< UseAmmo.Count;i++)
+            {
+                tag["StarBreakerW:UseAmmo" + i.ToString()] = UseAmmo[i];
+            }
+        }
+        public override void LoadData(TagCompound tag)
+        {
+            UseAmmo ??= new(20);
+            for (int i = 0; i < UseAmmo.Count; i++)
+            {
+                UseAmmo[i] = tag.GetInt("StarBreakerW:UseAmmo" + i.ToString());
+            }
         }
         public override bool OnPickup(Player player)
         {
@@ -64,58 +84,39 @@ namespace StarBreaker.Items.Weapon
                     Velocity = new Vector2(0, -4),
                     Color = Color.Purple
                 }, player.Center);
+
             }
             return base.OnPickup(player);
         }
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override void HoldItem(Player player)
         {
-            if (StarBreakerSystem.downedStarBreakerEX)
+            if(StarBreakerSystem.downed.downedStarBreakerEX)
             {
-                Projectile.NewProjectile(source, player.Center, Vector2.Normalize(Main.MouseWorld - player.Center),
-                    ModContent.ProjectileType<StarBreakerHeadProjReal>(), damage, knockback, player.whoAmI);
-                //召唤枪
-                if (player.altFunctionUse == 2 && player.ownedProjectileCounts[ModContent.ProjectileType<OmnipotentGun>()] < 2)
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        int proj = Projectile.NewProjectile(source, position, velocity,
-                            ModContent.ProjectileType<OmnipotentGun>(), 1, 1, player.whoAmI);
-
-                        if (Main.projectile[proj].ModProjectile is OmnipotentGun gun)
-                        {
-                            gun.States[4] = i;
-                        }
-                        #region 获取对应武器贴图
-                        foreach (Item item in player.inventory)
-                        {
-                            if (item.DamageType == ModContent.GetInstance<Items.DamageClasses.EnergyDamage>())
-                            {
-                                (Main.projectile[proj].ModProjectile as OmnipotentGun).ItemGun = item;
-                                Main.projectile[proj].damage = item.damage;
-                                continue;
-                            }
-                        }
-                    }
-                }
-                #endregion
-                return false;
+                Item.shoot = ModContent.ProjectileType<StarBreakerHeadProjReal>();
             }
-            Projectile.NewProjectile(source, player.Center, Vector2.Normalize(Main.MouseWorld - player.Center),
-                ModContent.ProjectileType<StarBreakerHeadProj>(), damage, knockback, player.whoAmI);
-            return false;
+            if (player.ownedProjectileCounts[Item.shoot] < 1)
+            {
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, Vector2.Normalize(Main.MouseWorld - player.Center),
+                    Item.shoot,player.GetWeaponDamage(Item),Item.knockBack, player.whoAmI);
+            }
         }
-        public override bool AltFunctionUse(Player player)
-        {
-            return true;
-        }
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, 
+            Vector2 position, Vector2 velocity, int type, int damage, float knockback) => false;
+        public override bool AltFunctionUse(Player player) => true;
 
         public override bool CanUseItem(Player player)
         {
+            Item.useStyle = player.altFunctionUse == 2 ? ItemUseStyleID.Rapier : ItemUseStyleID.Shoot;
             return true;
         }
 
         public override void PostUpdate()
         {
+            if (!_onSpwan)
+            {
+                _onSpwan = true;
+                return;
+            }
             if (_hasMe)//丢弃时的语句
             {
                 const string Text = "Mods.StarBreaker.StarBreakerText.WeaponText.OnThrow.";
@@ -137,7 +138,12 @@ namespace StarBreaker.Items.Weapon
         public override void UpdateInventory(Player player)
         {
             StarPlayer starPlayer = player.GetModPlayer<StarPlayer>();
-            if (StarBreakerSystem.downedStarBreakerEX && Item.damage < 30)
+            if(starPlayer.Const++ > 1)
+            {
+                Item.TurnToAir();
+                return;
+            }
+            if (StarBreakerSystem.downed.downedStarBreakerEX && Item.damage < 30)
             {
                 Item.damage = 30;
             }
@@ -181,7 +187,7 @@ namespace StarBreaker.Items.Weapon
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            if (StarBreakerSystem.downedStarBreakerEX)
+            if (StarBreakerSystem.downed.downedStarBreakerEX)
             {
                 TooltipLine tooltip1 = new(Mod, "StarBreaker", "封印解除:");
                 tooltip1.OverrideColor = Color.MediumPurple;

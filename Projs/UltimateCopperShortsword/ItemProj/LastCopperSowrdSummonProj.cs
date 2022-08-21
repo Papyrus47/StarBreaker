@@ -28,12 +28,12 @@
             Player player = Main.player[Projectile.owner];
             NPC npc = Projectile.OwnerMinionAttackTargetNPC;
             Projectile.damage = Projectile.originalDamage + (int)(Projectile.originalDamage * (0.2f * (Projectile.numHits % 10)));
-            if(!player.active)
+            if (!player.active)
             {
                 Projectile.Kill();
                 return;
             }
-            if(player.HasBuff<Buffs.CopperSummonBuff>())
+            if (player.HasBuff<Buffs.CopperSummonBuff>())
             {
                 Projectile.timeLeft = 2;
             }
@@ -51,7 +51,7 @@
                 }
 
                 Vector2 center = player.Center + new Vector2((Projectile.minionPos * 20 * -player.direction) + (-100 * player.direction), -10);
-                Projectile.velocity = (Projectile.velocity * 10f + (center - Projectile.Center).RealSafeNormalize() * 12f)/11f;
+                Projectile.velocity = (Projectile.velocity * 10f + (center - Projectile.Center).RealSafeNormalize() * 12f) / 11f;
                 if (Projectile.Distance(player.Center) > 2000f)
                 {
                     Projectile.Center = player.Center;
@@ -87,11 +87,23 @@
             Projectile.velocity *= 0.1f;
             Projectile.velocity.Y -= 18f;
             target.immune[Projectile.owner] = 0;
+
+            Color color = Color.RosyBrown;
+            color.A = 0;
+            Particle.LightStar LightStar = new();
+            LightStar.SetBasicInfo(StarBreakerAssetTexture.LightStar, null, Main.rand.NextVector2Unit() * 3f, Projectile.Center);
+            LightStar.color = color;
+            LightStar.Rotation = 0;
+            LightStar.RotationVelocity = Main.rand.NextFloat(0.05f);
+            LightStar.Scale = new(0.2f, 0.3f);
+            LightStar.TimeLeft = 180;
+            LightStar.ScaleVelocity = new(-0.02f);
+            StarBreakerUtils.AddParticle(LightStar, false);
             base.OnHitNPC(target, damage, knockback, crit);
         }
         public override void PostDraw(Color lightColor)
         {
-            StarBreakerWay.ProjDrawTail(Projectile, lightColor * 0.5f, lightColor * 0.1f);
+            StarBreakerUtils.ProjDrawTail(Projectile, lightColor * 0.5f, lightColor * 0.1f);
         }
     }
 }

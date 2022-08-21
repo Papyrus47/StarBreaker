@@ -35,7 +35,7 @@ namespace StarBreaker.Projs.Type
             Projectile.DamageType = ModContent.GetInstance<EnergyDamage>();
             NewSetDef();
         }
-        public sealed override void AI()
+        public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
             StateAI();
@@ -45,7 +45,10 @@ namespace StarBreaker.Projs.Type
             }
 
         }
-        public override bool ShouldUpdatePosition() => ShouldUpdatePositionByProjVel;
+        public override bool ShouldUpdatePosition()
+        {
+            return ShouldUpdatePositionByProjVel;
+        }
 
         public override void Kill(int timeLeft)
         {
@@ -115,7 +118,7 @@ namespace StarBreaker.Projs.Type
             }
             return Proj_Colliding(Projectile, projHitbox, targetHitbox);
         }
-        public abstract void StateAI();
+        public virtual void StateAI() { }
         public abstract void NewSetDef();
 
     }

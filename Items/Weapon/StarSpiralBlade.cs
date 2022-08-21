@@ -44,7 +44,7 @@ namespace StarBreaker.Items.Weapon
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile proj = Projectile.NewProjectileDirect(source, position,Vector2.Zero, type, damage, knockback, player.whoAmI);
+            Projectile proj = Projectile.NewProjectileDirect(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI);
             proj.originalDamage = damage;
             if (player.altFunctionUse == 2)
             {
@@ -54,6 +54,9 @@ namespace StarBreaker.Items.Weapon
             }
             return false;
         }
-        public override bool AltFunctionUse(Player player) => true;
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
     }
 }

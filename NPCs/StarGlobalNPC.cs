@@ -1,5 +1,4 @@
-﻿using MonoMod.Cil;
-using StarBreaker.Items.Weapon;
+﻿using StarBreaker.Items.Weapon;
 
 namespace StarBreaker.NPCs
 {
@@ -87,7 +86,7 @@ namespace StarBreaker.NPCs
                 damage += DrumHitDamage;
                 DrumHitDamage = 0;
             }
-            if (StarBreakerSystem.downedStarBreakerNom && !Main.player[projectile.owner].HasItem(ModContent.ItemType<StarBreakerW>()))
+            if (StarBreakerSystem.downed.downedStarBreakerNom && !Main.player[projectile.owner].HasItem(ModContent.ItemType<StarBreakerW>()))
             {
                 Item.NewItem(npc.GetSource_Loot(), npc.Hitbox, ModContent.ItemType<StarBreakerW>());
             }
@@ -98,7 +97,7 @@ namespace StarBreaker.NPCs
             //在这个重写函数进行判断
             if (EnergySmash)//如果buff存在了
             {
-                damage += Math.Max(0,(defense / 2) - 20);//调用原版伤害计算,然后转回伤害
+                damage += Math.Max(0, (defense / 2) - 20);//调用原版伤害计算,然后转回伤害
             }
             if (BloodyBleed > 0 && !npc.immortal)//血鞭
             {
@@ -123,7 +122,11 @@ namespace StarBreaker.NPCs
                 }
                 if (!crit && BloodRippingWhipTime <= 0)
                 {
-                    if (BloodyBleed <= 2) BloodyBleed = 0;
+                    if (BloodyBleed <= 2)
+                    {
+                        BloodyBleed = 0;
+                    }
+
                     BloodyBleed -= BloodyBleed / 3;
                 }
             }
@@ -149,7 +152,11 @@ namespace StarBreaker.NPCs
         public override void ResetEffects(NPC npc)//重置东西用的重写函数
         {
             EnergySmash = false;//这样可以避免buff不存在时,效果依然存在
-            if(BloodRippingWhipTime > 0) BloodRippingWhipTime--;
+            if (BloodRippingWhipTime > 0)
+            {
+                BloodRippingWhipTime--;
+            }
+
             base.ResetEffects(npc);
         }
     }

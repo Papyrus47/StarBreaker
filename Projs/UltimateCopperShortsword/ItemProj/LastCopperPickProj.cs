@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperPickProj : ModProjectile
     {
@@ -29,14 +27,18 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
                 Projectile.rotation = 0;
             }
             Player player = Main.player[Projectile.owner];
-            if(player.channel && Projectile.ai[0] == 0)
+            if (player.channel && Projectile.ai[0] == 0)
             {
                 Projectile.timeLeft = 2;
                 player.itemTime = player.itemAnimation = 2;
                 Projectile.Center = player.RotatedRelativePoint(player.MountedCenter);
             }
         }
-        public override bool ShouldUpdatePosition() => Projectile.ai[0] > 0; 
+        public override bool ShouldUpdatePosition()
+        {
+            return Projectile.ai[0] > 0;
+        }
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.velocity.X = -oldVelocity.X;

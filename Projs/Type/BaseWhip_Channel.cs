@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StarBreaker.Projs.Type
+﻿namespace StarBreaker.Projs.Type
 {
     public abstract class BaseWhip_Channel : ModProjectile
     {
@@ -43,14 +37,8 @@ namespace StarBreaker.Projs.Type
             ChannelAI();
             return false;
         }
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
-        {
-            if(Main.player[Projectile.owner].channel)
-            {
-                return false;
-            }
-            return base.Colliding(projHitbox, targetHitbox);
-        }
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Main.player[Projectile.owner].channel;
+        public override bool? CanHitNPC(NPC target) => Main.player[Projectile.owner].channel;
         public override bool PreDraw(ref Color lightColor)
         {
             WhipDraw();
@@ -117,13 +105,13 @@ namespace StarBreaker.Projs.Type
             /// 蓄力加一段长度的时间
             /// </summary>
             public int SegmentsTime;
-            public ChannelWhipSet(int maxChargeTime,int segmentsTime, float Multiplier)
+            public ChannelWhipSet(int maxChargeTime, int segmentsTime, float Multiplier)
             {
                 MaxChargeTime = maxChargeTime;
                 RangeMultiplier = Multiplier;
                 SegmentsTime = segmentsTime;
             }
-            
+
         }
     }
 }

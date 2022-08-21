@@ -2,7 +2,7 @@
 {
     public class FireKnife_Blade : ModProjectile
     {
-        Projectile proj = null;
+        private Projectile proj = null;
         public override void SetStaticDefaults()
         {
             DisplayName.AddTranslation(7, "炎刀");
@@ -13,13 +13,13 @@
             Projectile.friendly = true;
             Projectile.timeLeft = 10;
             Projectile.tileCollide = false;
-            Projectile.Size = new(14,90);
+            Projectile.Size = new(14, 90);
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
         }
         public override void OnSpawn(IEntitySource source)
         {
-            if(source is EntitySource_Parent entity && entity.Entity is Projectile p)
+            if (source is EntitySource_Parent entity && entity.Entity is Projectile p)
             {
                 proj = p;
             }
@@ -32,7 +32,7 @@
                 Projectile.Kill();
                 return;
             }
-            else if(proj != null && proj.ModProjectile is FireKnife)
+            else if (proj != null && proj.ModProjectile is FireKnife)
             {
                 if (proj.localAI[0] == 1)
                 {
@@ -49,14 +49,22 @@
 
             }
         }
-        public override bool? CanHitNPC(NPC target) => null;
-        public override bool ShouldUpdatePosition() => false;
+        public override bool? CanHitNPC(NPC target)
+        {
+            return null;
+        }
+
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float r = 0;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(),targetHitbox.Size(),
-                proj.Center,Projectile.Center + Projectile.velocity.RealSafeNormalize() * (Projectile.height / 2 * Projectile.scale),
-                Projectile.width * Projectile.scale,ref r);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(),
+                proj.Center, Projectile.Center + Projectile.velocity.RealSafeNormalize() * (Projectile.height / 2 * Projectile.scale),
+                Projectile.width * Projectile.scale, ref r);
         }
         public override bool PreDraw(ref Color lightColor)
         {

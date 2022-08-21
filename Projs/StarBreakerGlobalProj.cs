@@ -219,6 +219,103 @@
                         projectile.spriteDirection = -projectile.direction;
                         return false;
                     }
+                case ProjectileID.FlinxMinion://小雪怪,12帧
+                    {
+                        Player player = Main.player[projectile.owner];
+                        int AttackNPC = -1;
+                        projectile.Minion_FindTargetInRange(800, ref AttackNPC, true);//寻找敌人
+                        projectile.spriteDirection = projectile.direction = (projectile.velocity.X > 0f).ToDirectionInt();//改变弹幕朝向
+                        projectile.shouldFallThrough = player.position.Y + player.height - 12f > projectile.position.Y + projectile.height;//可以坠落平台
+                        if (player.HasBuff(BuffID.FlinxMinion))//让弹幕存活
+                        {
+                            projectile.timeLeft = 2;
+                            player.flinxMinion = true;
+                        }
+
+                        if (++projectile.frameCounter > 10 - ((int)Math.Abs(projectile.velocity.X) / 10))//修改帧图
+                        {
+                            projectile.frameCounter = 0;
+                            if (++projectile.frame >= Main.projFrames[projectile.type])
+                            {
+                                projectile.frame = 0;
+                            }
+                        }
+                        if (projectile.velocity.Y > 0.5f || projectile.velocity.Y < -0.5f)
+                        {
+                            projectile.frame = 2;
+                        }//跳跃时候固定为第二帧
+                        #region 待机
+                        if (AttackNPC == -1)
+                        {
+                            Vector2 pos = player.Center;
+                            pos.X -= 35 * player.width / 2f * player.direction;//改变位置
+                            pos.X -= projectile.minionPos * 5f * player.direction;//改变最终位置
+
+                            bool canHit = Collision.CanHit(projectile.Center, 1, 1, pos, 1, 1);
+                            if (Vector2.Distance(pos, projectile.Center) < 20f)//速度变的很小时候
+                            {
+                                projectile.frame = 0;//停下脚步
+                            }
+                            if (projectile.velocity.Length() < 6f)
+                            {
+                                projectile.velocity.X += 0.5f * (pos.X - projectile.Center.X > 0f).ToDirectionInt();
+                            }
+                            else
+                            {
+                                projectile.velocity.X = (projectile.velocity.X > 0f).ToDirectionInt() * 5.5f;
+                            }
+                            if (projectile.velocity.Y == 0 && !canHit)
+                            {
+                                projectile.velocity.Y = -4.5f;
+                            }
+                        }
+                        #endregion
+                        #region 攻击ai
+                        else
+                        {
+                            NPC npc = Main.npc[AttackNPC];//获取目标npc
+                            float dis = Vector2.Distance(projectile.Center, npc.Center);
+                            bool canHit = Collision.CanHit(projectile.Center, 1, 1, npc.Center, 1, 1);
+
+                            if (projectile.ai[0] == 0)//不处于攻击状态
+                            {
+                                if (projectile.velocity.Length() < 4f)
+                                {
+                                    projectile.velocity.X += (npc.Center.X - projectile.Center.X > 0f).ToDirectionInt() * 0.3f;//提升速度 
+                                }
+                                else
+                                {
+                                    projectile.velocity.X = (npc.Center.X - projectile.Center.X > 0f).ToDirectionInt() * 3.5f;
+                                }
+                            }
+
+                            if (projectile.ai[0] == 0 && dis + npc.width < 200 && canHit && projectile.velocity.Y != 0f)//当未起跳,同时距离靠近的时候
+                            {
+                                projectile.ai[0] = 1;//起跳
+                                projectile.velocity.Y = (npc.height * -0.1f) - 6f;//根据npc高度,控制跳跃高度
+                            }
+                            else if (!canHit && projectile.velocity.Y == 0f)
+                            {
+                                projectile.velocity.Y -= 6f;
+                            }
+                            if (projectile.ai[0] != 0 && projectile.velocity.Y == 0)//落地状态
+                            {
+                                projectile.ai[0] = 0;
+                            }
+
+                            if (!npc.active)
+                            {
+                                player.MinionAttackTargetNPC = -1;
+                            }
+                        }
+                        #endregion
+                        if (projectile.velocity.Y < 5f)
+                        {
+                            projectile.velocity.Y += 0.5f;
+                        }
+
+                        return false;
+                    }
             }
             if (ProjectileForLastBow)
             {
@@ -291,13 +388,21 @@
                         }
                         break;
                     }
+                case ProjectileID.FlinxMinion:
+                    {
+                        if (projectile.ai[0] != 0)//回复到普通模式
+                        {
+                            projectile.ai[0] = 0;
+                        }
+                        break;
+                    }
             }
             if (Bloody > 0)
             {
                 target.GetGlobalNPC<NPCs.StarGlobalNPC>().BloodyBleed += Bloody;
             }
         }
-        private void FlyingProj_Move(Player player,Projectile projectile,float velSpeed = 6f,float velSpeed_MoveFast = 10f)
+        private void FlyingProj_Move(Player player, Projectile projectile, float velSpeed = 6f, float velSpeed_MoveFast = 10f)
         {
             #region 待机移动
             Vector2 vel = player.Center - projectile.Center - new Vector2(0f, 60f);

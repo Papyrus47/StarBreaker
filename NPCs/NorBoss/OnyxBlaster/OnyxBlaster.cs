@@ -179,7 +179,7 @@ namespace StarBreaker.NPCs.NorBoss.OnyxBlaster
         }
         public override void OnKill()
         {
-            StarBreakerSystem.downedOnyxBlaster = true;
+            //StarBreakerSystem.downedOnyxBlaster = true;
         }
         private void ShootOnyx(Vector2 center, Vector2 vel)//私自定义的方法
         {

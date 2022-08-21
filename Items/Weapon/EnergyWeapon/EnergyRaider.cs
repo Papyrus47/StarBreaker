@@ -1,4 +1,6 @@
-﻿namespace StarBreaker.Items.Weapon.EnergyWeapon
+﻿using StarBreaker.Items.Type;
+
+namespace StarBreaker.Items.Weapon.EnergyWeapon
 {
     public class EnergyRaider : BaseEnergyRanged
     {

@@ -65,7 +65,7 @@
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            StarBreakerWay.EntityDrawLight(Projectile, lightColor);
+            StarBreakerUtils.EntityDrawLight(Projectile, lightColor);
             return false;
         }
         public override void PostDraw(Color lightColor)

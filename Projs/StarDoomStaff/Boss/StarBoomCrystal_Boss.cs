@@ -27,7 +27,7 @@
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            StarBreakerWay.ProjDrawTail(Projectile, lightColor * 0.5f, lightColor * 0.1f);
+            StarBreakerUtils.ProjDrawTail(Projectile, lightColor * 0.5f, lightColor * 0.1f);
             return base.PreDraw(ref lightColor);
         }
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)

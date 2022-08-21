@@ -16,7 +16,7 @@ namespace StarBreaker.Items.Weapon.XuanYu
                 "穿刺攻击命中敌人:向目标施加五层\"极寒之炎\",同时施加五层流血\n" +
                 "极寒之炎:每1/12秒减少一层,如果每隔一秒层数没有变为零,则造成\"血量上限 * 层数 * 0.1%\"的伤害\n" +
                 "每用完一次穿刺攻击为一遍攻击循环");
-            Item.SacrificeCountNeededByItemId(1);
+            SacrificeTotal =1;
         }
         public override void SetDefaults()
         {

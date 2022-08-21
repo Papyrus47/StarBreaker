@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Terraria.Localization;
-using Microsoft.Xna.Framework;
-
-namespace BloodSoul.Projectiles
+﻿namespace BloodSoul.Projectiles
 {
     /// <summary>
     /// 弹幕的基类
@@ -31,7 +20,7 @@ namespace BloodSoul.Projectiles
         /// </summary>
         protected float minionSlots { get => Projectile.minionSlots; set => Projectile.minionSlots = value; }
         protected bool tileCollide { get => Projectile.tileCollide; set => Projectile.tileCollide = value; }
-        protected bool hide { get => Projectile.hide; set=>Projectile.hide = value; }
+        protected bool hide { get => Projectile.hide; set => Projectile.hide = value; }
         /// <summary>
         /// 说明这个弹幕是不是召唤物
         /// </summary>
@@ -77,7 +66,11 @@ namespace BloodSoul.Projectiles
         }
         protected int ModifyHitDamage(int damage)
         {
-            if (Main.expertMode || Main.masterMode) damage = damage / 2;
+            if (Main.expertMode || Main.masterMode)
+            {
+                damage = damage / 2;
+            }
+
             return damage;
         }
         /// <summary>
@@ -86,22 +79,22 @@ namespace BloodSoul.Projectiles
         /// <param name="speed">弹幕的速度</param>
         /// <param name="maxdis">距离中心的位置</param>
         /// <param name="center">寻找敌对npc的中心位置</param>
-        protected virtual void TrackNPC(float speed,float maxdis, Vector2 center)
+        protected virtual void TrackNPC(float speed, float maxdis, Vector2 center)
         {
             NPC target = null;//定义一个目标
-            foreach(NPC npc in Main.npc)
+            foreach (NPC npc in Main.npc)
             {
                 float dis = Vector2.Distance(center, npc.position);//获取距离
-                if(dis < maxdis && npc.active && npc.CanBeChasedBy() && !npc.friendly && npc.type != NPCID.TargetDummy)
-                    //小于范围 npc活着 可以追踪 不是友善的 不是假人
+                if (dis < maxdis && npc.active && npc.CanBeChasedBy() && !npc.friendly && npc.type != NPCID.TargetDummy)
+                //小于范围 npc活着 可以追踪 不是友善的 不是假人
                 {
                     target = npc;//让这个目标是这个npc
                     maxdis = dis;//在这个范围内，重新寻找npc
                 }
             }
-            if(target != null)
+            if (target != null)
             {
-                Projectile.velocity = (Projectile.velocity * 10 + (target.position - Projectile.position).SafeNormalize(Vector2.Zero) * speed)/11;
+                Projectile.velocity = (Projectile.velocity * 10 + (target.position - Projectile.position).SafeNormalize(Vector2.Zero) * speed) / 11;
             }
         }
     }

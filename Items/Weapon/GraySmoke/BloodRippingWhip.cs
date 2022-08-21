@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-
-namespace StarBreaker.Items.Weapon.GraySmoke
+﻿namespace StarBreaker.Items.Weapon.GraySmoke
 {
     public class BloodRippingWhip : ModItem
     {
@@ -20,7 +13,7 @@ namespace StarBreaker.Items.Weapon.GraySmoke
         }
         public override void SetDefaults()
         {
-            Item.DefaultToWhip(ModContent.ProjectileType<BloodRippingWhipProj>(), 150, 10f,3f, 40);
+            Item.DefaultToWhip(ModContent.ProjectileType<BloodRippingWhipProj>(), 150, 10f, 3f, 40);
             Item.DamageType = DamageClass.Melee;
             Item.value = 24300;
             Item.rare = ItemRarityID.Red;
@@ -28,9 +21,9 @@ namespace StarBreaker.Items.Weapon.GraySmoke
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            foreach(var tool in tooltips)
+            foreach (var tool in tooltips)
             {
-                if(tool.Name == "ItemName" && tool.Mod == "Terraria")
+                if (tool.Name == "ItemName" && tool.Mod == "Terraria")
                 {
                     tool.OverrideColor = Color.Gray;
                     break;

@@ -1,5 +1,4 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword.ItemProj;
-using Terraria.ID;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -15,7 +14,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
         {
             Item.Size = new Vector2(46);
             var sound = SoundID.Item4;
-            sound.Pitch = -0.6f; ;
+            sound.Pitch = -0.6f;
             Item.UseSound = sound;
             Item.damage = 70;
             Item.DamageType = DamageClass.Magic;

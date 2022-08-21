@@ -84,7 +84,7 @@
                                         {
                                             for (int i = 0; i < 30; i++)
                                             {
-                                                int NPC_Hit_damage = Main.rand.Next(Projectile.damage * 2,Projectile.damage * 2 + 50);
+                                                int NPC_Hit_damage = Main.rand.Next(Projectile.damage * 2, Projectile.damage * 2 + 50);
                                                 target.life -= NPC_Hit_damage;
                                                 target.HitEffect(0, 10.0);
                                                 Main.player[Projectile.owner].addDPS(NPC_Hit_damage);

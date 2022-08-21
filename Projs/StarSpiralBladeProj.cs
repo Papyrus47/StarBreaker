@@ -1,8 +1,4 @@
-﻿using StarBreaker.Items.Weapon;
-using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Filters = Terraria.Graphics.Effects.Filters;
-using Terraria.ID;
+﻿using Filters = Terraria.Graphics.Effects.Filters;
 
 namespace StarBreaker.Projs
 {
@@ -36,7 +32,7 @@ namespace StarBreaker.Projs
                 Projectile.Kill();
                 return;
             }
-            if(Projectile.DamageType.Type == DamageClass.Melee.Type)//手持旋转
+            if (Projectile.DamageType.Type == DamageClass.Melee.Type)//手持旋转
             {
                 return;
             }
@@ -53,13 +49,16 @@ namespace StarBreaker.Projs
                     Projectile.ai[1] += 20;
                 }
                 Projectile.timeLeft = (int)Projectile.ai[1] + 1;
-                if (Projectile.timeLeft < 5) Projectile.timeLeft = 5;
+                if (Projectile.timeLeft < 5)
+                {
+                    Projectile.timeLeft = 5;
+                }
 
                 if (Projectile.ai[1] > 13000 && Main.netMode != NetmodeID.Server)
                 {
                     if (!Filters.Scene["StarBreaker:ShockWave"].IsActive())
                     {
-                        Filters.Scene.Activate("StarBreaker:ShockWave", Projectile.Center).GetShader().UseColor(1,5,15).UseTargetPosition(Projectile.Center);
+                        Filters.Scene.Activate("StarBreaker:ShockWave", Projectile.Center).GetShader().UseColor(1, 5, 15).UseTargetPosition(Projectile.Center);
                     }
                     else
                     {
@@ -104,7 +103,11 @@ namespace StarBreaker.Projs
                     {
                         vel = (vel * 10 + (targetCenter - center).RealSafeNormalize() * 60) / 11;
                         center += vel;
-                        if(i % 2 == 0)vel = vel.RotatedBy(0.1);
+                        if (i % 2 == 0)
+                        {
+                            vel = vel.RotatedBy(0.1);
+                        }
+
                         pointList.Add(center);
                     }
                 }
@@ -152,7 +155,7 @@ namespace StarBreaker.Projs
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             Projectile.timeLeft -= 5;
-            if(Projectile.timeLeft > 2000)
+            if (Projectile.timeLeft > 2000)
             {
                 target.GetGlobalNPC<NPCs.StarGlobalNPC>().StarSpiralBladeProj = Projectile.whoAmI;
             }

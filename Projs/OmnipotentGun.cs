@@ -1,4 +1,5 @@
 ﻿using StarBreaker.Items.Bullet;
+using StarBreaker.Items.Type;
 using System.IO;
 
 namespace StarBreaker.Projs
@@ -267,7 +268,7 @@ namespace StarBreaker.Projs
                 States[0] = 0;
                 return;
             }
-            if (States[0] > ItemGun.useTime && Main.netMode != NetmodeID.MultiplayerClient && ItemGun.ModItem is Items.BaseEnergyWeapon gun)
+            if (States[0] > ItemGun.useTime && Main.netMode != NetmodeID.MultiplayerClient && ItemGun.ModItem is BaseEnergyWeapon gun)
             {
                 int shootID = ModContent.ItemType<NebulaBulletItem>();
                 #region 手动PickAmmo

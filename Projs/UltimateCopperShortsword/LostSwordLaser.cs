@@ -39,7 +39,7 @@
         {
             if (Projectile.ai[0] == 1)
             {
-                Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Projs/UltimateCopperShortsword/Line").Value;
+                Texture2D texture = StarBreakerAssetTexture.MyExtras[8].Value;
                 for (int i = 0; i < 2000; i += 512)
                 {
                     Main.spriteBatch.Draw(texture,

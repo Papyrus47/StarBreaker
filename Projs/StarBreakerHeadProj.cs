@@ -1,4 +1,9 @@
-﻿namespace StarBreaker.Projs
+﻿using StarBreaker.Items.Type;
+using StarBreaker.Items.Weapon;
+using StarBreaker.Particle;
+using StarBreaker.Projs.UltimateCopperShortsword;
+
+namespace StarBreaker.Projs
 {
     public class StarBreakerHeadProj : ModProjectile
     {
@@ -12,10 +17,14 @@
             get => (int)Projectile.ai[1];
             set => Projectile.ai[1] = value;
         }
+        public Player player;
+        public Asset<Texture2D> texture;
         public override string Texture => "StarBreaker/Items/Weapon/StarBreakerW";
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("星辰击碎者");
+            ProjectileID.Sets.TrailCacheLength[Type] = 5;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
         }
         public override void SetDefaults()
         {
@@ -28,127 +37,303 @@
         }
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
-            StarPlayer starPlayer = player.GetModPlayer<StarPlayer>();
-            Lighting.AddLight(Projectile.Center, Color.Purple.ToVector3());
-            if (!player.active)
-            {
-                Projectile.active = false;
-                return;
-            }
-            if (!player.controlUseTile && !player.channel)//判断玩家有没有长按右键或者左键
+            player ??= Main.player[Projectile.owner];
+            Item item = player.HeldItem;
+            float rot = Projectile.velocity.ToRotation();
+            if (Projectile.spriteDirection == -1) rot += MathHelper.Pi;
+            Projectile.rotation = rot;
+            if (item.ModItem is not StarBreakerW)
             {
                 Projectile.Kill();
+                return;
             }
-            Timer++;
-
-            if (Timer > 40 - State && starPlayer.StarCharge < 10)
+            if (player.channel && State == 0)//左键持续使用
             {
-                if ((starPlayer.Bullet1 is not null || starPlayer.Bullet2 is not null) && (!starPlayer.Bullet1.IsAir || !starPlayer.Bullet2.IsAir))
+                Timer++;
+                player.itemTime = player.itemAnimation = 2;
+                player.itemRotation = MathF.Atan2(Projectile.velocity.Y * Projectile.direction, Projectile.velocity.X * Projectile.direction);
+                if(Timer < 20)//飞出
                 {
-                    StarBreakerWay.StarBrekaerUseBulletShoot(starPlayer, out int shootID, out int shootDamage, out Items.EnergyBulletItem bulletItem);//获取对应能量子弹
-                    SoundEngine.PlaySound(SoundID.Item109, Projectile.Center);//声音
-                    for (float i = -5; i <= 5; i++)
+                    Projectile.position.Y -= 0.9f * Timer;
+                }
+                else //开火/正常移动
+                {
+                    Projectile.spriteDirection = Projectile.direction;
+                    if (Timer > 50)//开火
                     {
-                        Vector2 vec = (i.ToRotationVector2() * MathHelper.Pi / 18) + Projectile.velocity.SafeNormalize(Vector2.Zero);//速度
-                        int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vec * 10, shootID, player.GetWeaponDamage(player.HeldItem) + shootDamage,
-                            player.GetWeaponKnockback(player.HeldItem, 1), player.whoAmI, 0);//发射子弹
-                        Main.projectile[proj].friendly = true;
-                        Main.projectile[proj].hostile = false;
-                        StarBreakerWay.Add_Hooks_ToProj(bulletItem, proj);//添加被动钩子
+                        Timer = 20;
+                        if(StarBreakerUtils.StarBrekaerUseBulletShoot(player,out int shootID,out int shootDamage,out EnergyBulletItem bulletItem))//发射弹药
+                        {
+                            for (float i = -5; i <= 5; i++)
+                            {
+                                Vector2 vel = (i.ToRotationVector2() * MathHelper.Pi / 18) + Projectile.velocity.RealSafeNormalize();
+                                int proj = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, vel * 10,shootID,Projectile.damage + shootDamage, 1.2f, Main.myPlayer);
+                                StarBreakerUtils.Add_Hooks_ToProj(bulletItem, proj);
+                                Main.projectile[proj].hostile = false;
+                                Main.projectile[proj].friendly = true;
+                            }
+                            SoundEngine.PlaySound(SoundID.Item109, Projectile.Center);
+                        }
+                        else
+                        {
+                            Timer = 0;
+                            State = -1;//装弹
+                        }
                     }
-                }
-                if (State < 20)
-                {
-                    State++;
-                }
-
-                Timer = 0;
-                Projectile.damage += (int)State;
-                if (Projectile.damage > player.inventory[player.selectedItem].damage * State)
-                {
-                    Projectile.damage = (int)(player.inventory[player.selectedItem].damage * State);
-                }
-                starPlayer.StarCharge++;
-            }
-            else if(starPlayer.StarCharge >= 10)//在停火状态
-            {
-                if(Timer > 40)//冲刺
-                {
-                    if (Main.myPlayer == player.whoAmI) Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 30;
-                    if (Projectile.localNPCHitCooldown != 1)
-                    {
-                        Projectile.localNPCHitCooldown = 1;
-                        Timer = 0;
-                    }
-                    else
-                    {
-                        Timer = 0;
-                        Projectile.localNPCHitCooldown = 0;
-                        starPlayer.StarCharge = 0;
-                    }
-                }
-                else if(Timer > 10)
-                {
-                    Projectile.velocity *= 0.95f;
-                }
-            }
-            else
-            {
-                if (player.channel)//左键使用
-                {
                     if (Main.myPlayer == player.whoAmI)
                     {
-                        float dis = Vector2.Distance(Main.MouseWorld, Projectile.Center);
-                        if (dis > 150)//速度快到类似传送
+                        if (Projectile.ai[0] == 0f)//靠近鼠标
                         {
-                            Projectile.velocity = (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * (dis - 140f);
-                        }
-                        else if (dis > 20)//改变速度
-                        {
-                            if(Projectile.velocity.Length() > 10)
+                            Projectile.velocity = (Projectile.velocity * 10 + (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 5f) / 11f;
+                            if (Projectile.velocity.Length() < 5f)
                             {
-                                Projectile.velocity = Projectile.velocity.RealSafeNormalize() * 10f;
+                                Projectile.position -= Projectile.velocity;//固定位置
                             }
-                            Projectile.velocity = (Projectile.velocity * 8 + (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 10f) / 9f;
+                            if (Vector2.Distance(Main.MouseWorld, Projectile.Center) > 400f)
+                            {
+                                Projectile.ai[0] = 0.5f;//重新移动
+                            }
                         }
-                        else//减速
+                        else if (Projectile.ai[0] == 0.5f)//追随鼠标
                         {
-                            Projectile.velocity *= 0.9f;
+                            Projectile.velocity = (Projectile.velocity * 10 + (Main.MouseWorld - Projectile.Center).RealSafeNormalize() * 20f)/11f;
+                            if(Vector2.Distance(Main.MouseWorld,Projectile.Center) < 100f)
+                            {
+                                Projectile.ai[0] = 0f;//确定点,取消移动
+                            }
                         }
                     }
                 }
-                else//右键使用
+            }
+            else//右键给你一刀,或者待机(
+            {
+                switch(State)
                 {
-
+                    case 0://待机
+                        {
+                            if(player.controlUseTile)//使用了右键
+                            {
+                                State++;
+                            }
+                            Timer = 0;
+                            Projectile.spriteDirection = player.direction;
+                            Projectile.Center = player.Center + new Vector2((-player.width / 2 - Projectile.height / 2) * player.direction, player.gfxOffY);
+                            Projectile.velocity = Vector2.UnitY;
+                            break;
+                        }
+                    case 1://近战
+                        {
+                            Timer++; 
+                            if (Timer < 20)
+                            {
+                                Projectile.spriteDirection = player.direction;
+                                Projectile.Center = player.Center + new Vector2((-player.width / 2 - Projectile.height / 2) * player.direction, player.gfxOffY - Timer * 2);
+                            }
+                            else
+                            {
+                                if(Timer == 50)
+                                {
+                                    var sound = SoundID.Item1.WithPitchOffset(-0.8f);
+                                    sound.MaxInstances = 5;
+                                    sound.PitchVariance = 0;
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        SoundEngine.PlaySound(sound, player.Center);
+                                    }
+                                }
+                                player.heldProj = Projectile.whoAmI;
+                                player.ChangeDir(Projectile.spriteDirection);
+                                Projectile.Center = player.RotatedRelativePoint(player.MountedCenter);
+                                player.itemTime = player.itemAnimation = 2;
+                                player.itemRotation = MathF.Atan2(Projectile.velocity.Y * player.direction, Projectile.velocity.X * player.direction);
+                                rot = MathHelper.ToRadians((Timer - 40f) * 5f);
+                                Projectile.extraUpdates = 3;
+                                Projectile.velocity = (-Vector2.UnitY).RotatedBy(rot * Projectile.spriteDirection) * (Projectile.width / 2 - 14);
+                                if(rot > MathHelper.ToRadians(170) && rot < MathHelper.Pi)
+                                {
+                                    Projectile.extraUpdates = 0;
+                                    Timer = 0;
+                                    State = player.controlUseTile ? 2 : 0;
+                                }
+                            }
+                            break;
+                        }
+                    case 2://刺击
+                        {
+                            Timer++;//蓄力
+                            player.ChangeDir(Projectile.direction);
+                            Projectile.spriteDirection = Projectile.direction;
+                            player.heldProj = Projectile.whoAmI;
+                            player.itemTime = player.itemAnimation = 2;
+                            if (Timer < 40)
+                            {
+                                if (Timer % 10 == 0)
+                                {
+                                    StarBreakerUtils.NewDustByYouself(Projectile.Center, DustID.YellowStarDust, () => true, Vector2.UnitX,
+                                    5, 30, dust =>
+                                    {
+                                        dust.scale *= 0.4f;
+                                        dust.fadeIn = 0.05f;
+                                    });
+                                }
+                                if (Main.myPlayer == player.whoAmI)
+                                {
+                                    Projectile.velocity = (Projectile.velocity * 5 + (Main.MouseWorld - player.Center).RealSafeNormalize())/6;
+                                    Projectile.velocity.Normalize();
+                                    player.itemRotation = (-Projectile.velocity).ToRotation();
+                                    Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + (Projectile.velocity * (Projectile.width / 2 - 14));
+                                    Projectile.Center -= Projectile.velocity;
+                                    Projectile.position.Y += player.gfxOffY;
+                                }
+                            }
+                            else if (Timer < 45)//刺出
+                            {
+                                player.itemRotation = Projectile.velocity.ToRotation();
+                                Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + (Projectile.velocity * (Projectile.width / 2 - 14) * (Timer - 40));
+                                Projectile.Center -= Projectile.velocity;
+                                Projectile.position.Y += player.gfxOffY;
+                                Main.instance.CameraModifiers.Add(new Terraria.Graphics.CameraModifiers.PunchCameraModifier(player.Center,Projectile.velocity,10,5,3));//屏幕震动
+                            }
+                            else if(Timer < 70)//保持不动
+                            {
+                                Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + (Projectile.velocity * (Projectile.width / 2 - 14));
+                                Projectile.position.Y += player.gfxOffY;
+                                if (Timer == 45)//产生粒子
+                                {
+                                    var sound = SoundID.Item1.WithPitchOffset(2f);
+                                    sound.PitchVariance = 0;
+                                    sound.MaxInstances = 5; 
+                                    for (int i =0;i < 60;i++)
+                                    {
+                                        if(i < 5)
+                                        {
+                                            SoundEngine.PlaySound(sound, Projectile.Center);
+                                        }
+                                        float dustRot = MathHelper.TwoPi/ 60 * i;
+                                        Vector2 center = Projectile.Center + (Projectile.velocity * 30) + (dustRot.ToRotationVector2() * 60);
+                                        TheBall ball = new()
+                                        {
+                                            TimeLeft = 80,
+                                            color = Color.Purple,
+                                            Scale = Vector2.One * 2f,
+                                            ScaleVelocity = Vector2.One * -0.1f
+                                        };
+                                        ball.SetBasicInfo(StarBreakerAssetTexture.TheBall, null, (Projectile.Center - center) * 0.25f, Projectile.Center);
+                                        ball.Velocity.Y *= 0.05f;
+                                        if (dustRot > MathHelper.PiOver2 && dustRot < MathHelper.PiOver2 + MathHelper.Pi) ball.Velocity.X *= 0.2f;
+                                        else if (Projectile.direction == -1) ball.Velocity.X *= 2f;
+                                        ball.Velocity = ball.Velocity.RotatedBy((-Projectile.velocity).ToRotation());
+                                        ball.Velocity += player.velocity;
+                                        StarBreakerUtils.AddParticle(ball);
+                                        //Dust dust = Dust.NewDustDirect(Projectile.Center, 5, 5, DustID.RedTorch);
+                                        //dust.scale *= 2.3f;
+                                        //dust.velocity = (dust.position - center) * 0.25f;
+                                        //dust.velocity.Y *= 0.15f;
+                                        //if (dustRot > MathHelper.PiOver2 && dustRot < MathHelper.PiOver2 + MathHelper.Pi) dust.velocity.X *= 0.2f;
+                                        //else if (Projectile.direction == -1) dust.velocity.X *= 2f;
+                                        //dust.velocity = dust.velocity.RotatedBy((-Projectile.velocity).ToRotation());
+                                        //dust.velocity += player.velocity;
+                                        //dust.noGravity = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Timer = 0;
+                                State = 0;
+                            }
+                            break;
+                        }
+                    case -1://装填
+                        {
+                            Timer++;
+                            if(Timer == 5)
+                            {
+                                StarBreakerUtils.NewDustByYouself(Projectile.Center, DustID.YellowStarDust, () => true, Vector2.UnitX,
+                                    5, 30, dust =>
+                                    {
+                                        dust.scale *= 1.1f;
+                                    });
+                                Projectile.velocity = Vector2.Zero;
+                            }
+                            else if(Timer > 5)
+                            {
+                                Projectile.rotation = 0.2f * Projectile.spriteDirection;
+                                Projectile.Center = player.Center;
+                                player.heldProj = Projectile.whoAmI;
+                                if (Timer == 50)//自动装弹
+                                {
+                                    while (true)
+                                    {
+                                        if (player.GetHasItem<StarBreakerW>().ModItem is StarBreakerW starBreaker && starBreaker.UseAmmo.Count < 20)
+                                        {
+                                            Item[] useAmmo = player.GetHasItem<EnergyBulletItem>(2);
+                                            if (useAmmo == null)
+                                            {
+                                                break;
+                                            }
+                                            if (useAmmo[0] != null)
+                                            {
+                                                starBreaker.UseAmmo.Add(useAmmo[0].type);
+                                                useAmmo[0].ItemStackDeduct();
+                                            }
+                                            if (starBreaker.UseAmmo.Count < 20)
+                                            {
+                                                if (useAmmo[1] != null)
+                                                {
+                                                    starBreaker.UseAmmo.Add(useAmmo[1].type);
+                                                    useAmmo[1].ItemStackDeduct();
+                                                }
+                                                else
+                                                {
+                                                    starBreaker.UseAmmo.Add(0);
+                                                }
+                                            }//避免装多子弹
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    var sound = SoundID.Item149.WithPitchOffset(-0.66f);
+                                    sound.MaxInstances = 3;
+                                    sound.PitchVariance = 0;
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        SoundEngine.PlaySound(sound, player.Center);
+                                    }
+                                }
+                                else if(Timer == 70)
+                                {
+                                    State = 0;
+                                    Timer++;
+                                }
+                            }
+                            break;
+                        }
                 }
             }
-            #region 手持弹幕所需要的
-            Projectile.direction = Projectile.spriteDirection = (Projectile.velocity.X > 0f) ? 1 : -1;
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            if (Projectile.spriteDirection == -1)
+        }
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (State == 1 || State == 2)//近战
             {
-                Projectile.rotation += MathHelper.Pi;
+                float r = 0;
+                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(),targetHitbox.Size(),
+                    Projectile.Center - (Projectile.velocity.RealSafeNormalize() * Projectile.width / 2),
+                    Projectile.Center + (Projectile.velocity.RealSafeNormalize() * Projectile.width / 2),
+                    Projectile.height,ref r);
             }
-            Projectile.timeLeft = 2;
-            player.ChangeDir(Projectile.direction);
-            player.heldProj = Projectile.whoAmI;
-            player.itemTime = 2;
-            player.itemAnimation = 2;
-            player.itemRotation = (float)Math.Atan2(Projectile.velocity.Y * Projectile.direction,
-                Projectile.velocity.X * Projectile.direction);//改变旋转角度
-            #endregion
+            return false;
         }
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            if (Main.myPlayer == Projectile.owner)
+            damage *= 10;
+            target.velocity -= target.velocity.RealSafeNormalize() * hitDirection * knockback;
+            if(State == 2)//刺击
             {
-                damage += (int)Main.player[Projectile.owner].velocity.Length() * 5;
-                if (damage > 700)
-                {
-                    damage = 700;
-                }
-                damage += (int)(Main.player[Projectile.owner].GetModPlayer<StarPlayer>().StarCharge * Main.rand.NextFloat(2));
+                damage = (int)(damage * 1.5f);
+                target.velocity -= target.velocity.RealSafeNormalize() * hitDirection * knockback;
             }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -159,45 +344,29 @@
             }
 
             Main.player[Projectile.owner].GetModPlayer<StarPlayer>().SummonStarShieldTime -= target.active ? 1 : 60;
-            target.velocity += (Projectile.rotation - (Projectile.spriteDirection == -1 ? 0f : MathHelper.Pi)).ToRotationVector2() * -1.5f;
-            if (crit)
-            {
-                target.velocity *= 2;
-            }
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             Main.player[Projectile.owner].GetModPlayer<StarPlayer>().SummonStarShieldTime -= target.active ? 1 : 60;
-            target.velocity += (Projectile.rotation - (Projectile.spriteDirection == -1 ? 0f : MathHelper.Pi)).ToRotationVector2() * -1.5f;
-            if (crit)
-            {
-                target.velocity *= 2;
-            }
         }
         public override void OnHitPvp(Player target, int damage, bool crit)
         {
             Main.player[Projectile.owner].GetModPlayer<StarPlayer>().SummonStarShieldTime -= target.active ? 1 : 60;
-            target.velocity += (Projectile.rotation - (Projectile.spriteDirection == -1 ? 0f : MathHelper.Pi)).ToRotationVector2() * -1.5f;
-            if (crit)
-            {
-                target.velocity *= 2;
-            }
         }
-        public override void PostDraw(Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            if (Main.player[Projectile.owner].channel)
+            Vector2 origin;
+            texture ??= TextureAssets.Projectile[Type];
+            origin = texture.Size() * 0.5f;
+            int length = Projectile.oldPos.Length;
+            for (int i = 0; i < length; i++)
             {
-                List<CustomVertexInfo> customs = new();
-                int i = 0;
-                for(float r = 0;r <= MathHelper.TwoPi;r += MathHelper.TwoPi / 50f)
-                {
-                    i++;
-                    if (i % 3 == 0) continue;
-                    customs.Add(new(Main.MouseWorld + ((r + Main.GlobalTimeWrappedHourly).ToRotationVector2() * 150) - Main.screenPosition,Color.Lerp(Color.Purple,Color.Red,0.4f), new Vector3(0.5f, 0.5f, 0)));
-                }
-                Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
-                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, customs.ToArray(), 0, customs.Count - 1);
+                Color color = lightColor * ((length - i) / (float)length);
+                if (i > 0) color = Color.Lerp(color, Color.Transparent, 0.8f);
+                Main.spriteBatch.Draw(texture.Value, Projectile.oldPos[i] + Projectile.Size * 0.5f - Main.screenPosition, null, color, Projectile.oldRot[i],
+                    origin, 1f, Projectile.SpriteDirToEffects(), 0f);
             }
+            return false;
         }
     }
 }

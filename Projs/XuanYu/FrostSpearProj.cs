@@ -155,7 +155,7 @@
             if (Projectile.ai[0] == 2)
             {
                 List<CustomVertexInfo> customs = new();
-                Texture2D texture = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_1").Value;
+                Texture2D texture = StarBreakerAssetTexture.MyExtras[1].Value;
                 for (int i = 1; i < Projectile.oldPos.Length; ++i)//取顶点
                 {
                     if (Projectile.oldPos[i] == Vector2.Zero)

@@ -45,22 +45,22 @@
                 new Vector2(StartingPoint.X, StartingPoint.Y - 50), new Vector2(EndPoint.X, EndPoint.Y + 50), 10, ref r);
             return b1 || b2;
         }
-        public override void PostDraw(Color lightColor)
-        {
-            int b = Math.Min((int)Projectile.ai[0] * 2, 150);
-            int r = Math.Min(((int)Projectile.ai[0] - 20) * 2, 110);
-            Texture2D texture2D = ModContent.Request<Texture2D>("StarBreaker/Projs/GhostSlash").Value;
-            Main.spriteBatch.Draw(
-                texture2D,
-                Projectile.Center + new Vector2(50, 1.5f) - Main.screenPosition,
-                            null,
-                            new Color(r, 0, b, 0),
-                            Projectile.rotation,
-                            texture2D.Size() / 2f,
-                            new Vector2(10, 1.5f),
-                            SpriteEffects.None,
-                            0f
-                            );
-        }
+        //public override void PostDraw(Color lightColor)
+        //{
+        //    int b = Math.Min((int)Projectile.ai[0] * 2, 150);
+        //    int r = Math.Min(((int)Projectile.ai[0] - 20) * 2, 110);
+        //    Texture2D texture2D = ModContent.Request<Texture2D>("StarBreaker/Projs/GhostSlash").Value;
+        //    Main.spriteBatch.Draw(
+        //        texture2D,
+        //        Projectile.Center + new Vector2(50, 1.5f) - Main.screenPosition,
+        //                    null,
+        //                    new Color(r, 0, b, 0),
+        //                    Projectile.rotation,
+        //                    texture2D.Size() / 2f,
+        //                    new Vector2(10, 1.5f),
+        //                    SpriteEffects.None,
+        //                    0f
+        //                    );
+        //}
     }
 }

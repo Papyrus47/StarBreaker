@@ -23,7 +23,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
             public Color Color;
             public int TimeLeft;
             public bool Active => TimeLeft > 0;
-            public SwordHeartTalk(Vector2 center,float rot,Color color)
+            public SwordHeartTalk(Vector2 center, float rot, Color color)
             {
                 Text = Main.rand.Next<string>(new string[5]
                 {
@@ -35,11 +35,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 });
                 Center = center;
                 Rot = rot;
-                if(Rot < -MathHelper.PiOver4)
+                if (Rot < -MathHelper.PiOver4)
                 {
                     Rot = -MathHelper.PiOver4;
                 }
-                else if(Rot > MathHelper.PiOver4)
+                else if (Rot > MathHelper.PiOver4)
                 {
                     Rot = MathHelper.PiOver4;
                 }
@@ -48,11 +48,11 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
             }
             public void CheckActive()
             {
-                if(!Active)
+                if (!Active)
                 {
                     Color color = Color.Orange;
                     color.A = 0;
-                    this = new(new Vector2(Main.rand.Next(Main.screenWidth),Main.rand.Next(Main.screenHeight)),Main.rand.NextFloat(-MathHelper.PiOver4,MathHelper.PiOver4),color);
+                    this = new(new Vector2(Main.rand.Next(Main.screenWidth), Main.rand.Next(Main.screenHeight)), Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4), color);
                 }
             }
             public void Draw()
@@ -64,7 +64,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 {
                     text = Text.Remove(index);
                 }
-                StarBreakerWay.DrawString(Main.spriteBatch, text, Center, Color, Rot,Vector2.Zero, Scale, SpriteEffects.None);
+                StarBreakerUtils.DrawString(Main.spriteBatch, text, Center, Color, Rot, Vector2.Zero, Scale, SpriteEffects.None);
             }
         }
         public override void SetStaticDefaults()
@@ -375,7 +375,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            if(swordHeartTalks == null)
+            if (swordHeartTalks == null)
             {
                 swordHeartTalks = new SwordHeartTalk[8];
             }
@@ -396,7 +396,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 case 1:
                 case 2:
                     {
-                        StarBreakerWay.NPCDrawTail(NPC, drawColor, Color.Purple);
+                        StarBreakerUtils.NPCDrawTail(NPC, drawColor, Color.Purple);
                         break;
                     }
             }

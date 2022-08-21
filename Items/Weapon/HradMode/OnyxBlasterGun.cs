@@ -1,6 +1,4 @@
-﻿using Terraria.ID;
-
-namespace StarBreaker.Items.Weapon.HradMode
+﻿namespace StarBreaker.Items.Weapon.HradMode
 {
     public class OnyxBlasterGun : ModItem
     {
@@ -100,8 +98,7 @@ namespace StarBreaker.Items.Weapon.HradMode
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient && player.HasAmmo(player.HeldItem))
                 {
-                    int ammoID;
-                    player.PickAmmo(player.HeldItem, out ammoID, out _, out int damage, out _, out ammoID);
+                    player.PickAmmo(player.HeldItem, out int ammoID, out _, out int damage, out _, out ammoID);
                     if (Projectile.ai[1] > 8)
                     {
                         for (int i = 0; i < 5; i++)

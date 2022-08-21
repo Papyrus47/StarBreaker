@@ -65,7 +65,7 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 {
                     text = Text.Remove(index);
                 }
-                StarBreakerWay.DrawString(Main.spriteBatch, text, Center, Color, Rot, Vector2.Zero, Scale, SpriteEffects.None);
+                StarBreakerUtils.DrawString(Main.spriteBatch, text, Center, Color, Rot, Vector2.Zero, Scale, SpriteEffects.None);
             }
         }
         public override void SetStaticDefaults()
@@ -943,8 +943,8 @@ namespace StarBreaker.NPCs.UltimateCopperShortsword.Bosses
                 color = new Color(0.3f, 0.8f, 0.1f, 0.2f);
             }
 
-            StarBreakerWay.NPCDrawTail(NPC, drawColor, color);
-            StarBreakerWay.EntityDrawLight(NPC, drawColor);
+            StarBreakerUtils.NPCDrawTail(NPC, drawColor, color);
+            StarBreakerUtils.EntityDrawLight(NPC, drawColor);
             return false;
         }
         public override void BossHeadRotation(ref float rotation)

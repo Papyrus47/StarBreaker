@@ -1,4 +1,5 @@
 ﻿using StarBreaker.NPCs;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace StarBreaker.Items.Weapon.DoomFight
 {
@@ -49,7 +50,7 @@ namespace StarBreaker.Items.Weapon.DoomFight
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Volley sword");
-            DisplayName.AddTranslation(7, "凌空之剑");
+            DisplayName.AddTranslation(7, "凌空之剑");        
         }
         public override void SetDefaults()
         {
@@ -134,8 +135,6 @@ namespace StarBreaker.Items.Weapon.DoomFight
                         }
                         Vector2 pos = Projectile.Center + Projectile.ai[1].ToRotationVector2() * Projectile.width * 2.5f;
                         Projectile.velocity = pos - Projectile.Center;
-                        Projectile.velocity.Y *= 0.1f;
-                        Projectile.velocity.X *= 0.3f;
                         Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.localAI[0]);
                         break;
                     }
@@ -216,80 +215,78 @@ namespace StarBreaker.Items.Weapon.DoomFight
                    Projectile.rotation, new Vector2(5, texture.Height - 10), 1.3f, 0, 0);
                 return false;
             }
-            bool flag = !Main.drawToScreen && Main.netMode != 2 && !Main.gameMenu && !Main.mapFullscreen && Lighting.NotRetro && Terraria.Graphics.Effects.Filters.Scene.CanCapture();
+            bool flag = !Main.drawToScreen && Main.netMode != NetmodeID.Server && !Main.gameMenu && !Main.mapFullscreen && Lighting.NotRetro && Terraria.Graphics.Effects.Filters.Scene.CanCapture();
+            Matrix matrix = Main.GameViewMatrix.TransformationMatrix * Matrix.CreateRotationX(3.14f);
             if (!flag)
             {
-                DrawVectrx(Projectile, oldVels);
+                DrawVectrx(Projectile, oldVels,matrix);
             }
-            Vector2 scale = Projectile.velocity.AbsVector2() / texture.Size() + Vector2.One;
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White,
-                Projectile.rotation, new Vector2(5, texture.Height - 10), scale, 0, 0);
+            Player player = Main.player[Projectile.owner];
+            Vector2 center = player.RotatedRelativePoint(player.MountedCenter, true);
+            DrawSowrd(texture, center,matrix);
             return false;
         }
-        public static void DrawVectrx(Projectile Projectile, Vector2[] oldVels)
+
+        public static void DrawVectrx(Projectile projectile, Vector2[] oldVels, Matrix matrix)
         {
-            List<CustomVertexInfo> bars = new();
-            for (int i = 1; i < oldVels.Length; i++)
-            {
-                if (oldVels[i] == Vector2.Zero)
-                {
-                    continue;
-                }
 
-                Vector2 vel = oldVels[i - 1] - oldVels[i];
-                vel = vel.NormalVector();
-                var factor = i / (float)oldVels.Length;
-                var color = Color.Lerp(Color.AliceBlue * 0.4f, Color.Blue, 1 - factor);
-                var w = MathHelper.Lerp(0.5f, 0.05f, factor);
-                bars.Add(new(Projectile.Center + (oldVels[i] * 0.8f + vel.RealSafeNormalize()) * 5f, color, new Vector3((float)Math.Sqrt(factor), 1, w)));
-                bars.Add(new(Projectile.Center + (oldVels[i] * 0.8f + vel.RealSafeNormalize()).RealSafeNormalize() * 2f, color, new Vector3((float)Math.Sqrt(factor), 0, w)));
-            }
-            if (bars.Count > 2)
-            {
-                List<CustomVertexInfo> triangleList = new();
-                for (int i = 0; i < bars.Count - 2; i += 2)
-                {
-                    triangleList.Add(bars[i]);
-                    triangleList.Add(bars[i + 2]);
-                    triangleList.Add(bars[i + 1]);
+        }
+        /// <summary>
+        /// 绘制剑
+        /// </summary>
+        /// <param name="texture">图片</param>
+        /// <param name="center">弹幕中心位置</param>
+        /// <param name="vel">速度</param>
+        /// <param name="matrix">应用矩阵</param>
+        private void DrawSowrd(Texture2D texture, Vector2 center,Matrix matrix)
+        {
+            //GraphicsDevice gd = Main.instance.GraphicsDevice;
+            SpriteBatch sb = Main.spriteBatch;
+            #region 想法1
+            //Vector2 Size = texture.Size();
+            ////我们要的是武器在Z轴和X轴上旋转法
+            ////而不是在平面上
+            ////玩家默认的Z轴位置是0
+            //Vector3[] pos = new Vector3[4]
+            //{
+            //    new(0,0,0),//以中心为原点
+            //    new(0,0,Size.Y),
+            //    new(Size.X,0,0),
+            //    new(Size.X,0,Size.Y)
+            //};
+            //Vector2[] vector2s = new Vector2[4];
+            //for(int i = 0;i<pos.Length;i++)
+            //{
+            //    pos[i] = Vector3.Transform(pos[i], matrix);
 
-                    triangleList.Add(bars[i + 1]);
-                    triangleList.Add(bars[i + 2]);
-                    triangleList.Add(bars[i + 3]);
-                }
+            //    vector2s[i] = pos[i].Vector3ProjectionToVectoer2(180f);
+            //    vector2s[i] += center - Main.screenPosition;//到玩家位置上来
+            //}
+            //Vector2 rotCenter = vector2s[0] + ((vector2s[0] - vector2s[2]) * 0.5f);
+            //for (int j = 0; j < vector2s.Length; j++)
+            //{
+            //    vector2s[j] = rotCenter + (rotCenter - vector2s[j]).RotatedBy(MathHelper.PiOver4);
+            //}
+            //CustomVertexInfo[] customs = new CustomVertexInfo[6];
+            //customs[0] = customs[3] = new(vector2s[0], Color.White, new Vector3(0, 1, 0));//柄的位置
+            //customs[1] = new(vector2s[1], Color.White, new Vector3(0, 0, 0));
+            //customs[2] = customs[5] = new(vector2s[2], Color.White, new Vector3(1, 0, 0));
+            //customs[4] = new(vector2s[3], Color.White, new Vector3(1, 1, 0));
+            //gd.Textures[0] = TextureAssets.Projectile[Type].Value;
+            //gd.DrawUserPrimitives(PrimitiveType.TriangleList, customs, 0, 2);
+            #endregion
+            #region 想法2
+            //sb.End();
+            //sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone,
+            //    null,matrix);
 
-                if (StarBreakerWay.InBegin())
-                {
-                    Main.spriteBatch.End();
-                }
+            //sb.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White,
+            //    Projectile.rotation, new Vector2(5, texture.Height - 10),1.5f, SpriteEffects.None, 0f);
 
-                if (!StarBreakerWay.InBegin())
-                {
-                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
-                }
-
-                RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
-                var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0)) * Main.GameViewMatrix.ZoomMatrix;
-
-                Main.graphics.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_2").Value;
-                Main.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
-                StarBreaker.UseSwordShader.Parameters["uTransform"].SetValue(model * projection);
-                StarBreaker.UseSwordShader.CurrentTechnique.Passes[0].Apply();
-                Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, triangleList.ToArray(), 0, triangleList.Count / 3);
-
-                Main.graphics.GraphicsDevice.RasterizerState = originalState;
-
-            }
-            if (StarBreakerWay.InBegin())
-            {
-                Main.spriteBatch.End();
-            }
-
-            if (!StarBreakerWay.InBegin())
-            {
-                Main.spriteBatch.Begin();
-            }
+            //sb.End();
+            //sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone,
+            //    null);
+            #endregion
         }
     }
     public class VolleySword_BigLine : ModProjectile
@@ -319,7 +316,11 @@ namespace StarBreaker.Items.Weapon.DoomFight
             {
                 Projectile.Kill();
             }
-            if (linePos == null) linePos = new Vector2[15];
+            if (linePos == null)
+            {
+                linePos = new Vector2[15];
+            }
+
             if (Projectile.velocity == Vector2.Zero)
             {
                 Projectile.extraUpdates = 6;
@@ -432,7 +433,11 @@ namespace StarBreaker.Items.Weapon.DoomFight
             {
                 Projectile.Kill();
             }
-            if (linePos == null) linePos = new Vector2[15];
+            if (linePos == null)
+            {
+                linePos = new Vector2[15];
+            }
+
             if (Projectile.velocity == Vector2.Zero)
             {
                 Projectile.extraUpdates = 3;
@@ -489,7 +494,11 @@ namespace StarBreaker.Items.Weapon.DoomFight
                 customs[0] = new(linePos[0] - Main.screenPosition, Color.LightBlue, new Vector3(0.5f, 0.5f, 0));
                 for (int i = 1; i < linePos.Length; i++)
                 {
-                    if (linePos[i] == Vector2.Zero) break;
+                    if (linePos[i] == Vector2.Zero)
+                    {
+                        break;
+                    }
+
                     customs[i] = new(linePos[i] - Main.screenPosition, Color.LightBlue, new Vector3(0.5f, 0.5f, 0));
                 }
                 Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.FishingLine.Value;

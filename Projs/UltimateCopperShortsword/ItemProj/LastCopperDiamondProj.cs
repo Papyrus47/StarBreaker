@@ -1,6 +1,4 @@
-﻿using Terraria.ID;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperDiamondProj : ModProjectile
     {

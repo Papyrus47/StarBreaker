@@ -194,7 +194,7 @@ namespace StarBreaker.NPCs
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            StarBreakerWay.NPCDrawTail(NPC, Color.White, drawColor);
+            StarBreakerUtils.NPCDrawTail(NPC, Color.White, drawColor);
             Utils.DrawBorderString(spriteBatch, ((int)NPC.localAI[3] * 60).ToString(), NPC.Center + new Vector2(-10, -50) - Main.screenPosition, Color.MediumPurple);
             switch (State)
             {

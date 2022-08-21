@@ -1,5 +1,4 @@
 ﻿using StarBreaker.Projs.UltimateCopperShortsword;
-using Terraria.ID;
 
 namespace StarBreaker.Items.UltimateCopperShortsword
 {
@@ -19,7 +18,7 @@ namespace StarBreaker.Items.UltimateCopperShortsword
             Item.shootSpeed = 4f;
             Item.useAmmo = AmmoID.Arrow;
             Item.damage = 30;
-            Item.Size = new(24,42);
+            Item.Size = new(24, 42);
             Item.useTime = Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useTurn = false;
@@ -41,8 +40,12 @@ namespace StarBreaker.Items.UltimateCopperShortsword
                     damage += (int)(damage * 0.1f);
                 }
                 velocity *= i * 0.7f;
-                if (velocity.Length() > 20f) velocity = velocity.RealSafeNormalize() * 20f;
-                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1),Item.shoot, damage, knockback, player.whoAmI);
+                if (velocity.Length() > 20f)
+                {
+                    velocity = velocity.RealSafeNormalize() * 20f;
+                }
+
+                Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1), Item.shoot, damage, knockback, player.whoAmI);
                 projectile.GetGlobalProjectile<Projs.StarBreakerGlobalProj>().ProjectileForLastBow = true;
                 projectile.penetrate = 5;
             }

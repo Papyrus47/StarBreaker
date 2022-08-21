@@ -1,7 +1,6 @@
 ﻿using StarBreaker.NPCs;
 using StarBreaker.SpecialBattles;
 using StarBreaker.StarUI;
-using StarBreaker.StarUI.Research;
 using System.IO;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
@@ -10,70 +9,56 @@ namespace StarBreaker
 {
     public partial class StarBreakerSystem : ModSystem
     {
-        public static bool downedStarBreakerNom;
-        public static bool downedStarBreakerEX;
-        public static bool downedStarSpiralBlade;
-        public static bool downedStarFist;
-        public static bool downedOnyxBlaster;
+        public class DownedNPC
+        {
+            public bool downedStarBreakerNom;
+            public bool downedStarBreakerEX;
+            public bool downedStarSpiralBlade;
+            public bool downedStarFist;
+            public bool downedOnyxBlaster;
+        }
+        public static DownedNPC downed;
         public static SpecialBattle SpecialBattle = null;
-        public static List<Particle.Particle> Particles = new();
+        public static Item[] saveStarBreakerUIStates;
 
         #region UI变量
         #region 星击子弹UI
         public static StarBreakerUIState starBreaker_UI;
         internal UserInterface _userInterface;
         #endregion
-        #region 星击能量条显示UI
-        public static StarChargeUIState chargeUIState;
-        internal UserInterface chargeUser;
-        #endregion
-        #endregion
-        #region 测试用 血魂任务书
-        public static StarBook_UI book_UI;
-        internal UserInterface starBook_UI;
         #endregion
         public override void SaveWorldData(TagCompound tag)
         {
-            if (downedStarBreakerNom)
+            if (downed.downedStarBreakerNom)
             {
-                tag["downedStarBrekerNom"] = downedStarBreakerNom;
+                tag["downedStarBrekerNom"] = downed.downedStarBreakerNom;
             }
 
-            if (downedStarBreakerEX)
+            if (downed.downedStarBreakerEX)
             {
-                tag["downedStarBreakerEX"] = downedStarBreakerEX;
+                tag["downedStarBreakerEX"] = downed.downedStarBreakerEX;
+            }
+             if (saveStarBreakerUIStates != null)
+            {
+                tag["StarBreaker:Bullet1"] = saveStarBreakerUIStates[0];
+                tag["StarBreaker:Bullet2"] = saveStarBreakerUIStates[1];
             }
 
-            if (downedStarSpiralBlade)
-            {
-                tag["downedStarSpiralBlade"] = downedStarSpiralBlade;
-            }
-
-            if (downedStarFist)
-            {
-                tag["downedStarFist"] = downedStarFist;
-            }
-
-            if (downedOnyxBlaster)
-            {
-                tag["downedOnyxBlaster"] = downedOnyxBlaster;
-            }
         }
         public override void LoadWorldData(TagCompound tag)
         {
-            downedStarBreakerNom = tag.ContainsKey("downedStarBrekerNom");
-            downedStarBreakerEX = tag.ContainsKey("downedStarBreakerEX");
-            downedStarSpiralBlade = tag.ContainsKey("downedStarSpiralBlade");
-            downedStarFist = tag.ContainsKey("downedStarFist");
-            downedOnyxBlaster = tag.ContainsKey("downedOnyxBlaster");
+            downed.downedStarBreakerNom = tag.ContainsKey("downedStarBrekerNom");
+            downed.downedStarBreakerEX = tag.ContainsKey("downedStarBreakerEX");
+            if (saveStarBreakerUIStates == null) saveStarBreakerUIStates = new Item[2];
+            else
+            {
+                starBreaker_UI.element1.Item = tag.Get<Item>("StarBreaker:Bullet1");
+                starBreaker_UI.element2.Item = tag.Get<Item>("StarBreaker:Bullet2");
+            }
         }
         public override void OnWorldLoad()
         {
-            downedStarBreakerNom = false;
-            downedStarBreakerEX = false;
-            downedStarSpiralBlade = false;
-            downedStarFist = false;
-            Particles = new();
+            downed = new();
 
             #region UI加载
             starBreaker_UI = new();
@@ -81,15 +66,6 @@ namespace StarBreaker
             _userInterface = new();
             _userInterface.SetState(starBreaker_UI);
 
-            chargeUIState = new();
-            chargeUIState.Activate();
-            chargeUser = new();
-            chargeUser.SetState(chargeUIState);
-
-            book_UI = new();
-            book_UI.Activate();
-            starBook_UI = new();
-            starBook_UI.SetState(book_UI);
             #endregion
         }
         public override void Load()
@@ -99,28 +75,18 @@ namespace StarBreaker
             starBreaker_UI.Activate();
             _userInterface = new();
             _userInterface.SetState(starBreaker_UI);
-
-            chargeUIState = new();
-            chargeUIState.Activate();
-            chargeUser = new();
-            chargeUser.SetState(chargeUIState);
-
-            book_UI = new();
-            book_UI.Activate();
-            starBook_UI = new();
-            starBook_UI.SetState(book_UI);
             #endregion
+            downed = new();
+            saveStarBreakerUIStates = new Item[2];
         }
         public override void Unload()
         {
             SpecialBattle = null;
-            Particles = null;
             starBreaker_UI = null;
             _userInterface = null;
-            chargeUIState = null;
-            chargeUser = null;
-            starBook_UI = null;
-            book_UI = null;
+            downed = null;
+            SpecialBattle = null;
+            saveStarBreakerUIStates = null;
         }
         public override void PostUpdateEverything()
         {
@@ -135,58 +101,51 @@ namespace StarBreaker
                     SpecialBattle = null;
                 }
             }
-            foreach (var particle in Particles.ToArray()) particle.Update();
         }
         public override void PostDrawInterface(SpriteBatch spriteBatch)
         {
-            foreach (var particle in Particles.ToArray()) particle.Draw(spriteBatch);
         }
         public override void OnWorldUnload()
         {
-            downedStarBreakerNom = false;
-            downedStarBreakerEX = false;
-            downedStarSpiralBlade = false;
-            downedStarFist = false;
-            starBook_UI = null;
+            downed = null;
             _userInterface = null;
-            chargeUIState = null;
-            chargeUser = null;
         }
-        public override void NetSend(BinaryWriter writer)
-        {
-            base.NetSend(writer);
-            BitsByte flags = new();//最多只有8个索引
-            flags[0] = downedStarBreakerNom;//向多人服务器写入击败信息
-            flags[1] = downedStarBreakerEX;
-            flags[2] = downedStarSpiralBlade;
-            flags[3] = downedStarFist;
-            writer.Write(flags);
-        }
-        public override void NetReceive(BinaryReader reader)
-        {
-            base.NetReceive(reader);
-            BitsByte flags = reader.ReadByte();//与上面的对应
-            downedStarBreakerNom = flags[0];
-            downedStarBreakerEX = flags[1];
-            downedStarSpiralBlade = flags[2];
-            downedStarFist = flags[3];
-        }
+        //public override void NetSend(BinaryWriter writer)
+        //{
+        //    base.NetSend(writer);
+        //    BitsByte flags = new();//最多只有8个索引
+        //    flags[0] = downed.downedStarBreakerNom;//向多人服务器写入击败信息
+        //    flags[1] = downed.downedStarBreakerEX;
+        //    writer.Write(flags);
+        //}
+        //public override void NetReceive(BinaryReader reader)
+        //{
+        //    base.NetReceive(reader);
+        //    BitsByte flags = reader.ReadByte();//与上面的对应
+        //    downed.downedStarBreakerNom = flags[0];
+        //    downed.downedStarBreakerEX = flags[1];
+        //    downedStarSpiralBlade = flags[2];
+        //    downedStarFist = flags[3];
+        //}
         public override void UpdateUI(GameTime gameTime)
         {
             _userInterface?.Update(gameTime);
-            chargeUser?.Update(gameTime);
-            starBook_UI?.Update(gameTime);
+            if(saveStarBreakerUIStates != null)
+            {
+                saveStarBreakerUIStates[0] = starBreaker_UI.element1.Item;
+                saveStarBreakerUIStates[1] = starBreaker_UI.element2.Item;
+            }
             base.UpdateUI(gameTime);
         }
         public override void PostUpdateWorld()
         {
             if (Main.LocalPlayer.ZoneSkyHeight && Main.rand.NextBool(100) && !Main.CurrentFrameFlags.AnyActiveBossNPC)
             {
-                if (NPC.downedAncientCultist && !downedStarBreakerNom)
+                if (NPC.downedAncientCultist && !downed.downedStarBreakerNom)
                 {
                     NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<StarBreakerN>());
                 }
-                else if (downedStarBreakerNom && !downedStarBreakerEX)
+                else if (downed.downedStarBreakerNom && !downed.downedStarBreakerEX)
                 {
                     NPC.SpawnOnPlayer(Main.myPlayer, ModContent.NPCType<StarBreakerN>());
                 }
@@ -206,18 +165,6 @@ namespace StarBreaker
                     },//委托
                     InterfaceScaleType.UI)
                 );//添加UI
-                layers.Insert(Index, new LegacyGameInterfaceLayer("StarBreaker:Charge",
-                delegate
-                {
-                    chargeUser.Draw(Main.spriteBatch, new GameTime());
-                    return true;
-                }, InterfaceScaleType.UI));
-                layers.Insert(Index, new LegacyGameInterfaceLayer("BloodSoul:StarBook",
-                delegate
-                {
-                    starBook_UI.Draw(Main.spriteBatch, new GameTime());
-                    return true;
-                }, InterfaceScaleType.UI));
             }
         }
     }

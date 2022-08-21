@@ -1,6 +1,4 @@
-﻿using Terraria.ID;
-
-namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
+﻿namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
 {
     public class LastCopperJackhammerProj : ModProjectile
     {
@@ -24,11 +22,14 @@ namespace StarBreaker.Projs.UltimateCopperShortsword.ItemProj
         {
             Projectile.ai[0]++;
             Projectile.frameCounter++;
-            if(Projectile.frameCounter > 4)
+            if (Projectile.frameCounter > 4)
             {
                 Projectile.frame++;
                 Projectile.frameCounter = 0;
-                if (Projectile.frame >= 4) Projectile.frame = 0;
+                if (Projectile.frame >= 4)
+                {
+                    Projectile.frame = 0;
+                }
             }
             if (Projectile.ai[0] > 120)
             {

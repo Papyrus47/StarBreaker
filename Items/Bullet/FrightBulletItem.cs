@@ -1,4 +1,5 @@
-﻿using StarBreaker.Projs.Bullets;
+﻿using StarBreaker.Items.Type;
+using StarBreaker.Projs.Bullets;
 
 namespace StarBreaker.Items.Bullet
 {
@@ -9,7 +10,7 @@ namespace StarBreaker.Items.Bullet
             DisplayName.SetDefault("恐惧能量聚集器");
             Tooltip.SetDefault("使用恐惧之魂制作的稳定的聚集器,50%的概率不消耗\n" +
                 "这种能量使人恐惧");
-            Item.SacrificeCountNeededByItemId(100);
+            SacrificeTotal = 100;
         }
         public override void SetDefaults()
         {
@@ -31,7 +32,7 @@ namespace StarBreaker.Items.Bullet
         {
             if (target.life < target.lifeMax * 0.5f)
             {
-                target.NPC_AddOnHitDamage(Main.player[projectile.owner],damage);
+                target.NPC_AddOnHitDamage(Main.player[projectile.owner], damage);
             }
         }
     }

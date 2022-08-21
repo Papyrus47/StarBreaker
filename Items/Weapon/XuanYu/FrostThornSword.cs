@@ -13,7 +13,7 @@ namespace StarBreaker.Items.Weapon.XuanYu
                 "On hit: Limit the speed of the target for 3 seconds");
             Tooltip.AddTranslation(7, "向前方刺出三次攻击\n" +
                 "命中敌人时:限制敌人的速度,持续三秒");
-            Item.SacrificeCountNeededByItemId(1);
+            SacrificeTotal = 1;
         }
         public override void SetDefaults()
         {

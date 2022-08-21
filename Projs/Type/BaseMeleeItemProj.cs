@@ -1,6 +1,4 @@
-﻿using Terraria.ID;
-
-namespace StarBreaker.Projs.Type
+﻿namespace StarBreaker.Projs.Type
 {
     public abstract class BaseMeleeItemProj : ModProjectile
     {
@@ -19,6 +17,10 @@ namespace StarBreaker.Projs.Type
         /// 顶点绘制向量取长,和伤害判定
         /// </summary>
         public float DrawLength;
+        public override void OnSpawn(IEntitySource source)
+        {
+            StarBreaker.RenderTargetProjDrawsHelper.AddDrawProj(Projectile.whoAmI, new BaseMeleeItemProjDraw());
+        }
         public override bool ShouldUpdatePosition()
         {
             return false;
@@ -82,12 +84,12 @@ namespace StarBreaker.Projs.Type
                     triangleList.Add(bars[i + 3]);
                 }
 
-                if (StarBreakerWay.InBegin())
+                if (StarBreakerUtils.InBegin())
                 {
                     Main.spriteBatch.End();
                 }
 
-                if (!StarBreakerWay.InBegin())
+                if (!StarBreakerUtils.InBegin())
                 {
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
                 }
@@ -97,7 +99,7 @@ namespace StarBreaker.Projs.Type
                 var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0)) * Main.GameViewMatrix.ZoomMatrix;
 
                 #region 这一段是你们需要根据自己的mod用于切换的顶点绘制shader
-                Main.graphics.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("StarBreaker/Images/MyExtra_2").Value;
+                Main.graphics.GraphicsDevice.Textures[0] = StarBreakerAssetTexture.MyExtras[2].Value;
                 Main.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
                 StarBreaker.UseSwordShader.Parameters["uTransform"].SetValue(model * projection);
                 StarBreaker.UseSwordShader.CurrentTechnique.Passes[0].Apply();
@@ -106,12 +108,12 @@ namespace StarBreaker.Projs.Type
 
                 Main.graphics.GraphicsDevice.RasterizerState = originalState;
             }
-            if (StarBreakerWay.InBegin())
+            if (StarBreakerUtils.InBegin())
             {
                 Main.spriteBatch.End();
             }
 
-            if (!StarBreakerWay.InBegin())
+            if (!StarBreakerUtils.InBegin())
             {
                 Main.spriteBatch.Begin();
             }

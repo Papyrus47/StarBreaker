@@ -6,7 +6,7 @@
         public int FavorabilityCount = 0;
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            if(tooltips != null)
+            if (tooltips != null)
             {
                 string FavorabilityLag = "Favorability:";
                 string FavorabilityLag2 = "Ways to increase favorability:";

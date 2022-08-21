@@ -1,10 +1,10 @@
 ﻿using StarBreaker.Items.UltimateCopperShortsword;
 using StarBreaker.Items.Weapon;
-using StarBreaker.Items.Weapon.IceGunAndFireKnife;
 using StarBreaker.Projs;
-using StarBreaker.Projs.StarGhostKnife;
 using Terraria.GameInput;
 using Terraria.ModLoader.IO;
+using StarBreaker.SwitchPlayer;
+using StarBreaker.Items;
 
 namespace StarBreaker
 {
@@ -17,23 +17,20 @@ namespace StarBreaker
         public int GhostSwordAttack;
         public ScreenMove screenMove;
 
-        public readonly Dictionary<StarGhostKnifeAtk, string> GhostSwordName = new()
+        public readonly string[] GhostSwordName = new string[]
         {
-            { StarGhostKnifeAtk.Kalla, "冥炎之卡洛" },
-            { StarGhostKnifeAtk.GhostFireHit, "鬼炎斩(阎冥斩)" },
-            { StarGhostKnifeAtk.StoneShower, "死亡墓碑" },
-            { StarGhostKnifeAtk.KeiGa, "残影之凯嘉" },
-            { StarGhostKnifeAtk.LunarSlash, "满月斩" },
-            { StarGhostKnifeAtk.Puchumeng, "侵蚀之普戾蒙" },
-            { StarGhostKnifeAtk.SaYa, "冰霜之萨亚" },
-            { StarGhostKnifeAtk.GhostSlash, "鬼影闪" },
-            { StarGhostKnifeAtk.Rhasa, "瘟疫之罗刹" },
-            { StarGhostKnifeAtk.Kazan, "刀魂卡赞" },
-            { StarGhostKnifeAtk.Buraxiu, "第七鬼神 怖拉修" }
+            "冥炎之卡洛",
+            "鬼炎斩(阎冥斩)",
+            "死亡墓碑",
+            "残影之凯嘉",
+            "满月斩",
+            "侵蚀之普戾蒙",
+            "冰霜之萨亚",
+            "鬼影闪",
+            "瘟疫之罗刹",
+            "刀魂卡赞",
+            "第七鬼神 怖拉修"
         };
-        public Item Bullet1;
-        public Item Bullet2;
-        public int StarCharge;
         public bool DrumDraw;//鼓的绘制
         #region 最终铜短剑
         public bool SwordSum = false;
@@ -41,12 +38,10 @@ namespace StarBreaker
         public bool SwordTurret = false;
         public int PlayerEmotion = 0;//情感
         public int PlayerVectorZero = 0;//速度为0的时间
+        internal int Const;
         #endregion
         public override void SaveData(TagCompound tag)
         {
-            tag["Bullet1"] = Bullet1;
-            tag["Bullet2"] = Bullet2;
-            tag["StarBreker:StarCharge"] = StarCharge;
             base.SaveData(tag);
         }
         public override bool CanBuyItem(NPC vendor, Item[] shopInventory, Item item)
@@ -100,9 +95,6 @@ namespace StarBreaker
         }
         public override void LoadData(TagCompound tag)
         {
-            Bullet1 = tag.Get<Item>("Bullet1");
-            Bullet2 = tag.Get<Item>("Bullet2");
-            StarCharge = tag.GetInt("StarBreker:StarCharge");
             base.LoadData(tag);
         }
         public override void ResetEffects()
@@ -110,6 +102,7 @@ namespace StarBreaker
             SummonStarWenpon = false;
             SwordSum = false;
             DrumDraw = false;
+            Const = 0;
             if (SummonStarShieldTime > 0)
             {
                 SummonStarShieldTime--;
@@ -139,6 +132,7 @@ namespace StarBreaker
             {
                 PlayerEmotion = 150;
             }
+            //移除HashSet对运行速度有影响
         }
         public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
         {
@@ -173,7 +167,7 @@ namespace StarBreaker
             }
             if (Player.HeldItem.type == ModContent.ItemType<StarGhostKnife>())//如果玩家手持星辰鬼刀
             {
-                Utils.DrawBorderString(Main.spriteBatch, GhostSwordName[(StarGhostKnifeAtk)GhostSwordAttack], Player.Center - new Vector2(90, 80) - Main.screenPosition, Color.Purple);
+                Utils.DrawBorderString(Main.spriteBatch, GhostSwordName[GhostSwordAttack], Player.Center - new Vector2(90, 80) - Main.screenPosition, Color.Purple);
             }
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
@@ -294,18 +288,6 @@ namespace StarBreaker
         }
         public override void OnEnterWorld(Player Player)
         {
-            if (Bullet1 is null)
-            {
-                Bullet1 = new();
-                Bullet1.SetDefaults(0);
-            }
-            if (Bullet2 is null)
-            {
-                Bullet2 = new();
-                Bullet2.SetDefaults(0);
-            }
-            StarBreakerSystem.starBreaker_UI.element1.Item = Bullet1;
-            StarBreakerSystem.starBreaker_UI.element2.Item = Bullet2;
             base.OnEnterWorld(Player);
         }
         public override void ModifyScreenPosition()
@@ -330,7 +312,7 @@ namespace StarBreaker
             /// <summary>
             /// 生成新的屏幕移动
             /// </summary>
-            public void NewScreenMove(int timeLeft,Vector2 vel,Vector2? center = null)
+            public void NewScreenMove(int timeLeft, Vector2 vel, Vector2? center = null)
             {
                 TimeLeft = timeLeft;
                 Velocity = vel;

@@ -69,9 +69,9 @@ namespace StarBreaker.Projs.EnergyDamage_Proj
                         ModContent.ProjectileType<IceEnergyBullet>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     Main.projectile[proj].hostile = false;
                     Main.projectile[proj].friendly = true;
-                    StarBreakerWay.PickAmmo_EnergyBulletItem(player, out int shootID, out int damage);
+                    StarBreakerUtils.PickAmmo_EnergyBulletItem(player, out int shootID, out int damage);
                     Projectile.damage += 2;
-                    StarBreakerWay.Add_Hooks_ToProj(shootID, proj);
+                    StarBreakerUtils.Add_Hooks_ToProj(shootID, proj);
 
                 }
                 if (Projectile.ai[1] <= 0)
@@ -83,7 +83,7 @@ namespace StarBreaker.Projs.EnergyDamage_Proj
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    StarBreakerWay.PickAmmo_EnergyBulletItem(player, out int damage, out int shootID);
+                    StarBreakerUtils.PickAmmo_EnergyBulletItem(player, out int damage, out int shootID);
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + (Main.rand.NextVector2Unit() * 10)
                         , -Projectile.velocity,
                         ModContent.ProjectileType<IcePick>(), Projectile.damage * 2 / 3, Projectile.knockBack, Projectile.owner);

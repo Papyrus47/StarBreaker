@@ -3,7 +3,7 @@
     public class StarBreakerEX_SpecialBattle : SpecialBattle
     {
         public BattleTile[] battleTiles;
-        public override Texture2D Texture => ModContent.Request<Texture2D>("StarBreaker/Backgronuds/LightB", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        public override Texture2D Texture => StarBreakerAssetTexture.LightB.Value;
         public struct BattleTile
         {
             public Vector2 Pos;

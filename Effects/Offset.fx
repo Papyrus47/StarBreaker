@@ -1,11 +1,13 @@
-﻿sampler uImage0 : register(s0);
-texture2D tex0; 
-sampler2D uImage1 = sampler_state  
+﻿//来自：yiyang233
+//yiyang，我的超人！
+sampler uImage0 : register(s0);
+texture2D tex0; //声明一个纹理对象 
+sampler2D uImage1 = sampler_state //声明一个采样器对象 
 {
-    Texture = <tex0>; 
-    MinFilter = Linear; 
+    Texture = <tex0>;  //指定被采样的纹理 
+    MinFilter = Linear; //纹理过滤方式 
     MagFilter = Linear;
-    AddressU = Wrap;
+    AddressU = Wrap;//纹理寻址模式 
     AddressV = Wrap;
 };
 
@@ -18,7 +20,7 @@ float4 PSFunction(float2 coords : TEXCOORD0) : COLOR0
     {
         vec += offset;//偏移
     }
-    float4 color = tex2D(uImage0, vec);
+    float4 color = tex2D(uImage0, vec);//获取偏移后的图片颜色信息
     float4 invColor = color;
     if (any(tex2D(uImage1, coords)))
     {
