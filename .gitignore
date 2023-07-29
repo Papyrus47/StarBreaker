@@ -1,0 +1,12 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs
+/.vscode
+/bin/Debug/net6.0
+/大喵的建议.png
+/obj
+/Weapons/Test
+/Weapons/Test.zip
+/Weapons/Test/DoubleGuns
