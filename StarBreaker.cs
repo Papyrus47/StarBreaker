@@ -21,7 +21,7 @@ namespace StarBreaker
             StarBreakerWorldFileData = new(Main.WorldPath, false)
             {
                 GameMode = GameModeID.Expert,
-                CreationTime = DateTime.Now, 
+                CreationTime = DateTime.Now,
                 Metadata = FileMetadata.FromCurrentSettings(FileType.World),
                 WorldGeneratorVersion = 828928688129uL
             };
